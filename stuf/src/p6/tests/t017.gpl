@@ -1,0 +1,12 @@
+forward animation belch(triangle);
+
+//argument should be triangle, not circle
+//ANIMATION_PARAM_DOES_NOT_MATCH_FORWARD
+animation belch(circle stomach)
+{
+  stomach.radius -= 1;
+  //This should generate error because stomach (circle) doesn't have skew.
+  //This tests that the correct symbol has been added to the local
+  //system table even though there was a PARAM DOES NOT MATCH error
+  stomach.skew=3;
+}

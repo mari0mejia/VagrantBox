@@ -1,0 +1,2 @@
+Semantic error on line 3: A string expression is not a legal array index. The array is 'billboards'.
+Semantic error on line 4: A circle expression is not a legal array index. The array is 'billboards'.

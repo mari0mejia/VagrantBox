@@ -1,0 +1,13 @@
+int a=5;
+
+initialization {
+  print("This is one initialization block. a=" + a);
+  a=10;
+  print("Now a=" + a);
+}
+
+initialization {
+  print("There can be more than one initialization block. a=" + a);
+  a=20;
+  print("And now a=" + a);
+}

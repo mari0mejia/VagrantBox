@@ -1,0 +1,7 @@
+rectangle r1;
+textbox tx;
+
+on akey 
+{
+  r1.x-=tx.text;
+}

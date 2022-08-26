@@ -1,0 +1,13 @@
+string window_title = "Project 4 t40.gpl";
+
+circle roundish;
+rectangle my_rectangle[3];
+double dblarr[3];
+double justanumber;
+
+int seeit = my_rectangle[dblarr].visible; //can't have array variable as index
+int doit = seeit; //should work. Confirms that seeit was added to symbol table 
+int hearit = dblarr[my_rectangle].visible; //two more errors (confirms that parsing continued)
+int fearit = justanumber.visible; //Variable 'justanumber' is not an object
+int nearit = roundish; //Incorrect type (circle) for initial value of...
+int dearit = my_rectangle[0]; //Incorrect type (rectangle) for initial value of...

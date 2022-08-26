@@ -1,0 +1,1 @@
+Semantic error on line 5: Cannot initialize the animation_block attribute of a 'triangle' with an animation block designed for a 'circle'.

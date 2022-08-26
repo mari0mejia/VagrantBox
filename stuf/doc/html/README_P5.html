@@ -1,0 +1,647 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fifth Project &#8212; Game Programming Language 2.1 documentation</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Sixth Project" href="README_P6.html" />
+    <link rel="prev" title="Fourth Project" href="README_P4.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="README_P6.html" title="Sixth Project"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="README_P4.html" title="Fourth Project"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Fifth Project</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fifth-project">
+<h1>Fifth Project<a class="headerlink" href="#fifth-project" title="Permalink to this headline">¶</a></h1>
+<p>Ver. 13 November 2021</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>Event blocks (e.g., <cite>on leftarrow {…}</cite>) and statements (loops, if/else, etc.) are implemented</p>
+</div>
+<div class="section" id="manifest">
+<h2>Manifest<a class="headerlink" href="#manifest" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">Locator.cpp</span></code></dt>
+<dd class="field-odd"><p>Class that maps a symbol’s data to an lvalue</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">Locator.h</span></code></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p5/tests</span></code></dt>
+<dd class="field-odd"><p>Testing suite directory, 100 tests.</p>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="project-description">
+<h2>Project description<a class="headerlink" href="#project-description" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Copy the files from <code class="docutils literal notranslate"><span class="pre">p4</span></code> into <code class="docutils literal notranslate"><span class="pre">p5</span></code>:</p></li>
+</ol>
+<div class="topic">
+<p class="topic-title">Debugging projects 5 and 6</p>
+<p>This project introduces event blocks: statements that are executed when a key is pressed. For the automated testing suite to send keystrokes to the <code class="docutils literal notranslate"><span class="pre">./gpl</span></code> executable,
+a <code class="docutils literal notranslate"><span class="pre">-stdin</span></code> option can is used. The tests that require keystrokes have an additional file for this purpose (e.g., <code class="docutils literal notranslate"><span class="pre">t007.keypresses</span></code>). To run individual tests manually:</p>
+<blockquote>
+<div><div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># without valgrind</span>
+cat tests/t007.keypresses <span class="p">|</span> ./gpl -stdin tests/t007.gpl
+
+<span class="c1"># with valgrind</span>
+cat tests/t007.keypresses <span class="p">|</span> valgrind ./gpl -stdin tests/t007.gpl
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="2">
+<li><p>In order to get your working <code class="docutils literal notranslate"><span class="pre">p4</span></code> project to compile in the <code class="docutils literal notranslate"><span class="pre">p5</span></code> directory, add the following include statement, function declaration, and function definition to your Symbol class:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">//Symbol.h</span>
+<span class="cp">#include</span> <span class="cpf">&quot;Locator.h&quot;</span><span class="cp"></span>
+<span class="p">...</span>
+<span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Locator</span><span class="o">&gt;</span> <span class="n">as_lvalue</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+<span class="c1">//Symbol.cpp</span>
+<span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Locator</span><span class="o">&gt;</span> <span class="n">Symbol</span><span class="o">::</span><span class="n">as_lvalue</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+  <span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span> <span class="cm">/*CHANGE*/</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This function stub will be fleshed out in a later step. Confirm your project still compiles.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="topic">
+<p class="topic-title">The hierarchy of Statement classes</p>
+<p>Statments are designed to be similar to expressions.</p>
+<p>Class hierarchy:</p>
+<ul class="simple">
+<li><p>Expression classes are derived from an abstract base class, <cite>Expression</cite>.</p></li>
+<li><p>Statement classes (print, the for-loop, assignment, etc.) are derived from an abstract base class, <cite>Statement</cite>.</p></li>
+</ul>
+<p>Object organization:</p>
+<ul class="simple">
+<li><p>Expressions group into trees, linked by each operator’s operands. Each tree is <em>evaluated</em>.</p></li>
+<li><p>Statements group into linked lists, linked by a “next” pointer each object inherits. Each list is <em>executed</em>.</p></li>
+</ul>
+<p>The abstract base class <code class="docutils literal notranslate"><span class="pre">Statement</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Statement</span> <span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">append_statement</span><span class="p">(</span><span class="n">Statement</span><span class="o">*</span> <span class="n">atend</span><span class="p">);</span>
+    <span class="n">Statement</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">execute</span><span class="p">()</span> <span class="k">const</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Statement</span><span class="p">()</span> <span class="p">{</span><span class="k">delete</span> <span class="n">next</span><span class="p">;}</span>
+  <span class="k">protected</span><span class="o">:</span>
+    <span class="n">Statement</span><span class="o">*</span> <span class="n">next</span><span class="p">{</span><span class="k">nullptr</span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">Statement*</span> <span class="pre">next</span></code></dt><dd><p>Enables statements to be chained together in a linked list. For example, this GPL code:</p>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">turret</span><span class="p">.</span><span class="n">visible</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="n">plane</span><span class="p">.</span><span class="n">x</span> <span class="o">+=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span> <span class="n">i</span><span class="o">+=</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">pyramid</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">user_int1</span><span class="o">=</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+  <span class="n">print</span><span class="p">(</span><span class="s">&quot;Got &#39;em!&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="k">if</span><span class="p">(</span><span class="n">angle</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">)</span>
+  <span class="n">turret</span><span class="p">.</span><span class="n">visible</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>This code sample generates a linked list of 4 statements (lines 1, 2, 3, and 8). Each statement may itself link to additional statements. The for-loop on line 3 has a pointer to another list of statements linking to lines 5 &amp; 6.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">append_statement(Statement*)</span></code></dt><dd><p>Adds a statement to the end of the existing list. In the GPL grammar, a pointer to the head of the list is passed around the various productions. When an additional statement needs to be added, simply invoke this function on the head statement and the new statement will be appended at the end of the list.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">virtual</span> <span class="pre">void</span> <span class="pre">execute()</span> <span class="pre">const</span></code></dt><dd><p>Every class derived from <code class="docutils literal notranslate"><span class="pre">Statement</span></code> overrides this function with the behavior unique to the derived class.</p>
+</dd>
+</dl>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="3">
+<li><p>As a first foray into statements, add support for GPL’s <code class="docutils literal notranslate"><span class="pre">print</span></code> statement. Example usage:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">print</span><span class="p">(</span><span class="s">&quot;value=&quot;</span> <span class="o">+</span> <span class="mi">42</span> <span class="o">+</span> <span class="s">&quot;, fl=&quot;</span> <span class="o">+</span> <span class="n">fl</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Placing this example on line 17 of a GPL program produces output similar to:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">print</span><span class="p">[</span><span class="mi">17</span><span class="p">]</span><span class="o">:</span> <span class="n">value</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">fl</span><span class="o">=</span><span class="mf">37.5</span>
+</pre></div>
+</div>
+<p>Derive a <code class="docutils literal notranslate"><span class="pre">Print</span></code> class from <code class="docutils literal notranslate"><span class="pre">Statement</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Print</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Statement</span> <span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="n">Print</span><span class="p">(</span><span class="kt">int</span> <span class="n">line_number</span><span class="p">,</span> <span class="k">const</span> <span class="n">Expression</span><span class="o">*</span> <span class="n">argument</span><span class="p">)</span> <span class="o">:</span> <span class="n">line_number</span><span class="p">(</span><span class="n">line_number</span><span class="p">),</span> <span class="n">argument</span><span class="p">(</span><span class="n">argument</span><span class="p">){}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">execute</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="o">~</span><span class="n">Print</span><span class="p">();</span>
+  <span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">line_number</span><span class="p">;</span>
+    <span class="k">const</span> <span class="n">Expression</span><span class="o">*</span> <span class="n">argument</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">Print(int</span> <span class="pre">line_number,</span> <span class="pre">const</span> <span class="pre">Expression*</span> <span class="pre">argument)</span></code></dt><dd><p>Is initialized with the global <code class="docutils literal notranslate"><span class="pre">line_count</span></code> variable and an expression to be printed when <code class="docutils literal notranslate"><span class="pre">execute()</span></code> is called.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">virtual</span> <span class="pre">void</span> <span class="pre">execute()</span> <span class="pre">const</span></code></dt><dd><dl>
+<dt>Prints a line in the format shown in the example above. The expression is evaluated as a string for printing to stdout (cout).</dt><dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Statements are organized into linked lists, the last line of every <code class="docutils literal notranslate"><span class="pre">execute()</span></code> function must be:</p>
+<p><code class="docutils literal notranslate"><span class="pre">if(next!=nullptr)</span> <span class="pre">next-&gt;execute();</span></code></p>
+</div>
+</dd>
+</dl>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">~Print()</span></code></dt><dd><p>Release the object’s data: <code class="docutils literal notranslate"><span class="pre">delete</span> <span class="pre">argument;</span></code></p>
+</dd>
+</dl>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="4">
+<li><p>Integrate the <code class="docutils literal notranslate"><span class="pre">Print</span></code> class into the grammar actions.  A <code class="docutils literal notranslate"><span class="pre">Print</span></code> object is created in the action of the <code class="docutils literal notranslate"><span class="pre">print_statement:</span></code> production:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span> <span class="p">{</span> <span class="err">$$</span><span class="o">=</span><span class="k">new</span> <span class="n">Print</span><span class="p">(</span><span class="err">$</span><span class="mi">1</span><span class="p">,</span> <span class="err">$</span><span class="mi">3</span><span class="p">);</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Ensure the address of this object is passed through the <code class="docutils literal notranslate"><span class="pre">statement</span></code>: production, to the <code class="docutils literal notranslate"><span class="pre">statement_list:</span></code> production. The action for the first rule of <code class="docutils literal notranslate"><span class="pre">statement_list:</span></code> appends the pointer to an already existing list of statements:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span> <span class="p">{</span> <span class="err">$</span><span class="mi">1</span><span class="o">-&gt;</span><span class="n">append_statement</span><span class="p">(</span><span class="err">$</span><span class="mi">2</span><span class="p">);</span> <span class="err">$$</span><span class="o">=</span><span class="err">$</span><span class="mi">1</span><span class="p">;}</span>
+</pre></div>
+</div>
+<p>If a statement list does not yet exist, the second rule of <code class="docutils literal notranslate"><span class="pre">statement_list:</span></code> assigns the address of the first statement to <code class="docutils literal notranslate"><span class="pre">$$</span></code>.</p>
+<p>Ensure the project compiles.  As with previous projects, “type clash” warnings can be silenced with <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">$$=nullptr;</span> <span class="pre">/*CHANGE*/</span> <span class="pre">}</span></code>.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="5">
+<li><p>Add the functionality required of event handler blocks for the print statement (and statements generally). An event handler is a block of GPL statements that executes on a keystroke:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">on</span> <span class="n">space</span>
+<span class="p">{</span>
+  <span class="n">print</span><span class="p">(</span><span class="s">&quot;You hit the spacebar.&quot;</span><span class="p">);</span>
+  <span class="n">print</span><span class="p">(</span><span class="s">&quot;That&#39;s proof that you&#39;re learning computers!&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">on</span> <span class="n">space</span>
+<span class="p">{</span>
+  <span class="n">print</span><span class="p">(</span><span class="s">&quot;Each keystroke may have more than one event handler.&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The head <code class="docutils literal notranslate"><span class="pre">Statement</span></code> pointer propagates:</p>
+<blockquote>
+<div><p>from the <code class="docutils literal notranslate"><span class="pre">statement_list:</span></code> production,</p>
+<p>through the <code class="docutils literal notranslate"><span class="pre">statement_block:</span></code>  production,</p>
+<p>to the <code class="docutils literal notranslate"><span class="pre">on_block:</span></code> production.</p>
+<p>Don’t provide an action to the <code class="docutils literal notranslate"><span class="pre">on_block:</span></code> production yet.</p>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">statement_block:</span></code> production has two rules. The second rule represents an empty block (no GPL code). For this empty block create a <code class="docutils literal notranslate"><span class="pre">NullStatement</span></code> object:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span> <span class="nl">statement_block</span><span class="p">:</span>
+     <span class="n">T_LBRACE</span> <span class="n">statement_list</span> <span class="n">T_RBRACE</span> <span class="p">{</span><span class="err">$$</span><span class="o">=</span><span class="err">$</span><span class="mi">2</span><span class="p">;}</span>
+     <span class="o">|</span> <span class="n">T_LBRACE</span> <span class="n">T_RBRACE</span> <span class="p">{</span><span class="err">$$</span><span class="o">=</span><span class="k">new</span> <span class="n">NullStatement</span><span class="p">;}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="topic">
+<p class="topic-title">The Event_manager class</p>
+<p>In C++ code, each handler block is nothing more than a linked list of <code class="docutils literal notranslate"><span class="pre">Statement</span></code> objects. The sequence of productions outlined above build that linked list and deliver it to the <code class="docutils literal notranslate"><span class="pre">on_block:</span></code> production. The <code class="docutils literal notranslate"><span class="pre">on_block:</span></code> production registers the “block” of statements with the <code class="docutils literal notranslate"><span class="pre">Event_manager</span></code> class. The <code class="docutils literal notranslate"><span class="pre">Event_manager</span></code> class is a singleton class like the <code class="docutils literal notranslate"><span class="pre">Scope_manager</span></code> class. An incomplete version of the class has been provided:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Event_manager</span>
+<span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="k">static</span> <span class="n">Event_manager</span><span class="o">&amp;</span> <span class="n">instance</span><span class="p">();</span>
+    <span class="o">~</span><span class="n">Event_manager</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">execute_handlers</span><span class="p">(</span><span class="n">Window</span><span class="o">::</span><span class="n">Keystroke</span> <span class="n">keystroke</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">add_handler</span><span class="p">(</span><span class="n">Window</span><span class="o">::</span><span class="n">Keystroke</span><span class="p">,</span> <span class="k">const</span> <span class="n">Statement</span><span class="o">*</span><span class="p">);</span>
+
+    <span class="n">Event_manager</span><span class="p">(</span><span class="k">const</span> <span class="n">Event_manager</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+    <span class="k">const</span> <span class="n">Event_manager</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Event_manager</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+
+  <span class="k">private</span><span class="o">:</span>
+    <span class="c1">//add private data to contain the linked lists of statements.</span>
+    <span class="n">Event_manager</span><span class="p">(){};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt><cite>private data</cite></dt><dd><p>Contains the head pointers of each keystroke. Each keystroke may have multiple event handlers. That is, each keystroke may be associated with more than one linked list. <code class="docutils literal notranslate"><span class="pre">Event_manager</span></code> manages these lists.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">add_handler(Window::Keystroke,</span>&#160; <span class="pre">const</span> <span class="pre">Statement*)</span></code></dt><dd><p>Called in the <code class="docutils literal notranslate"><span class="pre">on_block:</span></code> production rule’s action. Adds the head <code class="docutils literal notranslate"><span class="pre">Statement*</span></code> to the private data.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">execute_handlers(Window::Keystroke</span> <span class="pre">keystroke)</span> <span class="pre">const</span></code></dt><dd><p>Loop through the private data, calling <code class="docutils literal notranslate"><span class="pre">Statement::execute()</span></code> on each head <code class="docutils literal notranslate"><span class="pre">Statement*</span></code> associated with the input <code class="docutils literal notranslate"><span class="pre">keystroke</span></code>. This function is called automatically by the provided GPL classes.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">~Event_manager()</span></code></dt><dd><p>Release the linked lists. Deleting the head of each list is sufficient.</p>
+</dd>
+</dl>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="6">
+<li><p>Define a data structure to manage the head pointers of each keystroke. A vector of vectors, a map of vectors, or any structure of your choosing is acceptable.  The <code class="docutils literal notranslate"><span class="pre">Window::Keystroke</span></code> enumeration can be found in the header file for <code class="docutils literal notranslate"><span class="pre">Window</span></code>. It lists the enumerations for the possible keystroke events. The enumerated values are sequential, and <code class="docutils literal notranslate"><span class="pre">Window::NUMBER_OF_KEYS</span></code> provides a total count, making these enumerations usable as indices in a vector. They can also be used as keys into a map.</p>
+<p>Implement the <code class="docutils literal notranslate"><span class="pre">add_handler()</span></code>, <code class="docutils literal notranslate"><span class="pre">execute_handlers()</span></code> and destructor for <code class="docutils literal notranslate"><span class="pre">Event_manager</span></code>.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="7">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">keystroke:</span></code> production has a rule for each event key. Map the event enumerations (<code class="docutils literal notranslate"><span class="pre">Window::SPACE</span></code>, <code class="docutils literal notranslate"><span class="pre">Window::UPARROW</span></code>, etc.) to these rules.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="8">
+<li><p>Add an action to the <code class="docutils literal notranslate"><span class="pre">on_block:</span></code> production that calls <code class="docutils literal notranslate"><span class="pre">Event_manager::add_handler</span></code> to register the linked list (the <code class="docutils literal notranslate"><span class="pre">statement_block</span></code>) associated with the keystroke.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>Compile the project and confirm that it passes the first six tests (<code class="docutils literal notranslate"><span class="pre">t001.gpl</span></code> through <code class="docutils literal notranslate"><span class="pre">t006.gpl</span></code>). The statement object should still be created even if there is a parse-error. (Optionally, a <code class="docutils literal notranslate"><span class="pre">NullStatement</span></code> object could be created on error but it makes no difference.) In the presence of errors, the GPL interpreter continues building the <code class="docutils literal notranslate"><span class="pre">Statement</span></code> linked list as it parses subsequent statements. However <code class="docutils literal notranslate"><span class="pre">Statement::execute()</span></code> is never invoked if there have been parse errors so any statement, valid or invalid, may be created on error.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="topic">
+<p class="topic-title">Assignment statements.</p>
+<p>The GPL grammar supports several types of assignment:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="nl">assign_statement</span><span class="p">:</span>
+      <span class="n">variable</span> <span class="n">T_ASSIGN</span> <span class="n">expression</span>
+    <span class="o">|</span> <span class="n">variable</span> <span class="n">T_PLUS_ASSIGN</span> <span class="n">expression</span>
+    <span class="o">|</span> <span class="n">variable</span> <span class="n">T_MINUS_ASSIGN</span> <span class="n">expression</span>
+    <span class="o">|</span> <span class="n">variable</span> <span class="n">T_PLUS_PLUS</span>
+    <span class="o">|</span> <span class="n">variable</span> <span class="n">T_MINUS_MINUS</span>
+</pre></div>
+</div>
+<p>Examples of GPL code matching these grammar rules:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">my_rect</span><span class="p">.</span><span class="n">x</span> <span class="o">+=</span> <span class="mi">30</span><span class="p">;</span>
+<span class="n">var</span> <span class="o">=</span> <span class="mf">9.2</span><span class="p">;</span>
+<span class="n">my_triangle</span><span class="p">.</span><span class="n">height</span><span class="o">++</span><span class="p">;</span>
+<span class="n">my_circles</span><span class="p">[</span><span class="mi">3</span><span class="p">].</span><span class="n">radius</span> <span class="o">-=</span> <span class="mi">2</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Each of these rules modifies the <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> found in private data of the <code class="docutils literal notranslate"><span class="pre">Variable</span></code> object on the lefthand side of the operator.  For example: <code class="docutils literal notranslate"><span class="pre">my_rectangle[2].radius+=12;</span></code> adds twelve to the radius attribute of the third rectangle object in a rectangle array. The array is managed by the “my_rectangle” symbol. The ability to modify <cite>Symbol</cite> values is provided by the <cite>Locator</cite> classes.</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="topic">
+<p class="topic-title">Locator class hierarchy</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Locator</span></code> classes provide functionality that is complementary to the <code class="docutils literal notranslate"><span class="pre">Constant</span></code> classes:</p>
+<p>Purpose:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> class creates <code class="docutils literal notranslate"><span class="pre">Constant</span></code> objects to allow read-only access to <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> data.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> class creates <code class="docutils literal notranslate"><span class="pre">Locator</span></code> objects to allow lvalue (modifiable) access to <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> data.</p></li>
+</ul>
+<p>Hierarchy:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Constant</span></code> class hierarchy consists of four derived classes: <code class="docutils literal notranslate"><span class="pre">Integer_constant</span></code>, <code class="docutils literal notranslate"><span class="pre">Double_constant</span></code>, <code class="docutils literal notranslate"><span class="pre">String_constant</span></code>, and <code class="docutils literal notranslate"><span class="pre">Game_attribute_constant</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Locator</span></code> class hierarchy consists of four derived classes: <code class="docutils literal notranslate"><span class="pre">Integer_locator</span></code>, <code class="docutils literal notranslate"><span class="pre">Double_locator</span></code>, <code class="docutils literal notranslate"><span class="pre">String_locator</span></code>, and <code class="docutils literal notranslate"><span class="pre">Game_attribute_locator</span></code>.</p></li>
+</ul>
+<p>Interface:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Constant classes</span>
+<span class="kt">int</span>         <span class="n">Constant</span><span class="o">::</span><span class="n">as_int</span><span class="p">()</span>    <span class="k">const</span><span class="p">;</span> <span class="c1">// return Symbol&#39;s value as int</span>
+<span class="kt">double</span>      <span class="n">Constant</span><span class="o">::</span><span class="n">as_double</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// return Symbol&#39;s value as double</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">Constant</span><span class="o">::</span><span class="n">as_string</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// return Symbol&#39;s value as string</span>
+
+<span class="c1">// Locator classes</span>
+<span class="kt">void</span>        <span class="n">Locator</span><span class="o">::</span><span class="n">mutate</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>                 <span class="c1">// Change Symbol&#39;s int value</span>
+<span class="kt">void</span>        <span class="n">Locator</span><span class="o">::</span><span class="n">mutate</span><span class="p">(</span><span class="kt">double</span><span class="p">);</span>              <span class="c1">// Change Symbol&#39;s double value</span>
+<span class="kt">void</span>        <span class="n">Locator</span><span class="o">::</span><span class="n">mutate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="p">);</span> <span class="c1">// Change Symbol&#39;s string value</span>
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="10">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> class has four <code class="docutils literal notranslate"><span class="pre">as_constant</span></code> member functions that generate and return <code class="docutils literal notranslate"><span class="pre">Constant</span></code> objects. Write four member functions for the <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> class that generate and return <code class="docutils literal notranslate"><span class="pre">Locator</span></code> objects:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">//non-array: int, double, or string</span>
+<span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Locator</span><span class="o">&gt;</span> <span class="n">as_lvalue</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+<span class="c1">//array element: int, double, or string</span>
+<span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Locator</span><span class="o">&gt;</span> <span class="n">as_lvalue</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+<span class="c1">//non-array: game object</span>
+<span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Locator</span><span class="o">&gt;</span> <span class="n">as_lvalue</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">attribute_name</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+<span class="c1">//array element: game object</span>
+<span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Locator</span><span class="o">&gt;</span> <span class="n">as_lvalue</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">attribute_name</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">Symbol::as_(int|double|string)</span></code> functions create <code class="docutils literal notranslate"><span class="pre">Constant</span></code> objects using <code class="docutils literal notranslate"><span class="pre">new</span></code> and return the raw pointers. This eases the incorporation of <code class="docutils literal notranslate"><span class="pre">Constant</span></code> objects into bison’s framework. <code class="docutils literal notranslate"><span class="pre">Locator</span></code> objects are not passed around by bison’s grammar. Therefore use <code class="docutils literal notranslate"><span class="pre">std::shared_ptr</span></code> and <code class="docutils literal notranslate"><span class="pre">std::make_shared</span></code> in the <code class="docutils literal notranslate"><span class="pre">Symbol::as_lvalue</span></code> functions to generate and return <code class="docutils literal notranslate"><span class="pre">Locator</span></code> objects. The body of each, <code class="docutils literal notranslate"><span class="pre">as_lvalue</span></code> function is nearly identical to its <code class="docutils literal notranslate"><span class="pre">as_constant</span></code> equivalent.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="11">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Variable</span></code> and <code class="docutils literal notranslate"><span class="pre">Member_variable</span></code> classes each have an <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> member function that creates and returns a <code class="docutils literal notranslate"><span class="pre">Constant</span></code> object for use in expression evaluation. Write the complementary function, <code class="docutils literal notranslate"><span class="pre">modify()</span></code> for both <code class="docutils literal notranslate"><span class="pre">Variable</span></code> and <code class="docutils literal notranslate"><span class="pre">Member_variable</span></code> that returns a shared pointer to a <code class="docutils literal notranslate"><span class="pre">Locator</span></code> object. The body of <code class="docutils literal notranslate"><span class="pre">modify()</span></code> is almost identical to the body of <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code>. The <code class="docutils literal notranslate"><span class="pre">modify()</span></code> function should be virtual, just as the <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> function is.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="12">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Assign</span></code> class handles simple assignment. GPL Examples:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">var</span><span class="o">=</span><span class="mf">9.2</span><span class="p">;</span>
+<span class="n">my_triangle</span><span class="p">.</span><span class="n">skew</span> <span class="o">=</span> <span class="n">building_height</span> <span class="o">/</span> <span class="n">var</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Derive an <code class="docutils literal notranslate"><span class="pre">Assign</span></code> class from <code class="docutils literal notranslate"><span class="pre">Statement</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Assign</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Statement</span> <span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="n">Assign</span><span class="p">(</span><span class="k">const</span> <span class="n">Variable</span><span class="o">*</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Expression</span><span class="o">*</span> <span class="n">rhs</span><span class="p">)</span> <span class="o">:</span> <span class="n">lhs</span><span class="p">(</span><span class="n">lhs</span><span class="p">),</span> <span class="n">rhs</span><span class="p">(</span><span class="n">rhs</span><span class="p">){}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">execute</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Assign</span><span class="p">();</span>
+  <span class="k">private</span><span class="o">:</span>
+    <span class="k">const</span> <span class="n">Variable</span><span class="o">*</span> <span class="n">lhs</span><span class="p">;</span>
+    <span class="k">const</span> <span class="n">Expression</span><span class="o">*</span> <span class="n">rhs</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">virtual</span> <span class="pre">void</span> <span class="pre">execute()</span> <span class="pre">const</span></code></dt><dd><p>Obtain an lvalue from <code class="docutils literal notranslate"><span class="pre">lhs</span></code> using <code class="docutils literal notranslate"><span class="pre">modify()</span></code> and a constant from <code class="docutils literal notranslate"><span class="pre">rhs</span></code> using <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code>. Use lvalue’s <code class="docutils literal notranslate"><span class="pre">mutate()</span></code> member function to assign it a new value. The type (<code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, or <code class="docutils literal notranslate"><span class="pre">string</span></code>) passed into <code class="docutils literal notranslate"><span class="pre">mutate()</span></code> depends on lvalue’s type. That is, lvalue’s type determines whether an <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, or <code class="docutils literal notranslate"><span class="pre">string</span></code> is retrieved from rhs’s constant.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">~Assign()</span></code></dt><dd><p>Release <code class="docutils literal notranslate"><span class="pre">rhs</span></code>, and <code class="docutils literal notranslate"><span class="pre">lhs</span></code>.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="13">
+<li><p>In the grammar, create an <code class="docutils literal notranslate"><span class="pre">Assign</span></code> object as the action in the first rule of the <code class="docutils literal notranslate"><span class="pre">assign_statement:</span></code> production. Review the grammar and ensure the pointer reaches the <code class="docutils literal notranslate"><span class="pre">statement_list:</span></code> production.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="14">
+<li><p>The project should now pass tests <code class="docutils literal notranslate"><span class="pre">t007.gpl</span></code>, <code class="docutils literal notranslate"><span class="pre">t008.gpl</span></code>, &amp; <code class="docutils literal notranslate"><span class="pre">t009.gpl</span></code>.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="15">
+<li><p>Implement the four remaining assignment statements: <code class="docutils literal notranslate"><span class="pre">+=</span></code>, <code class="docutils literal notranslate"><span class="pre">-=</span></code>, <code class="docutils literal notranslate"><span class="pre">++</span></code>, and <code class="docutils literal notranslate"><span class="pre">--</span></code>.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="16">
+<li><p>Ensure the project passes tests:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">+=</span></code>,  <code class="docutils literal notranslate"><span class="pre">t010.gpl</span></code> and <code class="docutils literal notranslate"><span class="pre">t011.gpl</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-=</span></code>, <code class="docutils literal notranslate"><span class="pre">t012.gpl</span></code> and <code class="docutils literal notranslate"><span class="pre">t013.gpl</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">++</span></code>,  <code class="docutils literal notranslate"><span class="pre">t014.gpl</span></code> and <code class="docutils literal notranslate"><span class="pre">t015.gpl</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--</span></code>,  <code class="docutils literal notranslate"><span class="pre">t016.gpl</span></code> and <code class="docutils literal notranslate"><span class="pre">t017.gpl</span></code></p></li>
+</ul>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="17">
+<li><p>Implement the <code class="docutils literal notranslate"><span class="pre">if/else</span></code>, <code class="docutils literal notranslate"><span class="pre">exit</span></code>, and <code class="docutils literal notranslate"><span class="pre">for-loop</span></code> statements. Consult the GPL manual for usage details. They have the following private data members:</p>
+<ul>
+<li><dl class="simple">
+<dt>class <code class="docutils literal notranslate"><span class="pre">If</span></code></dt><dd><ul class="simple">
+<li><p>Expression pointer</p></li>
+<li><p>Statement pointer (for the if-clause)</p></li>
+<li><p>Statement pointer (for the optional else-clause)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>class <code class="docutils literal notranslate"><span class="pre">For</span></code></dt><dd><ul class="simple">
+<li><p>Statement pointer (initializer)</p></li>
+<li><p>Expression pointer (condition, evaluates to int)</p></li>
+<li><p>Statement pointer (incrementor)</p></li>
+<li><p>Statement pointer (body of loop)</p></li>
+</ul>
+</dd>
+</dl>
+<p>The for-loop statement may have an empty initializer and/or incrementor. The <code class="docutils literal notranslate"><span class="pre">For::execute()</span></code> implementation will be easier if a <code class="docutils literal notranslate"><span class="pre">NullStatement</span></code> is used (instead of <code class="docutils literal notranslate"><span class="pre">nullptr</span></code>) for these empty components.</p>
+</li>
+<li><dl class="simple">
+<dt>class <code class="docutils literal notranslate"><span class="pre">Exit</span></code></dt><dd><ul class="simple">
+<li><p>line number</p></li>
+<li><p>Expression pointer (evaluates to integer exit status)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Statements are organized into linked lists, the last line of every <code class="docutils literal notranslate"><span class="pre">execute()</span></code> function must be:</p>
+<p><code class="docutils literal notranslate"><span class="pre">if(next!=nullptr)</span> <span class="pre">next-&gt;execute();</span></code></p>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="18">
+<li><p>Initial statement-specific tests:</p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">if/else</span></code></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">t020.gpl</span></code> and <code class="docutils literal notranslate"><span class="pre">t021.gpl</span></code></p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">for-loop</span></code></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">t022.gpl</span></code>, <code class="docutils literal notranslate"><span class="pre">t023.gpl</span></code>, and <code class="docutils literal notranslate"><span class="pre">t024.gpl</span></code></p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">exit</span></code></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">t025.gpl</span></code> through <code class="docutils literal notranslate"><span class="pre">t028.gpl</span></code></p>
+</dd>
+</dl>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="19">
+<li><p>Pass remaining tests.</p></li>
+</ol>
+</div>
+<div class="section" id="version-history">
+<h2>Version History<a class="headerlink" href="#version-history" title="Permalink to this headline">¶</a></h2>
+<p>Ver. 13 November 2021</p>
+<ul class="simple">
+<li><p>Converted Statement header to use default argument for <code class="docutils literal notranslate"><span class="pre">next</span></code>.</p></li>
+<li><p>Minor elimination of verbiage.</p></li>
+<li><p>Moved tail end of “Locator Hierarchy” box into its own item after box.</p></li>
+<li><p>lower/upper case typo.</p></li>
+<li><p>make as_lvalue functions <code class="docutils literal notranslate"><span class="pre">const</span></code></p></li>
+</ul>
+<p>Ver. 23 August 2021</p>
+<ul class="simple">
+<li><p>Transitioned out <code class="docutils literal notranslate"><span class="pre">Table_handler</span></code>.</p></li>
+</ul>
+<p>Ver. 17 August 2021</p>
+<ul class="simple">
+<li><p>Changed font on directory names.</p></li>
+</ul>
+<p>Ver. 19 Apr 2021</p>
+<ul class="simple">
+<li><p>For <code class="docutils literal notranslate"><span class="pre">print</span></code> production action, corrected <code class="docutils literal notranslate"><span class="pre">line_count</span></code> to <code class="docutils literal notranslate"><span class="pre">$1</span></code>.</p></li>
+</ul>
+<p>Ver. 2 Dec 2020</p>
+<ul class="simple">
+<li><p>Added section on debugging.</p></li>
+</ul>
+<p>Ver. 26 Nov 2020</p>
+<ul class="simple">
+<li><p>Corrected a p4 to p5 copy/paste error.</p></li>
+</ul>
+<p>Ver. 14 Nov 2020</p>
+<ul class="simple">
+<li><p>Reword paragraph on handling errors.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">const</span></code> on a couple member functions, data members, and input parameters</p></li>
+</ul>
+<p>Ver. 9 Nov 2020</p>
+<ul class="simple">
+<li><p>Removed direction to extract tarball</p></li>
+<li><p>Enhanced get-to-compile direction</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">statement_or_block_of_statements</span></code> to the list of productions the pointer traverses.</p></li>
+<li><p>Changed <cite>rhs</cite> to <cite>argument</cite> in print statement</p></li>
+</ul>
+<p>Ver. 5 May 2020</p>
+<ul class="simple">
+<li><p>Added Constant/Locator comments to code in “Locator class hierarchy” topic.</p></li>
+</ul>
+<p>Ver. 3 May 2020</p>
+<ul class="simple">
+<li><p>Restructured document for use with Sphinx markup</p></li>
+</ul>
+<p>Ver. 27 Apr 2020</p>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">const</span></code> to <code class="docutils literal notranslate"><span class="pre">Assign::execute()</span></code> function declaration</p></li>
+</ul>
+<p>Ver. 5 Dec 2019</p>
+<ul class="simple">
+<li><p>Added sentence to ensure modify is made virtual</p></li>
+</ul>
+<p>Ver. 27 Nov 2019</p>
+<ul class="simple">
+<li><p>Added for-loop note about using NullStatement instead of nullptr.</p></li>
+</ul>
+<p>Ver. 18 Nov 2019</p>
+<ul class="simple">
+<li><p>Removed <code class="docutils literal notranslate"><span class="pre">delete</span> <span class="pre">next;</span></code> from <code class="docutils literal notranslate"><span class="pre">Print::~Print()</span></code></p></li>
+</ul>
+<p>Ver. 13 Nov 2019</p>
+<ul class="simple">
+<li><p>Added NullStatement creation to 2nd rule of <code class="docutils literal notranslate"><span class="pre">statement_block:</span></code> production.</p></li>
+</ul>
+<p>Ver. 12 Nov 2019-B</p>
+<ul class="simple">
+<li><p>Added stub Symbol::lvalue() so project 4 compiles in p5 directory</p></li>
+</ul>
+<p>Ver. 12 Nov 2019</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Game_object_...</span></code> to <code class="docutils literal notranslate"><span class="pre">Game_attribute_...</span></code></p></li>
+</ul>
+<p>Ver. 11 Nov 2019</p>
+<ul class="simple">
+<li><p>Removed Statement class (now introduced at P4)</p></li>
+</ul>
+<p>Ver. 31 Oct 2019</p>
+<ul class="simple">
+<li><p>Minor revision. Rewording, fixing typos.</p></li>
+</ul>
+<p>Ver. 25 Oct 2019</p>
+<ul class="simple">
+<li><p>Major rewrite</p></li>
+</ul>
+<p>Ver. 6 May 2019</p>
+<ul class="simple">
+<li><p>Initial version.</p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="README_P6.html" title="Sixth Project"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="README_P4.html" title="Fourth Project"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Fifth Project</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CSCI 515 Compiler Design.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.0.
+    </div>
+  </body>
+</html>

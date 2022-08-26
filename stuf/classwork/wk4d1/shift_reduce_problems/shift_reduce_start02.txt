@@ -1,0 +1,2 @@
+     	3 + 4 * 5
+    	. T_INT(3)   T_ADD   T_INT(4)   T_MULT   T_INT(5)  (     )

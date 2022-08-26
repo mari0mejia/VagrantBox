@@ -1,0 +1,2 @@
+triangle pyramid;
+int top=pyramid[1].x; //error: variable is not an array

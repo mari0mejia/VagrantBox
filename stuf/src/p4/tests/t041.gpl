@@ -1,0 +1,11 @@
+string window_title = "Project 4 t041.gpl";
+
+rectangle all_the_way_down[11];
+
+//Wacky but it works
+textbox wowsers
+( x=50, y=50, text=
+  all_the_way_down[all_the_way_down[all_the_way_down[0].w].w].w
+  + " by " +
+  all_the_way_down[all_the_way_down[all_the_way_down[0].w].w].w
+);

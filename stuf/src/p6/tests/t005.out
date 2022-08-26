@@ -1,0 +1,27 @@
+gpl.cpp::main()
+  input file(tests/t005.gpl)
+  random seed(42)
+  read_keypresses_from_standard_input(true)
+  dump_pixels(false)
+  symbol_table(true)
+  graphics(true)
+
+gpl.cpp::main() Calling yyparse()
+
+
+gpl.cpp::main() after call to yyparse().
+
+
+Printing the symbol table from main()
+int theend = 2
+gpl.cpp::main() Calling window->initialize().
+
+
+gpl.cpp::main() Passing control to window->main_loop().
+print[23]: Inside event block for akey. About to call exit()
+print[4]: First termination block. Confirming is called after an GPL exit() call
+print[11]:   This is one termination block. theend=2
+print[13]:   Now theend=12
+print[17]:   There can be more than one termination block. theend=12
+print[19]:   And now theend=22
+gpl[24]: exit(1)

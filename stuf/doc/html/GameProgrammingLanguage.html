@@ -1,0 +1,1425 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Programming Language (GPL) Reference Manual &#8212; Game Programming Language 2.1 documentation</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Sixth Project" href="README_P6.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="README_P6.html" title="Sixth Project"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Game Programming Language (GPL) Reference Manual</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="game-programming-language-gpl-reference-manual">
+<h1>Game Programming Language (GPL) Reference Manual<a class="headerlink" href="#game-programming-language-gpl-reference-manual" title="Permalink to this headline">¶</a></h1>
+<p>Ver. 26 October 2021</p>
+<p><strong>From the Game Programming Language’s designer, Tyson Henry</strong></p>
+<blockquote>
+<div><p>The Game Programming Language (GPL) is an object-based language for specifying simple computer games such as arcade games of the late 1970’s and early 1980’s.  It was created as a semester long project for an undergraduate compiler course. My goal was to create a project that demonstrated the wide applicability of compiler construction tools. The language is simple to learn and surprisingly expressive. A typical computer science undergraduate can learn it in about an hour and create significant programs within several hours.</p>
+<p>To keep the implementation simple enough to be completed in a single semester several simplifying design decisions were made. For example, all variables are global and there are no functions.</p>
+</div></blockquote>
+<div class="section" id="programmatic-overview">
+<h2>Programmatic Overview<a class="headerlink" href="#programmatic-overview" title="Permalink to this headline">¶</a></h2>
+<p>In a GPL program, the visible components of a game are comprised of <em>game objects</em>. There are five types of game objects: <em>rectangle</em>, <em>circle</em>, <em>triangle</em>, <em>textbox</em>, and <em>pixmap</em>. Each game object has attributes that control its size, color, and location. Game objects are animated by modifying attributes. For example, a circle could be made to move across the screen by changing its <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> attributes or made to shrink by reducing its <code class="docutils literal notranslate"><span class="pre">radius</span></code> attribute.</p>
+<p>The GPL language syntax is similar to C/C++, borrowing the same syntax for variables (string, int, and double), for-loops, if-else, expressions, and statements. Statements grouped between pairs of curly-braces are called code blocks (think C/C++ function).</p>
+<p>An <cite>event handler block</cite> is executed whenever an event occurs such as an arrow key being pressed or a mouse button being clicked. An <cite>animation block</cite> can be assigned to one (or several) game objects. Animation blocks associated with a game object are executed several times each second.</p>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>The GPL executable is invoked from a terminal window. At startup a graphical window is created within which the game is played. Be sure the graphical window is in focus so that it receives the keystrokes and mouse clicks used to play the game. The GPL language includes a <code class="docutils literal notranslate"><span class="pre">print</span></code> statement that prints text to the terminal window, not the graphical window. When the GPL program ends, the graphical window is destroyed.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1">###</span>
+<span class="c1"># Standard invocation</span>
+<span class="c1">###</span>
+./gpl some_game_file.gpl
+
+<span class="c1">###</span>
+<span class="c1"># Use 42 as the argument to srand instead of time(nullptr)</span>
+<span class="c1">###</span>
+./gpl -seed <span class="m">42</span> some_game_file.gpl
+
+<span class="c1">###</span>
+<span class="c1"># Use the console&#39;s stdin for input rather than the graphical window</span>
+<span class="c1">###</span>
+./gpl -stdin  some_game_file.gpl
+
+<span class="c1">###</span>
+<span class="c1"># Send keystrokes directly to GPL executable</span>
+<span class="c1">###</span>
+cat tests/t005.keystrokes <span class="p">|</span> ./gpl -stdin tests/t005.gpl
+<span class="c1"># or</span>
+<span class="nb">printf</span> <span class="s2">&quot;aswq&quot;</span> <span class="p">|</span> ./gpl -stdin some_game_file.gpl
+
+<span class="c1">###</span>
+<span class="c1"># Good for quick tests. Output a short program and pipe it directly to the GPL executable</span>
+<span class="c1">###</span>
+<span class="nb">printf</span> <span class="s1">&#39;double trailer=2.95;string greeting=&quot;hi there&quot;;&#39;</span> <span class="p">|</span> ./gpl /dev/stdin
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">q</span></code> key exits a running GPL program. Before pressing <code class="docutils literal notranslate"><span class="pre">q</span></code>, ensure the GPL window is in focus, not the terminal window from which the game was started.</p>
+</div>
+<div class="section" id="components-of-a-gpl-program">
+<h2>Components of a GPL program<a class="headerlink" href="#components-of-a-gpl-program" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="c1">//////////</span>
+ <span class="c1">// Variable and animation block declarations</span>
+ <span class="c1">//////////</span>
+ <span class="n">forward</span> <span class="n">animation</span> <span class="nf">bounce</span><span class="p">(</span><span class="n">rectangle</span> <span class="n">cur</span><span class="p">);</span>
+
+ <span class="kt">int</span> <span class="n">window_width</span> <span class="o">=</span> <span class="mi">500</span><span class="p">;</span>
+ <span class="kt">int</span> <span class="n">window_height</span> <span class="o">=</span> <span class="mi">500</span><span class="p">;</span>
+ <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+ <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">500</span><span class="p">;</span>
+ <span class="kt">int</span> <span class="n">x_inc</span><span class="p">[</span><span class="n">num</span><span class="p">];</span>
+ <span class="kt">int</span> <span class="n">y_inc</span><span class="p">[</span><span class="n">num</span><span class="p">];</span>
+ <span class="n">rectangle</span> <span class="n">square</span><span class="p">[</span><span class="n">num</span><span class="p">];</span>
+ <span class="n">rectangle</span> <span class="nf">paddle</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">window_width</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">window_height</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                  <span class="n">w</span> <span class="o">=</span> <span class="n">paddle_width</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">paddle_height</span><span class="p">);</span>
+
+ <span class="c1">//////////</span>
+ <span class="c1">// Initialization block</span>
+ <span class="c1">//////////</span>
+ <span class="n">initialization</span>
+ <span class="p">{</span>
+     <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span>
+     <span class="p">{</span>
+         <span class="n">square</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="p">(</span><span class="n">window_width</span><span class="p">);</span>
+         <span class="n">square</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">w</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+         <span class="n">square</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">green</span> <span class="o">=</span> <span class="n">random</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="o">/</span><span class="mf">255.0</span><span class="p">;</span>
+         <span class="n">square</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">animation_block</span> <span class="o">=</span> <span class="n">bounce</span><span class="p">;</span>
+     <span class="p">}</span>
+ <span class="p">}</span>
+
+ <span class="c1">//////////</span>
+ <span class="c1">// Animation block</span>
+ <span class="c1">//////////</span>
+ <span class="n">animation</span> <span class="n">bounce</span><span class="p">(</span><span class="n">rectangle</span> <span class="n">cur</span><span class="p">)</span>
+ <span class="p">{</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">cur</span><span class="p">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">window_width</span> <span class="o">||</span> <span class="n">cur</span><span class="p">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+         <span class="n">x_inc</span><span class="p">[</span><span class="n">cur</span><span class="p">.</span><span class="n">user_int</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">x_inc</span><span class="p">[</span><span class="n">cur</span><span class="p">.</span><span class="n">user_int</span><span class="p">];</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">cur</span><span class="p">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">window_height</span> <span class="o">||</span> <span class="n">cur</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+         <span class="n">y_inc</span><span class="p">[</span><span class="n">cur</span><span class="p">.</span><span class="n">user_int</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">y_inc</span><span class="p">[</span><span class="n">cur</span><span class="p">.</span><span class="n">user_int</span><span class="p">];</span>
+     <span class="n">cur</span><span class="p">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">x_inc</span><span class="p">[</span><span class="n">cur</span><span class="p">.</span><span class="n">user_int</span><span class="p">];</span>
+     <span class="n">cur</span><span class="p">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">y_inc</span><span class="p">[</span><span class="n">cur</span><span class="p">.</span><span class="n">user_int</span><span class="p">];</span>
+ <span class="p">}</span>
+
+ <span class="c1">//////////</span>
+ <span class="c1">// event blocks</span>
+ <span class="c1">//////////</span>
+ <span class="n">on</span> <span class="n">uparrow</span>
+ <span class="p">{</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">paddle</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">window_height</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">paddle_increment</span><span class="p">)</span>
+         <span class="n">paddle</span><span class="p">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">paddle_increment</span><span class="p">;</span>
+ <span class="p">}</span>
+
+ <span class="n">on</span> <span class="n">downarrow</span>
+ <span class="p">{</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">paddle</span><span class="p">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">paddle_increment</span><span class="p">)</span>
+         <span class="n">paddle</span><span class="p">.</span><span class="n">y</span> <span class="o">-=</span> <span class="n">paddle_increment</span><span class="p">;</span>
+ <span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<dl>
+<dt><strong>Variable and animation block declarations (lines 1-14)</strong></dt><dd><p>All variables in GPL are global and are declared first in a program file. Forward declarations of Animation Blocks also appear here.</p>
+</dd>
+<dt><strong>Code blocks (lines 16-56)</strong></dt><dd><p>There are four types of code blocks. Each has a similar structure: zero or more code statements surrounded by a pair of curly braces. There may be zero or more of each of these kinds of blocks.</p>
+<dl class="simple">
+<dt><strong>Initialization block (16-28)</strong></dt><dd><p>Executed before entering the interpreter’s main event loop.</p>
+</dd>
+<dt><strong>Animation block (30-41)</strong></dt><dd><p>Each of these blocks are associated with zero or more game objects. The interpreter executes these repeatedly throughout the run of the game.</p>
+</dd>
+<dt><strong>Event handler block (43-56)</strong></dt><dd><p>When a player-generated event occurs such as pressing a key or moving the mouse the associated event handler block is executed.</p>
+</dd>
+<dt><strong>Termination block (not shown)</strong></dt><dd><p>Executed last, after interpreter’s main event loop ends. Termination blocks are useful for printing debug messages and end-of-game information (such as game scores).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div>
+<div class="section" id="variable-declarations">
+<h2>Variable Declarations<a class="headerlink" href="#variable-declarations" title="Permalink to this headline">¶</a></h2>
+<div class="sidebar">
+<p class="sidebar-title">Game objects</p>
+<p>Rectangles, triangles, circles, textboxes, and pixmaps are semantically similar to variables and are discussed further down.</p>
+</div>
+<p>As in C/C++, an identifier begins with a letter or an underscore, followed by zero or more letters, underscores, or digits.
+The three variable types are equivalent to those in C/C++: <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, <code class="docutils literal notranslate"><span class="pre">string</span></code>. All variables are global and are declared prior to any code blocks. Unlike C/C++, an uninitialized variable takes on default values</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 59%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Examples</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">var;</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">length=89;</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">age=32+length;</span></code></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">0</span></code> (default)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">89</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">121</span></code></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">double</span> <span class="pre">trouble;</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">double</span> <span class="pre">yummy=3.14;</span></code></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">0.0</span></code> (default)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">3.14</span></code></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">string</span> <span class="pre">theory;</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">string</span> <span class="pre">name=&quot;bobby&quot;</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">string</span> <span class="pre">b=age+&quot;orb&quot;</span></code></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> (default)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&quot;bobby&quot;</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&quot;121orb&quot;</span></code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="arrays">
+<h3>Arrays<a class="headerlink" href="#arrays" title="Permalink to this headline">¶</a></h3>
+<p>Arrays of variables and arrays of game objects can be created. The declared size of the array may be any expression that evaluates to an integer. Each element of an array is initialized to the type’s default value. One technique for initializing arrays to non-default values is to use an <em>initialization block</em>.</p>
+<p>Examples:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">angles</span><span class="p">[</span><span class="mi">42</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">how_many</span><span class="o">=</span><span class="mi">10</span><span class="p">;</span>
+<span class="n">circle</span> <span class="n">dots</span><span class="p">[</span><span class="n">how_many</span><span class="p">];</span>
+<span class="n">rectangle</span> <span class="n">blocks</span><span class="p">[</span><span class="n">how_many</span><span class="o">*</span><span class="mi">2</span><span class="p">];</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="constants">
+<h2>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 73%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>integer</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">42</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>double</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">3.14</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>logical</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code>  (integer <code class="docutils literal notranslate"><span class="pre">1</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>logical</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">false</span></code> (integer <code class="docutils literal notranslate"><span class="pre">0</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p>string</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Icabod</span> <span class="pre">Crane</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>As in C/C++, zero is false and any other value is true. Both <code class="docutils literal notranslate"><span class="pre">true</span></code> and <code class="docutils literal notranslate"><span class="pre">false</span></code> are language keywords and map to integer constants one and zero.</p>
+</div>
+<div class="section" id="reserved-variables">
+<h2>Reserved Variables<a class="headerlink" href="#reserved-variables" title="Permalink to this headline">¶</a></h2>
+<p>The following variables are predefined. Each may be declared with an initial value to change the default.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 9%" />
+<col style="width: 14%" />
+<col style="width: 61%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">animation_speed</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">88</span></code></p></td>
+<td><p>Speed of the game’s animation (1 is slowest, 100 is fastest)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">window_x</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">200</span></code></p></td>
+<td><p>Horizontal placement of the game window on desktop (top-left x=0)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">window_y</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">200</span></code></p></td>
+<td><p>Vertical placement of the game window on desktop (top-left y=0)</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">window_width</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">500</span></code></p></td>
+<td><p>Width of the game window</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">window_height</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">500</span></code></p></td>
+<td><p>Height of the game window</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">window_title</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;gpl</span> <span class="pre">window&quot;</span></code></p></td>
+<td><p>Text that appears in the titlebar of the game window</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">window_red</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></td>
+<td><p>Red component window background color.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">window_green</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></td>
+<td><p>Green component window background color.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">window_blue</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></td>
+<td><p>Blue component window background color.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="game-objects">
+<h2>Game Objects<a class="headerlink" href="#game-objects" title="Permalink to this headline">¶</a></h2>
+<p>Five variable types comprise the graphical elements of GPL: <code class="docutils literal notranslate"><span class="pre">rectangle</span></code>, <code class="docutils literal notranslate"><span class="pre">circle</span></code>, <code class="docutils literal notranslate"><span class="pre">triangle</span></code>, <code class="docutils literal notranslate"><span class="pre">pixmap</span></code>, and <code class="docutils literal notranslate"><span class="pre">textbox</span></code>. Each game object has several attributes which may be set at the time of declaration (or later using assignment statements).</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Examples</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rectangle</span> <span class="pre">box;</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rectangle</span> <span class="pre">box();</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rectangle</span> <span class="pre">box(x=10,</span> <span class="pre">y=15,</span> <span class="pre">h=30,</span> <span class="pre">w=25);</span></code></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">circle</span> <span class="pre">wheel;</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">circle</span> <span class="pre">wheel();</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">circle</span> <span class="pre">wheel(x=10,</span> <span class="pre">y=35,</span> <span class="pre">radius=50,</span> <span class="pre">animation_block=spin_doctor);</span></code></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">triangle</span> <span class="pre">apex;</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">triangle</span> <span class="pre">apex();</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">triangle</span> <span class="pre">apex(x=100,</span> <span class="pre">size=50,</span> <span class="pre">red=0.5,</span> <span class="pre">blue=1.0,</span> <span class="pre">skew=1.3);</span></code></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">pixmap</span> <span class="pre">gordo;</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">pixmap</span> <span class="pre">gordo();</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">pixmap</span> <span class="pre">gordo(filename=&quot;creature.bmp&quot;,</span> <span class="pre">x=50,</span> <span class="pre">y=100);</span></code></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">textbox</span> <span class="pre">marquis;</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">textbox</span> <span class="pre">marquis();</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">textbox</span> <span class="pre">marquis(text=&quot;World</span> <span class="pre">of</span> <span class="pre">Goo!&quot;,</span> <span class="pre">size=0.5);</span></code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="game-object-attributes">
+<h2>Game Object Attributes<a class="headerlink" href="#game-object-attributes" title="Permalink to this headline">¶</a></h2>
+<p>The following game object attributes are common to all game object types.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 9%" />
+<col style="width: 14%" />
+<col style="width: 61%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">x</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>Horizontal pixel placement of object in game window.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">y</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>Vertical pixel placement of object in game window.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">w</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">10</span></code></p></td>
+<td><p>Width of object in pixels.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">10</span></code></p></td>
+<td><p>Height of object in pixels.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">animation_block</span></code></p></td>
+<td><p>code block</p></td>
+<td><p><cite>none</cite></p></td>
+<td><p>Name of the animation code block associated with this game object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawing_order</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>Objects with higher numbers are drawn on top those with lower numbers.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">proximity</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
+<td><p>Distance in pixels used by <code class="docutils literal notranslate"><span class="pre">near</span></code> operator.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">visible</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>Draw objects with value <code class="docutils literal notranslate"><span class="pre">1</span></code>. Do not draw objects with value <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">red</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.5</span></code></p></td>
+<td><p>Red component of the object’s color</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">green</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.5</span></code></p></td>
+<td><p>Green component of the object’s color</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">blue</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.5</span></code></p></td>
+<td><p>Blue component of the object’s color</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">user_int</span></code>**</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>Typically used to store game-specific values.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">user_double</span></code>**</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.0</span></code></p></td>
+<td><p>Typically used to store game-specific values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">user_string</span></code>**</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p></td>
+<td><p>Typically used to store game-specific values.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="line-block">
+<div class="line">** There are five user variables for each type, e.g., <code class="docutils literal notranslate"><span class="pre">user_int</span></code>, <code class="docutils literal notranslate"><span class="pre">user_int2</span></code>, <code class="docutils literal notranslate"><span class="pre">user_int3</span></code>, <code class="docutils literal notranslate"><span class="pre">user_int4</span></code>, and <code class="docutils literal notranslate"><span class="pre">user_int5</span></code>.</div>
+</div>
+<p>Game object attributes are accessed using the same syntax as C/C++ for accessing structure or class attributes. For example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">wheel</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+
+<span class="n">i</span> <span class="o">=</span> <span class="n">wheel</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">wheel</span><span class="p">.</span><span class="n">radius</span> <span class="o">&lt;</span> <span class="mi">42</span><span class="p">)</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="type-specific-game-object-attributes">
+<h3>Type-Specific Game Object Attributes<a class="headerlink" href="#type-specific-game-object-attributes" title="Permalink to this headline">¶</a></h3>
+<p>In addition to the common attributes, each game object has type-specific attributes.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 1%" />
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 14%" />
+<col style="width: 61%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+</tr>
+<tr class="row-even"><th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+</tr>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>Attribute</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td colspan="5"><p><strong>rectangle</strong></p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rotation</span></code></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">double</span></code></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">0.0</span></code></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">Degrees rotated counter-clockwise around center of object</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 1%" />
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 14%" />
+<col style="width: 61%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td colspan="5"><p><strong>circle</strong></p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">radius</span></code></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">int</span></code></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">0</span></code></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">The radius in pixels (overrides <code class="docutils literal notranslate"><span class="pre">h</span></code> and <code class="docutils literal notranslate"><span class="pre">w</span></code>)</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 1%" />
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 14%" />
+<col style="width: 61%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td colspan="5"><p><strong>triangle</strong></p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">size</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rotation</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">skew</span></code></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">int</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">double</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">double</span></code></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">0</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">0.0</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">1.0</span></code></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">Length of the base of the triangle in pixels</div>
+<div class="line">Degrees rotated counter-clockwise around center of object</div>
+<div class="line">Ratio: height/width:</div>
+<div class="line-block">
+<div class="line">- Taller if <code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">1.0</span></code></div>
+<div class="line">- Shorter if <code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">1.0</span></code></div>
+<div class="line">- Equilateral if <code class="docutils literal notranslate"><span class="pre">==</span> <span class="pre">1.0</span></code></div>
+</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 1%" />
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 14%" />
+<col style="width: 61%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td colspan="5"><p><strong>textbox</strong></p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">text</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">size</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">spacing</span></code></div>
+<div class="line"><br /></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">string</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">double</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">int</span></code></div>
+<div class="line"><br /></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">0.1</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">10</span></code></div>
+<div class="line"><br /></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">Text to be displayed</div>
+<div class="line">1.0 is approx. 100 pixels high. 0.1 is approx. 10 pixels high</div>
+<div class="line">Number of pixels between letters when size == 1.0</div>
+<div class="line"><br /></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 1%" />
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 14%" />
+<col style="width: 61%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td colspan="5"><p><strong>pixmap</strong></p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">filename</span></code></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">string</span></code></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">Name of the file containing the pixmap in <code class="docutils literal notranslate"><span class="pre">.bmp</span></code> format</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>For <code class="docutils literal notranslate"><span class="pre">pixmap</span></code> objects, The graphics file must be in BMP format with 24 bit color and 1 color plane.
+Pixmaps can only handle bitmaps with 24 bit color and 1 plane.  <span style="font-weight:bold;color:Fuchsia;">Magic pink pixels</span> in the bitmap image (color = <span style="font-weight:bold;color:Fuchsia;">FF00FF</span> or <span style="font-weight:bold;color:Fuchsia;">255,0,255</span>, or <span style="font-weight:bold;color:Fuchsia;">1.0, 0.0, 1.0</span>) are not drawn. They are transparent when rendered in the game.</p>
+</div>
+</div>
+<div class="section" id="using-game-objects">
+<h2>Using Game Objects<a class="headerlink" href="#using-game-objects" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="rendering">
+<h3>Rendering<a class="headerlink" href="#rendering" title="Permalink to this headline">¶</a></h3>
+<p>By default, game objects are drawn in the order they are declared. Game objects declared earlier are drawn earlier:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">circle</span> <span class="nf">sun</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">100</span><span class="p">);</span>
+<span class="n">circle</span> <span class="nf">moon</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">200</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Because <code class="docutils literal notranslate"><span class="pre">sun</span></code> was declared before <code class="docutils literal notranslate"><span class="pre">moon</span></code>, the sun is eclipsed by the moon. Change the <code class="docutils literal notranslate"><span class="pre">drawing_order</span></code> attribute of game object to control its drawing order.</p>
+</div>
+<div class="section" id="colliding">
+<h3>Colliding<a class="headerlink" href="#colliding" title="Permalink to this headline">¶</a></h3>
+<p>The collision detection operators <code class="docutils literal notranslate"><span class="pre">near</span></code> and <code class="docutils literal notranslate"><span class="pre">touches</span></code> use the bounding box of the original game object and don’t account for object rotation. The <code class="docutils literal notranslate"><span class="pre">touches</span></code> operator detects overlapping bounding boxes and the <code class="docutils literal notranslate"><span class="pre">near</span></code> operator detects overlapping bounding boxes that have been arithmetically <em>grown</em> by each object’s <code class="docutils literal notranslate"><span class="pre">proximity</span></code> attribute.</p>
+</div>
+</div>
+<div class="section" id="operators">
+<h2>Operators<a class="headerlink" href="#operators" title="Permalink to this headline">¶</a></h2>
+<p>Most operators are semantically similar to their C/C++ counterparts. The unary operators are invoked like functions with parentheses. For example, <code class="docutils literal notranslate"><span class="pre">floor(x-3.1)</span></code>, <code class="docutils literal notranslate"><span class="pre">random(100)</span></code>, <code class="docutils literal notranslate"><span class="pre">sin(90)</span></code>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 31%" />
+<col style="width: 31%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input Types</p></th>
+<th class="head"><p>Output types</p></th>
+<th class="head"><p>Operator type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sin</span></code><sup>1</sup></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Unary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cos</span></code><sup>1</sup></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Unary</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tan</span></code><sup>1</sup></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Unary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">asin</span></code><sup>2</sup></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Unary</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">acos</span></code><sup>2</sup></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Unary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">atan</span></code><sup>2</sup></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Unary</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sqrt</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Unary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">abs</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Unary</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">floor</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Unary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">random</span></code><sup>3</sup></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Unary</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">touches</span></code><sup>4</sup></p></td>
+<td><p><cite>game object</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">near</span></code><sup>4</sup></p></td>
+<td><p><cite>game object</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">*</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">+</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, <code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, <code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>x</cite> <code class="docutils literal notranslate"><span class="pre">-</span></code> <cite>y</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Binary subtraction</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">%</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">-</span></code> <cite>x</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Unary negation</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, <code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&gt;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, <code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;=</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, <code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&gt;=</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, <code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">==</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, <code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">!=</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, <code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">!</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Unary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">||</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Binary</p></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic">
+<li><p>The input parameters to <code class="docutils literal notranslate"><span class="pre">sin</span></code>, <code class="docutils literal notranslate"><span class="pre">cos</span></code>, and <code class="docutils literal notranslate"><span class="pre">tan</span></code> are degrees, not radians.</p></li>
+<li><p>The return value of <code class="docutils literal notranslate"><span class="pre">asin</span></code>, <code class="docutils literal notranslate"><span class="pre">acos</span></code>, <code class="docutils literal notranslate"><span class="pre">atan</span></code> is degrees, not radians.</p></li>
+<li><div class="line-block">
+<div class="line">The <code class="docutils literal notranslate"><span class="pre">random</span></code> operator generates a random integer between <span class="math notranslate nohighlight">\([\,0,\lfloor{N}\rfloor\,)\)</span>.</div>
+<div class="line">If <span class="math notranslate nohighlight">\(\lfloor{N}\rfloor&lt;2\)</span> when <code class="docutils literal notranslate"><span class="pre">random(N)</span></code> is evaluated, then <span class="math notranslate nohighlight">\(N=2\)</span> is used.</div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">near</span></code> and <code class="docutils literal notranslate"><span class="pre">touches</span></code> return 1 (true) or 0 (false) depending on the proximity of the operators’ game object arguments:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span><span class="n">wheel</span> <span class="n">touches</span> <span class="n">box</span><span class="p">)</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="expressions-and-type-promotion">
+<h2>Expressions and Type Promotion<a class="headerlink" href="#expressions-and-type-promotion" title="Permalink to this headline">¶</a></h2>
+<p>Expressions are strongly typed and evaluate to either <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, or <code class="docutils literal notranslate"><span class="pre">string</span></code>. Several binary operators support type promotion. For example, with addition, when one operand is <code class="docutils literal notranslate"><span class="pre">string</span></code>, if the other operand is either <code class="docutils literal notranslate"><span class="pre">int</span></code> or <code class="docutils literal notranslate"><span class="pre">double</span></code> it will be promoted to <code class="docutils literal notranslate"><span class="pre">string</span></code> to allow them to be concatenated. Likewise, when one operand is <code class="docutils literal notranslate"><span class="pre">double</span></code> and the other operand is <code class="docutils literal notranslate"><span class="pre">int</span></code>, it will be promoted to <code class="docutils literal notranslate"><span class="pre">double</span></code> to allow them to be summed. Other operators support more limited promotion. For example, subtraction will promote an <code class="docutils literal notranslate"><span class="pre">int</span></code> to <code class="docutils literal notranslate"><span class="pre">double</span></code> but there is no promotion to <code class="docutils literal notranslate"><span class="pre">string</span></code> because there is no defined operation for the subtraction of strings.</p>
+<p>Type promotion is only one of:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">int</span></code> to <code class="docutils literal notranslate"><span class="pre">double</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">int</span></code> to <code class="docutils literal notranslate"><span class="pre">string</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">double</span></code> to <code class="docutils literal notranslate"><span class="pre">string</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="statements">
+<h2>Statements<a class="headerlink" href="#statements" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><strong>assignment statements</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 85%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Legal Operand Types</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">=</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, <code class="docutils literal notranslate"><span class="pre">string</span></code>, <em>animation block</em> (LHS must be the <code class="docutils literal notranslate"><span class="pre">animation_block</span></code> attribute of a game object)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">+=</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, <code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">-=</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">++</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>In GPL <code class="docutils literal notranslate"><span class="pre">++</span></code> and <code class="docutils literal notranslate"><span class="pre">--</span></code> are standalone statements. They cannot be used as part of larger expressions such as:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">next_gen</span> <span class="o">=</span> <span class="n">dial</span> <span class="o">/</span> <span class="n">value</span><span class="o">++</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p><strong>if-statements</strong>: the <code class="docutils literal notranslate"><span class="pre">expression</span></code> must evaluate to <code class="docutils literal notranslate"><span class="pre">int</span></code>.  The <code class="docutils literal notranslate"><span class="pre">statement_or_block</span></code> must be either a single statement, or several statements grouped with a pair of curly braces.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span> <span class="n">expression</span> <span class="p">)</span>
+  <span class="n">statement_or_block</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="n">expression</span> <span class="p">)</span>
+  <span class="n">statement_or_block</span>
+<span class="k">else</span>
+  <span class="n">statement_or_block</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p><strong>for-statements</strong>: <code class="docutils literal notranslate"><span class="pre">assignment_expression</span></code> is as described above, and <code class="docutils literal notranslate"><span class="pre">expression</span></code> must evaluate to <code class="docutils literal notranslate"><span class="pre">int</span></code>. The <code class="docutils literal notranslate"><span class="pre">statement_or_block</span></code> must be either a single statement, or several statements grouped with a pair of curly braces.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="p">(</span><span class="n">assignment_statement</span><span class="p">;</span> <span class="n">expression</span><span class="p">;</span> <span class="n">assignment_statement</span><span class="p">)</span>
+  <span class="n">statement_or_block</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p><strong>print statements</strong>:  <code class="docutils literal notranslate"><span class="pre">expression</span></code> must evaluate to <code class="docutils literal notranslate"><span class="pre">string</span></code>. Type promotion will occur if an <code class="docutils literal notranslate"><span class="pre">int</span></code> or <code class="docutils literal notranslate"><span class="pre">double</span></code> expression is provided. The string is displayed in the console along with the line number of the gpl program that the <code class="docutils literal notranslate"><span class="pre">print</span></code> statement appears on.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">expression</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul>
+<li><p><strong>exit statements</strong>:  <code class="docutils literal notranslate"><span class="pre">expression</span></code> must evaluate to <code class="docutils literal notranslate"><span class="pre">int</span></code>. The line number of the exit statement is displayed in the console as the program terminates.</p>
+<div class="highlight-perl notranslate"><div class="highlight"><pre><span></span><span class="nb">exit</span><span class="p">(</span><span class="n">expression</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="event-handler-blocks">
+<h2>Event Handler Blocks<a class="headerlink" href="#event-handler-blocks" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><pre><span style="font-weight:bold;color:green;">on</span> <span style="font-style: italic;">event_type</span>
+<span style="font-weight:bold;">{</span>
+  <span style="font-style: italic;">statement;</span>
+  <span style="font-style: italic;">statement;</span>
+  ...
+<span style="font-weight:bold;">}</span></pre></div></blockquote>
+<p>The <em>event_type</em> is a keystroke or mouse action that triggers the event and executes the statements in the block.</p>
+<p><strong>Types of Events</strong></p>
+<table class="hlist"><tr><td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">space</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">leftarrow</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rightarrow</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">uparrow</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">downarrow</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">leftmouse_down</span></code></p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">leftmouse_up</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">middlemouse_down</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">middlemouse_up</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rightmouse_down</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rightmouse_up</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mouse_move</span></code></p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mouse_drag</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">f1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wkey</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">akey</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">skey</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dkey</span></code></p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fkey</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hkey</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jkey</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kkey</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lkey</span></code></p></li>
+</ul>
+</td></tr></table>
+<p>There may be any number of event handler blocks for each <em>event_type</em>. They are executed in the order they are declared. The mouse events set the current location of the mouse in the global variables <code class="docutils literal notranslate"><span class="pre">mouse_x</span></code> and <code class="docutils literal notranslate"><span class="pre">mouse_y</span></code>. In order to use these variables, declare them as integers:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">mouse_x</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">mouse_y</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>These variables should be considered read-only. Assigning values to them has no effect.</p>
+</div>
+<div class="section" id="animation-blocks">
+<h2>Animation Blocks<a class="headerlink" href="#animation-blocks" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><pre><span style="font-weight:bold;color:green;">animation</span> <span style="font-style: italic;">block_name</span><span style="font-weight:bold;">(</span><span style="font-style:italic;font-weight:bold;">game_object_type</span> <span style="font-style:italic;">object_name</span><span style="font-weight:bold;">)</span>
+<span style="font-weight:bold;">{</span>
+  <span style="font-style: italic;">statement;</span>
+  <span style="font-style: italic;">statement;</span>
+  ...
+<span style="font-weight:bold;">}</span></pre></div></blockquote>
+<p>The <cite>block_name</cite> and <cite>object_name</cite> are legal identifiers (think function/variable name). The <cite>game_object_type</cite> is one of <code class="docutils literal notranslate"><span class="pre">rectangle</span></code>, <code class="docutils literal notranslate"><span class="pre">circle</span></code>, <code class="docutils literal notranslate"><span class="pre">triangle</span></code>, <code class="docutils literal notranslate"><span class="pre">pixmap</span></code>, or <code class="docutils literal notranslate"><span class="pre">textbox</span></code>.</p>
+<p>Each game object has an <code class="docutils literal notranslate"><span class="pre">animation_block</span></code> attribute. This attribute can be assigned the <cite>block_name</cite> of an animation block.</p>
+<blockquote>
+<div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">rectangle</span> <span class="nf">circuit_box</span><span class="p">(</span><span class="n">h</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+
+<span class="n">animation</span> <span class="nf">pulsate</span><span class="p">(</span><span class="n">rectangle</span> <span class="n">ac_dc</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">ac_dc</span><span class="p">.</span><span class="n">user_int</span><span class="o">++</span><span class="p">;</span>
+  <span class="n">ac_dc</span><span class="p">.</span><span class="n">h</span> <span class="o">=</span> <span class="mi">30</span> <span class="o">+</span> <span class="n">ac_dc</span><span class="p">.</span><span class="n">user_int</span> <span class="o">%</span> <span class="mi">50</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//in some other block:</span>
+<span class="n">circuit_box</span><span class="p">.</span><span class="n">animation_block</span><span class="o">=</span><span class="n">pulsate</span><span class="p">;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>In the above example, once <code class="docutils literal notranslate"><span class="pre">circuit_box</span></code> is associated with <code class="docutils literal notranslate"><span class="pre">pulsate</span></code>, the <code class="docutils literal notranslate"><span class="pre">pulsate</span></code> animation block will be called several times each second with <code class="docutils literal notranslate"><span class="pre">circuit_box</span></code> being passed in as the argument. The <code class="docutils literal notranslate"><span class="pre">ac_dc</span></code> argument is a reference to an existing game object.</p>
+<p>It is possible to assign an animation block to a game object at the time the game object is created.</p>
+<blockquote>
+<div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">forward</span> <span class="n">animation</span> <span class="nf">pulsate</span><span class="p">(</span><span class="n">rectangle</span><span class="p">);</span><span class="c1">//the object_name is optional here</span>
+<span class="n">rectangle</span> <span class="nf">circuit_box</span><span class="p">(</span><span class="n">h</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">animation_block</span><span class="o">=</span><span class="n">pulsate</span><span class="p">);</span>
+
+<span class="n">animation</span> <span class="nf">pulsate</span><span class="p">(</span><span class="n">rectangle</span> <span class="n">ac_dc</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">ac_dc</span><span class="p">.</span><span class="n">user_int</span><span class="o">++</span><span class="p">;</span>
+  <span class="n">ac_dc</span><span class="p">.</span><span class="n">h</span> <span class="o">=</span> <span class="mi">30</span> <span class="o">+</span> <span class="n">ac_dc</span><span class="p">.</span><span class="n">user_int</span> <span class="o">%</span> <span class="mi">50</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Because game objects and variables are declared prior to defining any code blocks, a forward declaration is used (think function prototype) to ensure the yet-to-be-defined animation block can be assigned to the game object.</p>
+<p>The frequency with which game objects’ animation blocks are called is controlled with the  <code class="docutils literal notranslate"><span class="pre">animation_speed</span></code> reserved variable.</p>
+<p>The <cite>game_object_type</cite> of the animation block must match the type of the game object it is assigned to. An animation block may be assigned to any number of game objects.</p>
+<p>During an iteration of the animation cycle, animation blocks are run prior to objects being drawn.</p>
+</div>
+<div class="section" id="initialization-blocks">
+<h2>Initialization Blocks<a class="headerlink" href="#initialization-blocks" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><pre><span style="font-weight:bold;color:green;">initialization</span>
+<span style="font-weight:bold;">{</span>
+  <span style="font-style: italic;">statement;</span>
+  <span style="font-style: italic;">statement;</span>
+  ...
+<span style="font-weight:bold;">}</span></pre></div></blockquote>
+<p>There may be zero or more initialization blocks. They are executed after input has been parsed, after the window has been created, and before the main event loop is entered.</p>
+<p>Initialization blocks are frequently used to initialize arrays of variables.</p>
+</div>
+<div class="section" id="termination-blocks">
+<h2>Termination Blocks<a class="headerlink" href="#termination-blocks" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><pre><span style="font-weight:bold;color:green;">termination</span>
+<span style="font-weight:bold;">{</span>
+  <span style="font-style: italic;">statement;</span>
+  <span style="font-style: italic;">statement;</span>
+  ...
+<span style="font-weight:bold;">}</span></pre></div></blockquote>
+<p>There may be zero or more termination blocks. They are executed after the user quits the program by typing <code class="docutils literal notranslate"><span class="pre">q</span></code>, or after an exit statement is executed.</p>
+<p>Termination blocks are frequently used to print out variables at the end of game execution.</p>
+</div>
+<div class="section" id="miscellaneous">
+<h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="comments">
+<h3>Comments<a class="headerlink" href="#comments" title="Permalink to this headline">¶</a></h3>
+<p>As in C++, the <code class="docutils literal notranslate"><span class="pre">//</span></code> characters start a comment through the end of the line.</p>
+</div>
+<div class="section" id="colors">
+<h3>Colors<a class="headerlink" href="#colors" title="Permalink to this headline">¶</a></h3>
+<p>Red, green, and blue attributes range from 0.0 (none) to 1.0 (full). In other applications, these colors are frequently represented as integers from 0-255. This can be mapped to the 0.0-1.0 range by simply dividing each number by the double 255.0:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">circle</span> <span class="nf">sun</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">300</span> <span class="p">,</span> <span class="n">red</span><span class="o">=</span><span class="mi">255</span><span class="o">/</span><span class="mf">255.0</span><span class="p">,</span> <span class="n">blue</span><span class="o">=</span><span class="mi">231</span><span class="o">/</span><span class="mf">255.0</span><span class="p">,</span> <span class="n">green</span><span class="o">=</span><span class="mi">109</span><span class="o">/</span><span class="mf">255.0</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="version-history">
+<h2>Version History<a class="headerlink" href="#version-history" title="Permalink to this headline">¶</a></h2>
+<p>Ver. 26 October 2021</p>
+<ul class="simple">
+<li><p>Upper- to lower-case of a letter.</p></li>
+</ul>
+<p>Ver. 23 March 2021</p>
+<ul class="simple">
+<li><p>Corrected footnote on <cite>random()</cite> to not be inclusive of the maximum number.</p></li>
+</ul>
+<p>Ver. 21 October 2020</p>
+<ul class="simple">
+<li><p>Corrected <code class="docutils literal notranslate"><span class="pre">!</span></code> operator from “Binary” to “Unary”</p></li>
+</ul>
+<p>Ver. 15 October 2020</p>
+<ul class="simple">
+<li><p>Corrected footnotes for the trigonometric functions</p></li>
+</ul>
+<p>Ver. 14 September 2020</p>
+<ul class="simple">
+<li><p>Added line number verbiage for the <code class="docutils literal notranslate"><span class="pre">exit</span></code> and <code class="docutils literal notranslate"><span class="pre">print</span></code> statements.</p></li>
+</ul>
+<p>Ver. 27 August 2020</p>
+<ul class="simple">
+<li><p>Corrected <code class="docutils literal notranslate"><span class="pre">textbox</span></code> attribute from <code class="docutils literal notranslate"><span class="pre">space</span></code> to <code class="docutils literal notranslate"><span class="pre">spacing</span></code>.</p></li>
+<li><p>Corrected description of <code class="docutils literal notranslate"><span class="pre">window_title</span></code> reserved variable.</p></li>
+</ul>
+<p>Ver. 13 August 2020</p>
+<ul class="simple">
+<li><p>Initial version built from original manual.</p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="README_P6.html" title="Sixth Project"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Game Programming Language (GPL) Reference Manual</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CSCI 515 Compiler Design.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+//Redeclaration of symbol as animation block error
+
+double trouble;
+
+animation trouble(triangle leanto) {
+  //This should not be an error. Even though the animation block
+  //can't be created, the compiler should still parse the 
+  //statement block. Ensure that another symbol table was 
+  //pushed onto the stack and that a game object was created
+  //matching the type of parameter.
+  leanto.skew=45;
+}

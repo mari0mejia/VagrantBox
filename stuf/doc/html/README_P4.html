@@ -1,0 +1,582 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fourth Project &#8212; Game Programming Language 2.1 documentation</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Fifth Project" href="README_P5.html" />
+    <link rel="prev" title="Third Project" href="README_P3.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="README_P5.html" title="Fifth Project"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="README_P3.html" title="Third Project"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Fourth Project</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fourth-project">
+<h1>Fourth Project<a class="headerlink" href="#fourth-project" title="Permalink to this headline">¶</a></h1>
+<p>Ver. 2 November 2021</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>Add support for game objects (Rectangle, Textbox, etc.)</p>
+</div>
+<div class="section" id="manifest">
+<h2>Manifest<a class="headerlink" href="#manifest" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p4/Game_object.cpp</span></code></dt>
+<dd class="field-odd"><p>The base class for the game objects</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p4/Game_object.h</span></code></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p4/Rectangle.cpp</span></code></dt>
+<dd class="field-odd"><p>Rectangle game object class</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p4/Rectangle.h</span></code></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p4/Circle.cpp</span></code></dt>
+<dd class="field-odd"><p>Circle game object class</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p4/Circle.h</span></code></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p4/Triangle.cpp</span></code></dt>
+<dd class="field-odd"><p>Triangle game object class</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p4/Triangle.h</span></code></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p4/Pixmap.cpp</span></code></dt>
+<dd class="field-odd"><p>Pixmap game object class</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p4/Pixmap.h</span></code></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p4/Textbox.cpp</span></code></dt>
+<dd class="field-odd"><p>Textbox game object class</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p4/Textbox.h</span></code></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p4/Window.cpp</span></code></dt>
+<dd class="field-odd"><p>Class that encapsulates graphics-rendering code.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p4/Window.h</span></code></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p4/Animation_code.cpp</span></code></dt>
+<dd class="field-odd"><p>Animation code class. Extended in p6</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p4/Animation_code.h</span></code></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p4/Event_manager.cpp</span></code></dt>
+<dd class="field-odd"><p>Event manager class. Extended in p5</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p4/Event_manager.h</span></code></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p4/Statement.cpp</span></code></dt>
+<dd class="field-odd"><p>GPL programming statement base class.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p4/Statement.h</span></code></dt>
+<dd class="field-even"><p>Extended in p5</p>
+</dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p4/default_pixmap.h</span></code></dt>
+<dd class="field-odd"><p>A default image used by GPL</p>
+</dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p4/tests</span></code></dt>
+<dd class="field-odd"><p>Testing suite directory, 40 tests.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="project-description">
+<h2>Project description<a class="headerlink" href="#project-description" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Copy the files from <code class="docutils literal notranslate"><span class="pre">p3</span></code> to <code class="docutils literal notranslate"><span class="pre">p4</span></code>:</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="topic">
+<p class="topic-title">Game objects</p>
+<p>There are five game objects: Rectangle, Circle, Triangle, Pixmap, and Textbox. Each is represented by a C++ class derived from a common <code class="docutils literal notranslate"><span class="pre">Game_object</span></code> class.</p>
+<p>In GPL code, after a game object is created, it is always used with one of its attributes:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Circle</span> <span class="n">pie</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">x</span>    <span class="o">=</span> <span class="n">pie</span><span class="p">.</span><span class="n">visible</span><span class="p">;</span> <span class="c1">//&quot;visible&quot; is attribute of pie</span>
+<span class="kt">double</span> <span class="n">c</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">pie</span><span class="p">.</span><span class="n">red</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">);</span> <span class="c1">//&quot;red&quot; is attribute of pie</span>
+</pre></div>
+</div>
+<p>The game object classes have three member functions for managing attributes: write an attribute, read an attribute, and retrieve the type of an attribute:</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="cpp function">
+<dt id="_CPPv4N11Game_object14attribute_typeERKNSt6stringE">
+<span id="_CPPv3N11Game_object14attribute_typeERKNSt6stringE"></span><span id="_CPPv2N11Game_object14attribute_typeERKNSt6stringE"></span><span id="Game_object::attribute_type__ssCR"></span>GPL::Type <code class="sig-name descname">attribute_type</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11Game_object14attribute_typeERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<ul class="simple">
+<li><p>Throws an <code class="docutils literal notranslate"><span class="pre">out_of_range</span></code> exception if <code class="docutils literal notranslate"><span class="pre">name</span></code> is not a game object attribute.</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="cpp function">
+<dt id="_CPPv4I0EN11Game_object15write_attributeER1TRKNSt6stringERK1T">
+<span id="_CPPv3I0EN11Game_object15write_attributeERKNSt6stringERK1T"></span><span id="_CPPv2I0EN11Game_object15write_attributeERKNSt6stringERK1T"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><a class="reference internal" href="#_CPPv4I0EN11Game_object15write_attributeER1TRKNSt6stringERK1T" title="Game_object::write_attribute::T">T</a> &amp;<code class="sig-name descname">write_attribute</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>name</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN11Game_object15write_attributeER1TRKNSt6stringERK1T" title="Game_object::write_attribute::T">T</a> &amp;<em>var</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN11Game_object15write_attributeER1TRKNSt6stringERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN11Game_object14read_attributeER1TRKNSt6stringER1T">
+<span id="_CPPv3I0EN11Game_object14read_attributeERKNSt6stringER1T"></span><span id="_CPPv2I0EN11Game_object14read_attributeERKNSt6stringER1T"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><a class="reference internal" href="#_CPPv4I0EN11Game_object14read_attributeER1TRKNSt6stringER1T" title="Game_object::read_attribute::T">T</a> &amp;<code class="sig-name descname">read_attribute</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>name</em>, <a class="reference internal" href="#_CPPv4I0EN11Game_object14read_attributeER1TRKNSt6stringER1T" title="Game_object::read_attribute::T">T</a> &amp;<em>var</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN11Game_object14read_attributeER1TRKNSt6stringER1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<ul class="simple">
+<li><p>Throws an <code class="docutils literal notranslate"><span class="pre">out_of_range</span></code> exception if <code class="docutils literal notranslate"><span class="pre">name</span></code> is not a game object attribute.</p></li>
+<li><p>Throws the <code class="docutils literal notranslate"><span class="pre">GPL::Type</span></code> of the attribute as an exception if the type of <code class="docutils literal notranslate"><span class="pre">var</span></code> does not match the type of the named <code class="docutils literal notranslate"><span class="pre">Game_object</span></code> attribute.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">var</span></code> may be an <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, or <code class="docutils literal notranslate"><span class="pre">std::string</span></code> (or <code class="docutils literal notranslate"><span class="pre">Animation_code*</span></code> used in future project).</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Example function invocations:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="hll"> <span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">param_type</span><span class="o">=</span><span class="n">game_object_ptr</span><span class="o">-&gt;</span><span class="n">attribute_type</span><span class="p">(</span><span class="s">&quot;red&quot;</span><span class="p">);</span>
+</span> <span class="n">Game_object</span><span class="o">*</span> <span class="n">gop</span><span class="o">=</span><span class="k">new</span> <span class="n">Circle</span><span class="p">();</span>
+ <span class="kt">int</span> <span class="n">nearby</span><span class="o">=</span><span class="mi">8</span><span class="p">;</span>
+<span class="hll"> <span class="n">gop</span><span class="o">-&gt;</span><span class="n">write_attribute</span><span class="p">(</span><span class="s">&quot;proximity&quot;</span><span class="p">,</span> <span class="n">nearby</span><span class="p">);</span> <span class="c1">//&quot;proximity&quot; attrib assigned value of nearby</span>
+</span> <span class="n">Game_object</span><span class="o">*</span> <span class="n">tri_tip</span><span class="o">=</span><span class="k">new</span> <span class="n">Triangle</span><span class="p">;</span>
+ <span class="kt">int</span> <span class="n">seeit</span><span class="p">;</span>
+<span class="hll"> <span class="n">gop</span><span class="o">-&gt;</span><span class="n">read_attribute</span><span class="p">(</span><span class="s">&quot;visible&quot;</span><span class="p">,</span> <span class="n">seeit</span><span class="p">);</span> <span class="c1">//seeit assigned value of &quot;visible&quot; attrib.</span>
+</span></pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="2">
+<li><p>Derive a <code class="docutils literal notranslate"><span class="pre">Game_attribute_constant</span></code> class from <code class="docutils literal notranslate"><span class="pre">Constant</span></code>. Because a game object is always used with one of its attributes, <code class="docutils literal notranslate"><span class="pre">Game_attribute_constant</span></code> has two pieces of private data:</p>
+<ol class="arabic simple">
+<li><p>a <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">Game_object*</span></code> pointing to the actual game object, and</p></li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">string</span></code> holding the name of the attribute.</p></li>
+</ol>
+<p>Class declaration:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Game_attribute_constant</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Constant</span> <span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="n">Game_attribute_constant</span><span class="p">(</span><span class="k">const</span> <span class="n">Game_object</span><span class="o">*</span> <span class="n">gop</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">attribute_name</span><span class="p">)</span>
+      <span class="o">:</span> <span class="n">Constant</span><span class="p">(</span><span class="n">gop</span><span class="o">-&gt;</span><span class="n">attribute_type</span><span class="p">(</span><span class="n">attribute_name</span><span class="p">)),</span>
+        <span class="n">gop</span><span class="p">(</span><span class="n">gop</span><span class="p">),</span>
+        <span class="n">attribute_name</span><span class="p">(</span><span class="n">attribute_name</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span>           <span class="n">as_int</span><span class="p">()</span>         <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">double</span>        <span class="nf">as_double</span><span class="p">()</span>      <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span>   <span class="n">as_string</span><span class="p">()</span>      <span class="k">const</span><span class="p">;</span>
+
+  <span class="k">private</span><span class="o">:</span>
+    <span class="k">const</span> <span class="n">Game_object</span><span class="o">*</span> <span class="n">gop</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">attribute_name</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The type of a <code class="docutils literal notranslate"><span class="pre">Game_attribute_constant</span></code> is the type its attribute (an integer, double, or string).</p>
+<p>The attribute’s type is initialized via the base class constructor.</p>
+<p>Because the constructor invokes <code class="docutils literal notranslate"><span class="pre">GPL::Type</span> <span class="pre">attribute_type(const</span> <span class="pre">std::string&amp;</span> <span class="pre">name)</span></code>, an <code class="docutils literal notranslate"><span class="pre">out_of_range</span></code> exception may be thrown.</p>
+</div>
+<p>Write the definitions for <code class="docutils literal notranslate"><span class="pre">as_int()</span></code>, <code class="docutils literal notranslate"><span class="pre">as_double()</span></code>, and <code class="docutils literal notranslate"><span class="pre">as_string()</span></code> in the source file for the <code class="docutils literal notranslate"><span class="pre">Constant</span></code> class:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">as_int()</span></code> returns the value of the attribute if it is an integer. Throw the constant’s type (<code class="docutils literal notranslate"><span class="pre">Constant::type()</span></code>) as an exception if the attribute is a different type.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">as_double()</span></code> returns the value of the attribute if it is an integer or a double.  Throw the constant’s type (<code class="docutils literal notranslate"><span class="pre">Constant::type()</span></code>) as an exception if the attribute is a different type.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">as_string()</span></code> returns the value of the attribute (converted to string) if it is an integer, double, or string. Throw the constant’s type (<code class="docutils literal notranslate"><span class="pre">Constant::type()</span></code>) as an exception if the attribute is a different type.</p></li>
+</ul>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Ensure the project compiles without error.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="4">
+<li><p>Add support for the five game object types (all as pointers) to class <code class="docutils literal notranslate"><span class="pre">Symbol</span></code>. This requires:</p>
+<ul>
+<li><p>Writing 10 constructors: two constructors for each new type, one for individual objects and one for arrays.</p></li>
+<li><p>Adding support for the five game object types in <code class="docutils literal notranslate"><span class="pre">operator&lt;&lt;(ostream&amp;</span> <span class="pre">os,</span> <span class="pre">const</span> <span class="pre">Symbol&amp;</span> <span class="pre">sym)</span></code>. The <code class="docutils literal notranslate"><span class="pre">operator&lt;&lt;</span></code> has been overloaded for the game objects so game objects can be printed as easily as floats.</p></li>
+<li><p>Writing two additional <code class="docutils literal notranslate"><span class="pre">as_constant</span></code> member functions:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span> <span class="n">Constant</span><span class="o">*</span> <span class="nf">as_constant</span><span class="p">(</span>           <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">attribute_name</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// non-arrays</span>
+<span class="k">const</span> <span class="n">Constant</span><span class="o">*</span> <span class="nf">as_constant</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">attribute_name</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// arrays</span>
+</pre></div>
+</div>
+<p>These two functions are structurally similar to the existing <code class="docutils literal notranslate"><span class="pre">as_constant()</span></code> and <code class="docutils literal notranslate"><span class="pre">as_constant(int)</span></code> functions. Just like those functions, if the symbol type is not one of the five game object types, <code class="docutils literal notranslate"><span class="pre">throw</span> <span class="pre">type;</span></code>.</p>
+</li>
+</ul>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Ensure the project compiles without error.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="topic">
+<p class="topic-title">Declaring game objects</p>
+<p>In the previous project, the actions for the <code class="docutils literal notranslate"><span class="pre">variable_declaration:</span></code> production rules were coded to create int, string, and double symbols and insert them into a symbol table.  The <code class="docutils literal notranslate"><span class="pre">object_declaration:</span></code> production fulfills the equivalent function for game objects. The actions for the <code class="docutils literal notranslate"><span class="pre">object_declaration:</span></code> production rules create symbols of the five game objects: <code class="docutils literal notranslate"><span class="pre">Rectangle</span></code>, <code class="docutils literal notranslate"><span class="pre">Circle</span></code>, <code class="docutils literal notranslate"><span class="pre">Textbox</span></code>, <code class="docutils literal notranslate"><span class="pre">Triangle</span></code>, and <code class="docutils literal notranslate"><span class="pre">Pixmap</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="nl">object_declaration</span><span class="p">:</span>
+    <span class="n">object_type</span> <span class="n">T_ID</span> <span class="n">parameter_list_or_empty</span>
+    <span class="o">|</span> <span class="n">object_type</span> <span class="n">T_ID</span> <span class="n">T_LBRACKET</span> <span class="n">expression</span> <span class="n">T_RBRACKET</span>
+</pre></div>
+</div>
+<p>The first rule creates single game objects. For example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">triangle</span> <span class="n">my_triangle</span><span class="p">;</span>
+<span class="n">rectangle</span> <span class="nf">some_rect</span><span class="p">();</span> <span class="c1">//empty parentheses optional</span>
+<span class="n">circle</span> <span class="nf">happy_face</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">100</span><span class="p">);</span> <span class="c1">//may have parameters</span>
+</pre></div>
+</div>
+<p>The action of <code class="docutils literal notranslate"><span class="pre">object_declaration:</span></code>’s first rule creates the game object symbol and then processes the object’s parameters (if any).</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="6">
+<li><p>Write the action for <code class="docutils literal notranslate"><span class="pre">object_declaration:</span></code>’s first rule to create game objects and insert them into the symbol table. Ignore <code class="docutils literal notranslate"><span class="pre">parameter_list_or_empty</span></code> for now.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="7">
+<li><p>Ensure the project passes tests 1-3.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="8">
+<li><p>Write the action for the second rule of the <code class="docutils literal notranslate"><span class="pre">object_declaration:</span></code> production that creates arrays of game objects. Use the array rule for <code class="docutils literal notranslate"><span class="pre">variable_declaration:</span></code> as a guide.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>Ensure the project passes tests 4-8.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="topic">
+<p class="topic-title">Initializing game objects with parameters</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">triangle</span> <span class="nf">my_triangle</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">100</span><span class="p">);</span>
+<span class="n">rectangle</span> <span class="nf">some_rect</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">green</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">object_declaration</span></code>’s, first rule ends with the non-terminal token <code class="docutils literal notranslate"><span class="pre">parameter_list_or_empty</span></code>. The production for <code class="docutils literal notranslate"><span class="pre">parameter_list_or_empty:</span></code> parses the parameters before the <code class="docutils literal notranslate"><span class="pre">object_declaration:</span></code> production is processed.
+This presents a challenge because the error messages generated while processing parameters include the name of
+the game object being declared which isn’t available until the <code class="docutils literal notranslate"><span class="pre">object_declaration:</span></code> production is processed.</p>
+<p>The solution is to collect the parameters in the
+<code class="docutils literal notranslate"><span class="pre">parameter_list_or_empty:</span></code> production but delay processing them until
+after the game object itself is created as a symbol in the
+<code class="docutils literal notranslate"><span class="pre">object_declaration:</span></code> production (completed in previous step).</p>
+<p>The parameters are collected into a linked list that is passed to the
+<code class="docutils literal notranslate"><span class="pre">object_declaration:</span></code> production. The <code class="docutils literal notranslate"><span class="pre">object_declaration:</span></code> production will
+validate the parameters after the game object is added to the symbol table.</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="10">
+<li><p>Declare a structure in <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code> to handle the linked
+list of parameters:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Parameter</span> <span class="p">{</span>
+      <span class="k">const</span> <span class="n">Expression</span><span class="o">*</span> <span class="n">value</span><span class="p">;</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+      <span class="n">Parameter</span><span class="o">*</span> <span class="n">next</span><span class="o">=</span><span class="k">nullptr</span><span class="p">;</span> <span class="c1">//default initialization</span>
+      <span class="o">~</span><span class="n">Parameter</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="n">next</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="11">
+<li><p><code class="docutils literal notranslate"><span class="pre">Parameter</span></code> objects are allocated and initialized in the action of the <code class="docutils literal notranslate"><span class="pre">parameter:</span></code> production. Parameter objects are joined together as a linked list in the <code class="docutils literal notranslate"><span class="pre">parameter_list:</span></code> production. Join <code class="docutils literal notranslate"><span class="pre">Parameter</span></code> objects to the <cite>end</cite> of the linked list to preserve their ordering.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="12">
+<li><p>The action for <code class="docutils literal notranslate"><span class="pre">object_declaration</span></code>’s first rule creates a game object and adds it to the symbol table. Append code after this to process the linked list of parameters (if any). Iterate thought the linked list of parameters:</p>
+<ul class="simple">
+<li><p>Use <a class="reference internal" href="#_CPPv4N11Game_object14attribute_typeERKNSt6stringE" title="Game_object::attribute_type"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Game_object::attribute_type()</span></code></a> to determine the <em>Attribute</em>’s expected type (int, double, or string).</p></li>
+<li><p>Call <a class="reference internal" href="#_CPPv4I0EN11Game_object15write_attributeER1TRKNSt6stringERK1T" title="Game_object::write_attribute"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Game_object::write_attribute()</span></code></a> to set the attribute’s value.</p></li>
+<li><p>Use try/catch to report unknown parameters and parameter type mismatches thrown by <code class="docutils literal notranslate"><span class="pre">attribute_type</span></code> and <code class="docutils literal notranslate"><span class="pre">write_attribute</span></code>.</p></li>
+</ul>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="13">
+<li><p>Ensure the project passes tests 9-12.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="14">
+<li><p>Add code to handle the other two rules in the <code class="docutils literal notranslate"><span class="pre">variable:</span></code> production. These
+two rules handle variables that are members of game objects. For example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">my_circle</span><span class="p">.</span><span class="n">radius</span>
+<span class="n">my_list_of_triangles</span><span class="p">[</span><span class="mi">3</span><span class="p">].</span><span class="n">y</span>
+</pre></div>
+</div>
+<p>Derive a class from <code class="docutils literal notranslate"><span class="pre">Variable</span></code> named <code class="docutils literal notranslate"><span class="pre">Member_variable</span></code>. It has the following characteristics:</p>
+<ul>
+<li><p>One private data string: the name of the game object’s attribute.
+In the above example the attribute names are “radius” and “y”.</p></li>
+<li><p>An <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> function. This is very similar to <code class="docutils literal notranslate"><span class="pre">Variable::evaluate()</span></code>. The signature of the function in the class declaration is:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">virtual</span> <span class="k">const</span> <span class="n">Constant</span><span class="o">*</span> <span class="nf">evaluate</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">override</span></code> keyword appears in the class declaration but is absent from the definition of the function (just like the <code class="docutils literal notranslate"><span class="pre">virtual</span></code> keyword).</p>
+</div>
+</li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">type()</span></code> function that returns the type of the attribute. Roughly: <code class="docutils literal notranslate"><span class="pre">symbol()-&gt;as_constant(...)-&gt;type()</span></code>. The signature of the function in the class declaration is:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">virtual</span> <span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">type</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Two constructors just like <code class="docutils literal notranslate"><span class="pre">Variable</span></code>: one for the attribute of an individual object (<code class="docutils literal notranslate"><span class="pre">my_circle.radius</span></code>) and one for the attribute of an element of an array (<code class="docutils literal notranslate"><span class="pre">my_list_of_triangles[3].y</span></code>).</p></li>
+</ul>
+<p>If there is an error in the fourth rule of the <code class="docutils literal notranslate"><span class="pre">variable:</span></code> production, the proper tokens to release are <code class="docutils literal notranslate"><span class="pre">$1</span></code>, <code class="docutils literal notranslate"><span class="pre">$3</span></code>, and <code class="docutils literal notranslate"><span class="pre">$6</span></code>. However, if there are <em>no</em> errors, a <code class="docutils literal notranslate"><span class="pre">Member_variable</span></code> is created and only <code class="docutils literal notranslate"><span class="pre">$1</span></code> and <code class="docutils literal notranslate"><span class="pre">$6</span></code> should be released. The expression <code class="docutils literal notranslate"><span class="pre">$3</span></code> is used by <code class="docutils literal notranslate"><span class="pre">Member_variable</span></code> and should not be released by the parser.</p>
+</li>
+</ol>
+<div class="topic">
+<p class="topic-title">Handling errors when parsing member variables</p>
+<p>There are several errors to recover from in the final two rules of the <cite>variable:</cite> production. The errors</p>
+<blockquote>
+<div><p><em>Variable…is not an object</em>, and</p>
+<p><em>Object…does not contain the member variable…</em></p>
+</div></blockquote>
+<p>can be reported by creating a (temporary, discardable) constant object from the symbol and catching the exceptions thrown. For example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="c1">//Somewhere inside of the third rule of the variable: production</span>
+  <span class="k">try</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Constant</span><span class="o">&gt;</span><span class="p">(</span><span class="n">sym</span><span class="o">-&gt;</span><span class="n">as_constant</span><span class="p">(</span><span class="o">*</span><span class="err">$</span><span class="mi">3</span><span class="p">));</span> <span class="p">}</span>
+  <span class="c1">//catch blocks follow.</span>
+</pre></div>
+</div>
+<p>Wrapping the returned constant in a <code class="docutils literal notranslate"><span class="pre">shared_ptr</span></code> is just a simple way to avoid leaking the allocated constant.</p>
+<p>For error-recovery in the <code class="docutils literal notranslate"><span class="pre">variable:</span></code> production  generate an “empty” <code class="docutils literal notranslate"><span class="pre">Variable</span></code>:  <code class="docutils literal notranslate"><span class="pre">$$=new</span> <span class="pre">Variable(&quot;&quot;)</span></code>. Do not create an empty <code class="docutils literal notranslate"><span class="pre">Member_variable</span></code>.</p>
+<p>It’s worth understanding <em>why</em> creating a constant object can generate exceptions that are useful for error-handling.  The member function <code class="docutils literal notranslate"><span class="pre">Symbol::as_constant(const</span> <span class="pre">std::string&amp;</span> <span class="pre">attribute_name)</span></code> called in the try block above switches on the symbol’s type with a case for each of the five game object types (<code class="docutils literal notranslate"><span class="pre">GPL::RECTANGLE</span></code>, <code class="docutils literal notranslate"><span class="pre">GPL::TRIANGLE</span></code>, etc.). (Take a look at the member function source.)  If the symbol’s value isn’t a game object, the switch’s default case throws the actual type of the symbol (<em>Variable…is not an object</em>).</p>
+<p>If the symbol’s value <em>is</em> a game object, the relevant case in the switch statement creates and returns a <code class="docutils literal notranslate"><span class="pre">Game_attribute_constant</span></code>. The <code class="docutils literal notranslate"><span class="pre">Game_attribute_constant</span></code> constructor retrieves the attribute’s type by calling <a class="reference internal" href="#_CPPv4N11Game_object14attribute_typeERKNSt6stringE" title="Game_object::attribute_type"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">attribute_type(attribute_name)</span></code></a>. As described earlier, this function throws <code class="docutils literal notranslate"><span class="pre">out_of_range</span></code> if the game object does not have the named attribute (<em>Object…does not contain the member variable…</em>).</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="15">
+<li><p>Pass all remaining tests.</p></li>
+</ol>
+</div>
+<div class="section" id="version-history">
+<h2>Version History<a class="headerlink" href="#version-history" title="Permalink to this headline">¶</a></h2>
+<p>Ver. 2 November 2021</p>
+<ul class="simple">
+<li><p>Converted Gpl_type to GPL::Type</p></li>
+<li><p>Changed signature for new <code class="docutils literal notranslate"><span class="pre">as_constant</span></code> functions.</p></li>
+<li><p>Provided default value to <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">parameter</span></code></p></li>
+</ul>
+<p>Ver. 15 May 2021</p>
+<ul class="simple">
+<li><p>Changed outdated <code class="docutils literal notranslate"><span class="pre">Animation_block</span></code> to <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code></p></li>
+</ul>
+<p>Ver. 2 May 2021</p>
+<ul class="simple">
+<li><p>Clarified that the game object attribute type/read/write functions are <em>member</em> functions.</p></li>
+</ul>
+<p>Ver. 4 November 2020</p>
+<ul class="simple">
+<li><p>Removed errant comma</p></li>
+<li><p>Added <cite>const</cite> to Parameter’s expression pointer.</p></li>
+</ul>
+<p>Ver. 2 November 2020</p>
+<ul class="simple">
+<li><p>Removed mention of tarball</p></li>
+<li><p>Made string argument to as_constant() references</p></li>
+<li><p>Fixed grammar.</p></li>
+</ul>
+<p>Ver. 3 May 2020</p>
+<ul class="simple">
+<li><p>Restructured document for use with Sphinx markup</p></li>
+</ul>
+<p>Ver. 21 April 2020</p>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">const</span></code> to <code class="docutils literal notranslate"><span class="pre">Game_object*</span></code> in <code class="docutils literal notranslate"><span class="pre">Game_attribute_constant</span></code>.</p></li>
+</ul>
+<p>Ver. 12 April 2020</p>
+<ul class="simple">
+<li><p>Clarified <em>Attribute</em>’s type when iterating over an object’s parameters.</p></li>
+<li><p>Fixed order of $1, $3 in <code class="docutils literal notranslate"><span class="pre">parameter_list:</span></code> production description.</p></li>
+<li><p>Added verbiage in final item about releasing memory.</p></li>
+</ul>
+<p>Ver. 6 April 2020</p>
+<ul class="simple">
+<li><p>Elaboration on <code class="docutils literal notranslate"><span class="pre">override</span></code> keyword</p></li>
+</ul>
+<p>Ver. 4 March 2020</p>
+<ul class="simple">
+<li><p>Add const to <code class="docutils literal notranslate"><span class="pre">shared_ptr&lt;Constant&gt;</span></code></p></li>
+</ul>
+<p>Ver. 3 March 2020</p>
+<ul class="simple">
+<li><p>Add override directives</p></li>
+</ul>
+<p>Ver. 17 November 2019</p>
+<ul class="simple">
+<li><p>Enhanced the description around handling errors by constructing a constant object.</p></li>
+</ul>
+<p>Ver. 11 November 2019</p>
+<ul class="simple">
+<li><p>Added direction to create two constructors for <code class="docutils literal notranslate"><span class="pre">Member_variable</span></code>.</p></li>
+</ul>
+<p>Ver. 1 November 2019</p>
+<ul class="simple">
+<li><p>Change <code class="docutils literal notranslate"><span class="pre">Game_object_constant</span></code> to <code class="docutils literal notranslate"><span class="pre">Game_attribute_constant</span></code></p></li>
+</ul>
+<p>Ver. 31 October 2019</p>
+<ul class="simple">
+<li><p>Minor updates to accommodate revisions to <code class="docutils literal notranslate"><span class="pre">Variable</span></code> class.</p></li>
+</ul>
+<p>Ver. 29 October 2019</p>
+<ul class="simple">
+<li><p>Minor grammar change.</p></li>
+</ul>
+<p>Ver. 24 October 2019</p>
+<ul class="simple">
+<li><p>Switched public/private order in class declaration. Appended to note on operator&lt;&lt;</p></li>
+</ul>
+<p>Ver. 21 October 2019 - A</p>
+<ul class="simple">
+<li><p>Nominal updates to reflect simpler use of Symbol in <code class="docutils literal notranslate"><span class="pre">variable:</span></code> production</p></li>
+</ul>
+<p>Ver. 21 October 2019</p>
+<ul class="simple">
+<li><p>Portions rewritten to reflect updated design.</p></li>
+</ul>
+<p>Ver. 17 October 2019</p>
+<ul class="simple">
+<li><p>Minor changes</p></li>
+</ul>
+<p>Ver. 16 October 2019</p>
+<ul class="simple">
+<li><p>Revisions to reflect redesigned game object classes.</p></li>
+</ul>
+<p>Ver. 9 October 2019</p>
+<ul class="simple">
+<li><p>Major revision to writeup</p></li>
+</ul>
+<p>Ver. 5 May 2019</p>
+<ul class="simple">
+<li><p>Reworded some text</p></li>
+</ul>
+<p>Ver. 25 April 2019</p>
+<ul class="simple">
+<li><p>Removed ‘const’ from static member functions</p></li>
+</ul>
+<p>Ver. 24 April 2019</p>
+<ul class="simple">
+<li><p>Corrected listed functions in step #10</p></li>
+</ul>
+<p>Ver. 22 April 2019</p>
+<ul class="simple">
+<li><p>Reworked game object code and updated step #10. More to come.</p></li>
+</ul>
+<p>Ver. 19 April 2019</p>
+<ul class="simple">
+<li><p>Some minor textual edits. More substantive edits to come.</p></li>
+</ul>
+<p>Ver. 17 April 2019</p>
+<ul class="simple">
+<li><p>Initial version. Step 13 to be revised.</p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="README_P5.html" title="Fifth Project"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="README_P3.html" title="Third Project"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Fourth Project</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CSCI 515 Compiler Design.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.0.
+    </div>
+  </body>
+</html>

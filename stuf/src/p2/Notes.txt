@@ -1,0 +1,2 @@
+P2 Notes:
+* Delcared the union class type inside the private data in the class declaration

@@ -1,0 +1,19 @@
+/* tagger modifications */
+
+/*Increase width of the (left) field*/
+dl.field-list > dt {
+    width: 20em; /*tagger*/
+}
+
+/*remove colon from field list*/
+dl.field-list > dt:after {
+    content: "";
+}
+
+/* There are syntax-highlighting errors on the dollar-signs 
+ * with the bison code shown. Normally these are surrounded
+ * by a red bordered box. This removes the border and 
+ * Colors the dollar sign the same as constant integers
+ * so $2 will be same color.
+ */
+.highlight .err { border: 0px; color: #40a070;} /* Error */

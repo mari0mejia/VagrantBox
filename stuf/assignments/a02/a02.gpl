@@ -1,0 +1,458 @@
+////////////////////////////////////////////////
+//         Assignment 02 Tic Tac Toe Game    //
+//////////////////////////////////////////////
+
+//set up system variables used to create window 
+int window_width = 320;
+int window_height = 420;
+int num_periods = 1;
+int ball_size = 15;
+string window_title = "Tic Tac Toe";
+int ball_x_increment = 2;
+int ball_y_increment = 1;
+double window_red = 0;
+double window_green = 0;
+double window_blue = 0;
+int grid_line_width = 10;
+int default_w = 100;
+int default_h = 100;
+int turn_number=1;
+string current_turn = "X";
+int max_turns = 10;
+int num =100;
+textbox r[num];
+int x_inc[num];
+int y_inc[num];
+int i;
+
+
+string grid[9];
+int j;
+
+////////////////////////////////////////////////////////
+//    declare animation handler function             //
+//////////////////////////////////////////////////////
+//forward animation ball_animate(circle cur_ball);
+forward animation turn_animate(textbox cur_box);
+forward animation max_turns_call_game(textbox cur_box);
+forward animation sinewave(circle cur_ball);
+forward animation find_streak(textbox cur);
+//initialization
+//{
+    
+//}
+
+//textbox reading current period: 1
+////////////////////////////////////////////////////////
+//               Grid Variables                      //
+//////////////////////////////////////////////////////
+textbox current_turn_display( x=10, y=window_height-50,text="Current turn: X", size = 0.2 , red=1);
+//game over
+//rectangle game_over_rect(x=0,y=0,w=0,h=0,red=0,blue=0,green=0,animation_block=max_turns_call_game);
+
+//tile0
+rectangle tile0(x=0,y=0,w=default_w,h=default_h,red=1,blue=1,green=1);
+textbox tile_input0( x=0, y=50,w = default_w,h=default_h,text="type j", size = .2 , blue=0,red=0,green=0);
+//tile1
+rectangle tile1(x=default_w+grid_line_width,y=0,w=default_w,h=default_h,red=1,blue=1,green=1);
+textbox tile_input1( x=default_w+grid_line_width, y=50,w = default_w,h=default_h,text="type k", size = .2 , blue=0,red=0,green=0);
+//tile2
+rectangle tile2(x=((default_w*2)+grid_line_width*2),y=0,w=default_w,h=default_h,red=1,blue=1,green=1);
+textbox tile_input2(x=((default_w*2)+grid_line_width*2), y=50,w = default_w,h=default_h,text="type l", size = .2 , blue=0,red=0,green=0);
+
+//tile3
+rectangle tile3(x=0,y=default_h+grid_line_width,w=default_w,h=default_h,red=1,blue=1,green=1);
+textbox tile_input3( x=0, y=default_h+grid_line_width+50,w = default_w,h=default_h,text="type f", size = .2 , blue=0,red=0,green=0);
+//tile4
+rectangle tile4(x=default_w+grid_line_width,y=default_h+grid_line_width,w=default_w,h=default_h,red=1,blue=1,green=1);
+textbox tile_input4( x=default_w+grid_line_width, y=default_h+grid_line_width+50,w = default_w,h=default_h,text="type d", size = .2 , blue=0,red=0,green=0);
+//tile5
+rectangle tile5(x=((default_w*2)+grid_line_width*2),y=default_h+grid_line_width,w=default_w,h=default_h,red=1,blue=1,green=1);
+textbox tile_input5(x=((default_w*2)+grid_line_width*2), y=default_h+grid_line_width+50,w = default_w,h=default_h,text="type s", size = .2 , blue=0,red=0,green=0);
+
+
+//tile6
+rectangle tile6(x=0,y=default_h*2+grid_line_width*2,w=default_w,h=default_h,red=1,blue=1,green=1);
+textbox tile_input6( x=0, y=default_h*2+grid_line_width*2+50,w = default_w,h=default_h,text="type w", size = .2 , blue=0,red=0,green=0);
+//tile7
+rectangle tile7(x=default_w+grid_line_width,y=default_h*2+grid_line_width*2,w=default_w,h=default_h,red=1,blue=1,green=1);
+textbox tile_input7( x=default_w+grid_line_width, y=default_h*2+grid_line_width*2+50,w = default_w,h=default_h,text="type a", size = .2 , blue=0,red=0,green=0);
+//tile8
+rectangle tile8(x=((default_w*2)+grid_line_width*2),y=default_h*2+grid_line_width*2,w=default_w,h=default_h,red=1,blue=1,green=1);
+textbox tile_input8(x=((default_w*2)+grid_line_width*2), y=default_h*2+grid_line_width*2+50,w = default_w,h=default_h,text="type h", size = .2 , blue=0,red=0,green=0);
+
+
+
+textbox game_over_text( x=0, y=0,w = 0,h=0,text="", size = .2 , blue=0,red=0,green=0,animation_block=max_turns_call_game);
+textbox game_won( x=0, y=0,w = 0,h=0,text="", size = .2 , blue=0,red=0,green=0,animation_block=find_streak);
+
+
+////////////////////////////////////////////////////////
+//                  circle                           //
+//////////////////////////////////////////////////////
+//circle circle1( x = 5, y = 5, radius = ball_size, red = 0, blue = 0, green = 0, animation_block =sinewave);
+
+
+
+////////////////////////////////////////////////////////
+//              event handler num_periods            //
+//////////////////////////////////////////////////////
+animation max_turns_call_game(textbox cur_box)
+{
+   if(turn_number == 10)
+   {
+        //animate end of game
+        //bring in a new rectange and textbox 
+        //rectangle gameover(x=0,y=0,w=window_width,h=window_height,red=0,blue=0,green=0);
+        //cur_rec.x = 0;
+       // cur_rec.y = 0;
+        //cur_rec.w = window_width;
+        //cur_rec.h = window_height;
+       // cur_rec.red = 0;
+        //cur_rec.green = 0;
+        //cur_rec.blue = 0;
+        print("animation called");
+
+        
+        cur_box.x=50;
+        cur_box.y=250;
+        cur_box.drawing_order = 100;
+
+        cur_box.w = default_w;
+        cur_box.h=default_h;
+        cur_box.text="Game Over";
+        cur_box.size = .3;
+        cur_box.red=1;
+        
+
+   }
+}
+
+
+animation find_streak(textbox cur)
+{
+    if((grid[0] == grid[1])&&(grid[1] == grid[2])&&(grid[0]=="O" || grid[0]=="X"))
+        print("true");
+    if((grid[3] == grid[4])&&(grid[4] == grid[5])&&(grid[0]=="O" || grid[1]=="X"))
+        print("rue");
+    if((grid[6] == grid[7])&&(grid[7] == grid[8])&&(grid[0]=="6" || grid[6]=="X"))
+        print("true");
+    if((grid[6] == grid[3])&&(grid[3] == grid[0])&&(grid[6]=="O" || grid[6]=="X"))
+        print("true");
+    if((grid[7] == grid[4])&&(grid[4] == grid[1])&&(grid[7]=="O" || grid[7]=="X"))
+         print("true");
+    if((grid[8] == grid[5])&&(grid[5] == grid[2])&&(grid[0]=="8" || grid[8]=="X"))
+        print("true");
+    if((grid[6] == grid[4])&&(grid[4] == grid[2])&&(grid[6]=="O" || grid[6]=="X"))
+        print("true");
+    if((grid[0] == grid[4])&&(grid[4] == grid[8])&&(grid[0]=="O" || grid[0]=="X"))
+        print("true");
+
+
+
+
+
+}
+
+///////////////////////////////////////////////////////////
+//                    Manage Key Presses                //
+//////////////////////////////////////////////////////////
+//on event_type
+//{
+    
+//        current_turn_display.text = "Current turn: "+current_turn;//add current_turn text to tile_textbox for the correct tile
+        // current_turn update
+
+//}
+on jkey 
+{
+
+    print(turn_number);
+    if(turn_number < 10)//if max rounds have not been met
+    {
+        turn_number++;
+        print("inside 10");
+        if(current_turn == "X")
+        {
+            print("inside X");
+            tile_input0.text = current_turn;// change tile0
+            grid[0] = current_turn;
+            tile_input0.x += 30;
+            current_turn = "O";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+        }
+        else
+        {
+            tile_input0.text = current_turn;// change tile0
+            grid[0] = current_turn;
+            tile_input0.x += 30;
+            current_turn = "X";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+            print("inside O");
+        }
+    }//check round
+    else 
+    { 
+        exit(1); 
+    }
+
+}//jkey update
+
+on kkey 
+{
+    print(turn_number);
+
+    if(turn_number < 10)//if max rounds have not been met
+    {
+        turn_number++;
+        print("inside 10");
+        if(current_turn == "X")
+        {
+            tile_input1.text = current_turn;// change tile0
+            grid[1] = current_turn;
+            tile_input1.x += 30;
+            print("inside X");
+            current_turn = "O";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+        }
+        else
+        {
+            tile_input1.text = current_turn;// change tile0
+            grid[1] = current_turn;
+            tile_input1.x += 30;
+            current_turn = "X";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+            print("inside O");
+        }
+    }//round_number
+    else 
+    { 
+        exit(1); 
+    }
+}//kkey
+
+on lkey 
+{
+    print(turn_number);
+    if(turn_number < 10)//if max rounds have not been met
+    {
+        turn_number++;
+        print("inside 10");
+        if(current_turn == "X")
+        {
+            print("inside X");
+            tile_input2.text = current_turn;// change tile2
+            grid[2] = current_turn;
+            tile_input2.x += 30;
+            current_turn = "O";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+        }
+        else
+        {
+            tile_input2.text = current_turn;// change tile2
+            grid[2] = current_turn;
+            tile_input2.x += 30;
+            current_turn = "X";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+            print("inside O");
+        }
+    }//round_number
+    else 
+    { 
+        exit(1); 
+    }
+}//lkey
+
+
+
+on fkey 
+{
+    print(turn_number);
+    if(turn_number < 10)//if max rounds have not been met
+    {
+        turn_number++;
+        print("inside 10");
+        if(current_turn == "X")
+        {
+            print("inside X");
+            tile_input3.text = current_turn;// change tile2
+            grid[3] = current_turn;
+            tile_input3.x += 30;
+            current_turn = "O";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+        }
+        else
+        {
+            tile_input3.text = current_turn;// change tile2
+            grid[3] = current_turn;
+            tile_input3.x += 30;
+            current_turn = "X";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+            print("inside O");
+        }
+    }//round_number
+    else 
+    { 
+        exit(1); 
+    }
+}//fkey
+
+on dkey 
+{
+    print(turn_number);
+    if(turn_number < 10)//if max rounds have not been met
+    {
+        turn_number++;
+        print("inside 10");
+        if(current_turn == "X")
+        {
+            print("inside X");
+            tile_input4.text = current_turn;// change tile4
+            grid[4] = current_turn;
+            tile_input4.x += 30;
+            current_turn = "O";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+        }
+        else
+        {
+            tile_input4.text = current_turn;// change tile4
+            grid[4] = current_turn;
+            tile_input4.x += 30;
+            current_turn = "X";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+            print("inside O");
+        }
+    }//round_number
+    else 
+    { 
+        exit(1); 
+    }
+}//dkey
+
+on skey 
+{
+    print(turn_number);
+    if(turn_number < 10)//if max rounds have not been met
+    {
+        turn_number++;
+        print("inside 10");
+        if(current_turn == "X")
+        {
+            print("inside X");
+            tile_input5.text = current_turn;// change tile5
+            grid[5] = current_turn;
+            tile_input5.x += 30;
+            current_turn = "O";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+        }
+        else
+        {
+            tile_input5.text = current_turn;// change tile5
+            grid[5] = current_turn;
+            tile_input5.x += 30;
+            current_turn = "X";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+            print("inside O");
+        }
+    }//round_number
+    else 
+    { 
+        exit(1); 
+    }
+}//skey
+
+on wkey 
+{
+    print(turn_number);
+    if(turn_number < 10)//if max rounds have not been met
+    {
+        turn_number++;
+        print("inside 10");
+        if(current_turn == "X")
+        {
+            print("inside X");
+            tile_input6.text = current_turn;// change tile6
+            grid[6] = current_turn;
+            tile_input6.x += 30;
+            current_turn = "O";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+        }
+        else
+        {
+            tile_input6.text = current_turn;// change tile6
+            grid[6] = current_turn;
+            tile_input6.x += 30;
+            current_turn = "X";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+            print("inside O");
+        }
+    }//round_number
+    else 
+    { 
+        exit(1); 
+    }
+}//wkey
+
+on akey 
+{
+    print(turn_number);
+    if(turn_number < 10)//if max rounds have not been met
+    {
+        turn_number++;
+        print("inside 10");
+        if(current_turn == "X")
+        {
+            print("inside X");
+            tile_input7.text = current_turn;// change tile7
+            grid[7] = current_turn;
+            tile_input7.x += 30;
+            current_turn = "O";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+        }
+        else
+        {
+            tile_input7.text = current_turn;// change tile7
+            grid[7] = current_turn;
+            tile_input7.x += 30;
+            current_turn = "X";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+            print("inside O");
+        }
+    }//round_number
+    else 
+    { 
+        exit(1); 
+    }
+
+}//akey
+on hkey 
+{
+    print(turn_number);
+    if(turn_number < 10)//if max rounds have not been met
+    {
+        turn_number++;
+        print("inside 10");
+        if(current_turn == "X")
+        {
+            print("inside X");
+            tile_input8.text = current_turn;// change tile8
+            grid[8] = current_turn;
+            tile_input8.x += 30;
+            current_turn = "O";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+        }
+        else
+        {
+            tile_input8.text = current_turn;// change tile8
+            grid[8] = current_turn;
+            tile_input8.x += 30;
+            current_turn = "X";//add current_turn text to tile_textbox for the correct tile
+            current_turn_display.text = "Current turn: "+current_turn;
+            print("inside O");
+        }
+    }//round_number
+    else
+    {
+        exit(1);
+    }
+}//hkey

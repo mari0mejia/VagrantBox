@@ -1,0 +1,19 @@
+
+int    lhs_int;
+double lhs_double;
+
+int    rhs_int=22;
+double rhs_double=33.33;
+
+on hkey
+{
+  print("Minus-assign. h-key pressed");
+  lhs_int    -= rhs_int;
+  lhs_double -= rhs_double;
+}
+
+on jkey
+{
+  print("Minus-assign. j-key pressed");
+  lhs_double -= rhs_int;
+}

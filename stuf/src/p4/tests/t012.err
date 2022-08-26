@@ -1,0 +1,3 @@
+Semantic error on line 1: Incorrect type for parameter 'x' of object my_rectangle.
+Semantic error on line 2: Incorrect type for parameter 'red' of object mypixmap.
+Semantic error on line 2: Incorrect type for parameter 'blue' of object mypixmap.

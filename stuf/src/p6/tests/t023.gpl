@@ -1,0 +1,4 @@
+// NO BODY PROVIDED FOR FORWARD error
+forward animation stretch(triangle);
+
+triangle mister_trippy(animation_block=stretch);

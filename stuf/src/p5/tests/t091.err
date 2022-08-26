@@ -1,0 +1,4 @@
+Semantic error on line 3: Game object 'paddle' does not have a parameter called 'skew'.
+Semantic error on line 7: Invalid right operand for operator '+'.
+Semantic error on line 8: Object 'paddle' does not contain the member variable 'skew'.
+Semantic error on line 9: Object 'paddle' does not contain the member variable 'skew'.

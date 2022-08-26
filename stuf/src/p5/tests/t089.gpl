@@ -1,0 +1,6 @@
+rectangle paddle;
+
+on akey
+{
+  print(paddle);
+}

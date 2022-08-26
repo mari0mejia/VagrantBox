@@ -1,0 +1,81 @@
+//set up system variables used to create window 
+int window_width = 500;
+int window_height = 300;
+int num_periods = 1;
+int ball_size = 15;
+string window_title = "First GPL Assignment";
+int ball_x_increment = 2;
+int counter = 0;
+int ball_y_increment = 1;
+circle dots[50];
+
+//declare animation handler function
+forward animation ball_animate(circle cur_ball);
+forward animation sinewave(circle cur_ball);
+
+
+//textbox reading current period: 1
+////////////////////////////////////////////////////////
+//               Display Variables                   //
+//////////////////////////////////////////////////////
+textbox num_periods_display( x=10, y=10,text="Current period: 1", size = 0.1 , blue=1);
+
+////////////////////////////////////////////////////////
+//                  circle                           //
+//////////////////////////////////////////////////////
+circle circle1( x = 5, y = 5, radius = ball_size, red = 0, blue = 0, green = 0, animation_block =sinewave);
+
+
+
+////////////////////////////////////////////////////////
+//              event handler num_periods            //
+//////////////////////////////////////////////////////
+animation ball_animate(circle cur_ball)
+{
+//    //if ball has reached either the left or right, reverse its direction
+ //   if(cur_ball.x < 0 || cur_ball.x > window_width - ball_size*2)
+  //      ball_x_increment = -ball_x_increment;
+    // if ball has reached either the top or bottom, reverse its direction
+   // if(cur_ball.y < 0 || cur_ball.y > window_height - ball_size*2)
+    //    ball_y_increment = -ball_y_increment;
+
+    // on each step of the animatin move the ball
+    //cur_ball.x += ball_x_increment;
+   // cur_ball.y += ball_y_increment;
+
+
+}
+
+animation sinewave(circle cur_ball)
+{
+    //if ball has reached either the left or right, reverse its direction
+    if(cur_ball.x < 0 || cur_ball.x > window_width - ball_size*2)
+        ball_x_increment = -1*ball_x_increment;
+    // if ball has reached either the top or bottom, reverse its direction
+    if(cur_ball.y < 0 || (cur_ball.y > (window_height - ball_size*2+20)))
+        ball_y_increment = -1*ball_y_increment;
+
+    cur_ball.x += ball_x_increment;
+    cur_ball.y = floor((window_height)/2.25+(window_height)/2.25*sin((360.0*cur_ball.x*num_periods)/window_width));
+
+
+
+}
+
+on leftarrow
+{
+    if(num_periods > 0 )
+    {
+        num_periods -= 1;
+        num_periods_display.text = "Current period: " + num_periods;
+        print(num_periods);        
+    }
+}
+on rightarrow
+{
+    num_periods += 1;
+    num_periods_display.text = "Current period: " + num_periods;
+    print(num_periods);        
+}
+
+

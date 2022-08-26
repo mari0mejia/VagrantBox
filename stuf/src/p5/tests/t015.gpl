@@ -1,0 +1,12 @@
+int    lhs_int;
+double lhs_double;
+string lhs_string;
+triangle lhs_triangle();
+
+on hkey
+{
+  print("Bad increment");
+  lhs_double++;
+  lhs_string++;
+  lhs_triangle++;
+}

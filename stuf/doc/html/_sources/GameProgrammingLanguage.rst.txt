@@ -1,0 +1,778 @@
+################################################
+Game Programming Language (GPL) Reference Manual
+################################################
+
+Ver. 26 October 2021
+
+**From the Game Programming Language's designer, Tyson Henry** 
+
+        The Game Programming Language (GPL) is an object-based language for specifying simple computer games such as arcade games of the late 1970's and early 1980's.  It was created as a semester long project for an undergraduate compiler course. My goal was to create a project that demonstrated the wide applicability of compiler construction tools. The language is simple to learn and surprisingly expressive. A typical computer science undergraduate can learn it in about an hour and create significant programs within several hours.
+
+        To keep the implementation simple enough to be completed in a single semester several simplifying design decisions were made. For example, all variables are global and there are no functions.
+
+=====================
+Programmatic Overview
+=====================
+
+In a GPL program, the visible components of a game are comprised of *game objects*. There are five types of game objects: *rectangle*, *circle*, *triangle*, *textbox*, and *pixmap*. Each game object has attributes that control its size, color, and location. Game objects are animated by modifying attributes. For example, a circle could be made to move across the screen by changing its ``x`` and ``y`` attributes or made to shrink by reducing its ``radius`` attribute.
+
+The GPL language syntax is similar to C/C++, borrowing the same syntax for variables (string, int, and double), for-loops, if-else, expressions, and statements. Statements grouped between pairs of curly-braces are called code blocks (think C/C++ function).
+
+An `event handler block` is executed whenever an event occurs such as an arrow key being pressed or a mouse button being clicked. An `animation block` can be assigned to one (or several) game objects. Animation blocks associated with a game object are executed several times each second.
+
+
+=====
+Usage
+=====
+
+The GPL executable is invoked from a terminal window. At startup a graphical window is created within which the game is played. Be sure the graphical window is in focus so that it receives the keystrokes and mouse clicks used to play the game. The GPL language includes a ``print`` statement that prints text to the terminal window, not the graphical window. When the GPL program ends, the graphical window is destroyed.
+
+
+.. code-block:: shell
+   
+   ###
+   # Standard invocation
+   ###
+   ./gpl some_game_file.gpl 
+
+   ###
+   # Use 42 as the argument to srand instead of time(nullptr)
+   ###
+   ./gpl -seed 42 some_game_file.gpl  
+
+   ###
+   # Use the console's stdin for input rather than the graphical window
+   ###
+   ./gpl -stdin  some_game_file.gpl  
+
+   ###
+   # Send keystrokes directly to GPL executable
+   ###
+   cat tests/t005.keystrokes | ./gpl -stdin tests/t005.gpl
+   # or
+   printf "aswq" | ./gpl -stdin some_game_file.gpl
+
+   ###
+   # Good for quick tests. Output a short program and pipe it directly to the GPL executable
+   ###
+   printf 'double trailer=2.95;string greeting="hi there";' | ./gpl /dev/stdin
+
+The ``q`` key exits a running GPL program. Before pressing ``q``, ensure the GPL window is in focus, not the terminal window from which the game was started.
+
+
+===========================
+Components of a GPL program
+===========================
+
+.. code-block:: cpp
+   :linenos:
+
+    //////////
+    // Variable and animation block declarations
+    //////////
+    forward animation bounce(rectangle cur);
+
+    int window_width = 500;
+    int window_height = 500;
+    int i;
+    int num = 500;
+    int x_inc[num];
+    int y_inc[num];
+    rectangle square[num];
+    rectangle paddle(x = window_width/10, y = window_height/2,
+                     w = paddle_width, h = paddle_height);
+
+    //////////
+    // Initialization block
+    //////////
+    initialization
+    {
+        for (i = 0; i < num; i += 1)
+        {
+            square[i].x = random(window_width);
+            square[i].w = 10;
+            square[i].green = random(255)/255.0;
+            square[i].animation_block = bounce;
+        }
+    }
+
+    //////////
+    // Animation block
+    //////////
+    animation bounce(rectangle cur)
+    {
+        if (cur.x > window_width || cur.x < 0)
+            x_inc[cur.user_int] = - x_inc[cur.user_int];
+        if (cur.y > window_height || cur.y < 0)
+            y_inc[cur.user_int] = - y_inc[cur.user_int];
+        cur.x += x_inc[cur.user_int];
+        cur.y += y_inc[cur.user_int];
+    }
+
+    //////////
+    // event blocks
+    //////////
+    on uparrow
+    {
+        if (paddle.y < window_height - 2*paddle_increment)
+            paddle.y += paddle_increment;
+    }
+
+    on downarrow
+    {
+        if (paddle.y > paddle_increment)
+            paddle.y -= paddle_increment;
+    }
+
+
+**Variable and animation block declarations (lines 1-14)**
+    All variables in GPL are global and are declared first in a program file. Forward declarations of Animation Blocks also appear here.
+
+**Code blocks (lines 16-56)**
+    There are four types of code blocks. Each has a similar structure: zero or more code statements surrounded by a pair of curly braces. There may be zero or more of each of these kinds of blocks.
+
+    **Initialization block (16-28)**
+        Executed before entering the interpreter's main event loop.
+
+    **Animation block (30-41)**
+        Each of these blocks are associated with zero or more game objects. The interpreter executes these repeatedly throughout the run of the game.
+
+    **Event handler block (43-56)**
+        When a player-generated event occurs such as pressing a key or moving the mouse the associated event handler block is executed.
+
+    **Termination block (not shown)**
+        Executed last, after interpreter's main event loop ends. Termination blocks are useful for printing debug messages and end-of-game information (such as game scores).
+
+=====================
+Variable Declarations
+=====================
+
+
+.. sidebar:: Game objects
+
+   Rectangles, triangles, circles, textboxes, and pixmaps are semantically similar to variables and are discussed further down.
+
+As in C/C++, an identifier begins with a letter or an underscore, followed by zero or more letters, underscores, or digits.
+The three variable types are equivalent to those in C/C++: ``int``, ``double``, ``string``. All variables are global and are declared prior to any code blocks. Unlike C/C++, an uninitialized variable takes on default values
+
+|
+
++------------------------------+---------------------+
+| Examples                     | Value               |
++==============================+=====================+
+| | ``int var;``               | | ``0`` (default)   |
+| | ``int length=89;``         | | ``89``            |
+| | ``int age=32+length;``     | | ``121``           |
++------------------------------+---------------------+
+| | ``double trouble;``        | | ``0.0`` (default) |
+| | ``double yummy=3.14;``     | | ``3.14``          |
++------------------------------+---------------------+
+| | ``string theory;``         | | ``""`` (default)  |
+| | ``string name="bobby"``    | | ``"bobby"``       |
+| | ``string b=age+"orb"``     | | ``"121orb"``      |
++------------------------------+---------------------+
+
+------
+Arrays
+------
+
+Arrays of variables and arrays of game objects can be created. The declared size of the array may be any expression that evaluates to an integer. Each element of an array is initialized to the type's default value. One technique for initializing arrays to non-default values is to use an *initialization block*. 
+
+Examples:
+
+.. code-block:: cpp
+
+    double angles[42];
+    int how_many=10;
+    circle dots[how_many];
+    rectangle blocks[how_many*2];
+
+=========
+Constants
+=========
+
++----------+---------------------------+
+| Type     | Example                   |
++==========+===========================+
+| integer  | ``42``                    |
++----------+---------------------------+
+| double   | ``3.14``                  |
++----------+---------------------------+
+| logical  | ``true``  (integer ``1``) |
++----------+---------------------------+
+| logical  | ``false`` (integer ``0``) |
++----------+---------------------------+
+| string   | ``Icabod Crane``          | 
++----------+---------------------------+
+
+As in C/C++, zero is false and any other value is true. Both ``true`` and ``false`` are language keywords and map to integer constants one and zero.
+
+==================
+Reserved Variables
+==================
+
+The following variables are predefined. Each may be declared with an initial value to change the default.
+
+=================== ========== ================ ======================================================================
+ Name               Type       Default          Description
+=================== ========== ================ ======================================================================
+``animation_speed`` ``int``    ``88``           Speed of the game's animation (1 is slowest, 100 is fastest)
+``window_x``        ``int``    ``200``          Horizontal placement of the game window on desktop (top-left x=0)
+``window_y``        ``int``    ``200``          Vertical placement of the game window on desktop (top-left y=0) 
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+``window_width``    ``int``    ``500``          Width of the game window
+``window_height``   ``int``    ``500``          Height of the game window
+``window_title``    ``string`` ``"gpl window"`` Text that appears in the titlebar of the game window
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+``window_red``      ``double`` ``1.0``          Red component window background color.
+``window_green``    ``double`` ``1.0``          Green component window background color.
+``window_blue``     ``double`` ``1.0``          Blue component window background color.
+=================== ========== ================ ======================================================================
+
+
+
+============
+Game Objects
+============
+
+Five variable types comprise the graphical elements of GPL: ``rectangle``, ``circle``, ``triangle``, ``pixmap``, and ``textbox``. Each game object has several attributes which may be set at the time of declaration (or later using assignment statements).
+
++-------------------------------------------------------------------------+
+| Examples                                                                |
++=========================================================================+
+| | ``rectangle box;``                                                    |
+| | ``rectangle box();``                                                  |
+| | ``rectangle box(x=10, y=15, h=30, w=25);``                            |
++-------------------------------------------------------------------------+
+| | ``circle wheel;``                                                     |
+| | ``circle wheel();``                                                   |
+| | ``circle wheel(x=10, y=35, radius=50, animation_block=spin_doctor);`` |
++-------------------------------------------------------------------------+
+| | ``triangle apex;``                                                    |
+| | ``triangle apex();``                                                  |
+| | ``triangle apex(x=100, size=50, red=0.5, blue=1.0, skew=1.3);``       |
++-------------------------------------------------------------------------+
+| | ``pixmap gordo;``                                                     |
+| | ``pixmap gordo();``                                                   |
+| | ``pixmap gordo(filename="creature.bmp", x=50, y=100);``               |
++-------------------------------------------------------------------------+
+| | ``textbox marquis;``                                                  |
+| | ``textbox marquis();``                                                |
+| | ``textbox marquis(text="World of Goo!", size=0.5);``                  |
++-------------------------------------------------------------------------+
+
+
+======================
+Game Object Attributes
+======================
+
+The following game object attributes are common to all game object types.
+
+=================== ========== ================ ======================================================================
+ Attribute Name     Type       Default          Description
+=================== ========== ================ ======================================================================
+``x``               ``int``    ``0``            Horizontal pixel placement of object in game window.
+``y``               ``int``    ``0``            Vertical pixel placement of object in game window.
+``w``               ``int``    ``10``           Width of object in pixels.
+``h``               ``int``    ``10``           Height of object in pixels.
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+``animation_block`` code block `none`           Name of the animation code block associated with this game object.
+``drawing_order``   ``int``    ``0``            Objects with higher numbers are drawn on top those with lower numbers.
+``proximity``       ``int``    ``4``            Distance in pixels used by ``near`` operator.
+``visible``         ``int``    ``1``            Draw objects with value ``1``. Do not draw objects with value ``0``.
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+``red``             ``double`` ``0.5``          Red component of the object's color
+``green``           ``double`` ``0.5``          Green component of the object's color
+``blue``            ``double`` ``0.5``          Blue component of the object's color
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+------------------- ---------- ---------------- ----------------------------------------------------------------------
+``user_int``\ **    ``int``    ``0``            Typically used to store game-specific values.
+``user_double``\ ** ``double`` ``0.0``          Typically used to store game-specific values.
+``user_string``\ ** ``string`` ``""``           Typically used to store game-specific values.
+=================== ========== ================ ======================================================================
+
+| ** There are five user variables for each type, e.g., ``user_int``, ``user_int2``, ``user_int3``, ``user_int4``, and ``user_int5``.
+
+Game object attributes are accessed using the same syntax as C/C++ for accessing structure or class attributes. For example:
+
+.. code-block:: cpp
+
+   wheel.x = 42;
+
+   i = wheel.x;
+
+   if (wheel.radius < 42)
+   {
+
+   }
+
+------------------------------------
+Type-Specific Game Object Attributes
+------------------------------------
+
+In addition to the common attributes, each game object has type-specific attributes.
+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+| | Attribute     |Type         |Default         |Description                                                          |
++=+===============+=============+================+=====================================================================+
+|   **rectangle**                                                                                                      |
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+| | | ``rotation``| | ``double``| | ``0.0``      | | Degrees rotated counter-clockwise around center of object         |
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+
+|
+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+| **circle**                                                                                                           |
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+| | |  ``radius`` | | ``int``   | | ``0``        | | The radius in pixels (overrides ``h`` and ``w``)                  |
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+
+|
+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+|   **triangle**                                                                                                       |
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+| | | ``size``    | | ``int``   | | ``0``        | | Length of the base of the triangle in pixels                      |
+| | | ``rotation``| | ``double``| | ``0.0``      | | Degrees rotated counter-clockwise around center of object         |
+| | | ``skew``    | | ``double``| | ``1.0``      | | Ratio: height/width:                                              |
+| | |             | |           | |              | |   - Taller if ``> 1.0``                                           |
+| | |             | |           | |              | |   - Shorter if ``< 1.0``                                          |
+| | |             | |           | |              | |   - Equilateral if ``== 1.0``                                     |
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+
+|
+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+| **textbox**                                                                                                          |
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+| | | ``text``    | | ``string``| | ``""``       | | Text to be displayed                                              |
+| | | ``size``    | | ``double``| | ``0.1``      | | 1.0 is approx. 100 pixels high. 0.1 is approx. 10 pixels high     |
+| | | ``spacing`` | | ``int``   | | ``10``       | | Number of pixels between letters when size == 1.0                 |
+| | |             | |           | |              | |                                                                   |
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+
+|
+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+| **pixmap**                                                                                                           |
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+| | | ``filename``| | ``string``| | ``""``       | | Name of the file containing the pixmap in ``.bmp`` format         |
++-+---------------+-------------+----------------+---------------------------------------------------------------------+
+
+.. |pink| raw:: html
+
+   <span style="font-weight:bold;color:Fuchsia;">
+
+.. |endpink| raw:: html
+
+   </span>
+
+For ``pixmap`` objects, The graphics file must be in BMP format with 24 bit color and 1 color plane.
+Pixmaps can only handle bitmaps with 24 bit color and 1 plane.  |pink|\ Magic pink pixels\ |endpink| in the bitmap image (color = |pink|\ FF00FF\ |endpink| or |pink|\ 255,0,255\ |endpink|, or |pink|\ 1.0, 0.0, 1.0\ |endpink|) are not drawn. They are transparent when rendered in the game.
+
+==================
+Using Game Objects
+==================
+
+---------
+Rendering
+---------
+
+By default, game objects are drawn in the order they are declared. Game objects declared earlier are drawn earlier::
+
+  circle sun(x=100, y=100, w=100, h=100);
+  circle moon(x=100, y=100, w=200, h=200);
+
+Because ``sun`` was declared before ``moon``, the sun is eclipsed by the moon. Change the ``drawing_order`` attribute of game object to control its drawing order.
+
+
+---------
+Colliding
+---------
+
+The collision detection operators ``near`` and ``touches`` use the bounding box of the original game object and don't account for object rotation. The ``touches`` operator detects overlapping bounding boxes and the ``near`` operator detects overlapping bounding boxes that have been arithmetically *grown* by each object's ``proximity`` attribute.
+
+
+=========
+Operators
+=========
+
+Most operators are semantically similar to their C/C++ counterparts. The unary operators are invoked like functions with parentheses. For example, ``floor(x-3.1)``, ``random(100)``, ``sin(90)``.
+
+===================== =============================== =============================== =============
+ Operator             Input Types                     Output types                    Operator type
+===================== =============================== =============================== =============
+ ``sin``\ :sup:`1`    ``int``, ``double``                      ``double``             Unary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``cos``\ :sup:`1`    ``int``, ``double``                      ``double``             Unary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``tan``\ :sup:`1`    ``int``, ``double``                      ``double``             Unary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``asin``\ :sup:`2`   ``int``, ``double``                      ``double``             Unary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``acos``\ :sup:`2`   ``int``, ``double``                      ``double``             Unary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``atan``\ :sup:`2`   ``int``, ``double``                      ``double``             Unary
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+ ``sqrt``             ``int``, ``double``                      ``double``             Unary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``abs``              ``int``, ``double``             ``int``, ``double``             Unary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``floor``            ``int``, ``double``             ``int``                         Unary
+--------------------- ------------------------------- ------------------------------- -------------
+``random``\ :sup:`3`  ``int``, ``double``             ``int``                         Unary
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+``touches``\ :sup:`4` `game object`                   ``int``                         Binary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``near``\ :sup:`4`   `game object`                   ``int``                         Binary
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+ ``*``                ``int``, ``double``             ``int``, ``double``             Binary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``/``                ``int``, ``double``             ``int``, ``double``             Binary
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+ ``+``                ``int``, ``double``, ``string`` ``int``, ``double``, ``string`` Binary
+--------------------- ------------------------------- ------------------------------- -------------
+`x` ``-`` `y`         ``int``, ``double``             ``int``, ``double``             Binary subtraction
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+ ``%``                ``int``                         ``int``                         Binary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``-`` `x`            ``int``, ``double``             ``int``, ``double``             Unary negation
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+ ``<``                ``int``, ``double``, ``string`` ``int``                         Binary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``>``                ``int``, ``double``, ``string`` ``int``                         Binary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``<=``               ``int``, ``double``, ``string`` ``int``                         Binary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``>=``               ``int``, ``double``, ``string`` ``int``                         Binary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``==``               ``int``, ``double``, ``string`` ``int``                         Binary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``!=``               ``int``, ``double``, ``string`` ``int``                         Binary
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+--------------------- ------------------------------- ------------------------------- -------------
+ ``!``                ``int``, ``double``             ``int``                         Unary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``&&``               ``int``, ``double``             ``int``                         Binary
+--------------------- ------------------------------- ------------------------------- -------------
+ ``||``               ``int``, ``double``             ``int``                         Binary
+===================== =============================== =============================== =============
+
+1. The input parameters to ``sin``, ``cos``, and ``tan`` are degrees, not radians.
+2. The return value of ``asin``, ``acos``, ``atan`` is degrees, not radians.
+3. | The ``random`` operator generates a random integer between :math:`[\,0,\lfloor{N}\rfloor\,)`.  
+   | If :math:`\lfloor{N}\rfloor<2` when ``random(N)`` is evaluated, then :math:`N=2` is used.
+4. ``near`` and ``touches`` return 1 (true) or 0 (false) depending on the proximity of the operators' game object arguments::
+
+     if(wheel touches box)
+     ...
+
+
+
+==============================
+Expressions and Type Promotion
+==============================
+
+Expressions are strongly typed and evaluate to either ``int``, ``double``, or ``string``. Several binary operators support type promotion. For example, with addition, when one operand is ``string``, if the other operand is either ``int`` or ``double`` it will be promoted to ``string`` to allow them to be concatenated. Likewise, when one operand is ``double`` and the other operand is ``int``, it will be promoted to ``double`` to allow them to be summed. Other operators support more limited promotion. For example, subtraction will promote an ``int`` to ``double`` but there is no promotion to ``string`` because there is no defined operation for the subtraction of strings.
+
+Type promotion is only one of:
+
+* ``int`` to ``double``
+
+* ``int`` to ``string``
+  
+* ``double`` to ``string``
+
+
+
+==========
+Statements
+==========
+
+
+* **assignment statements**
+
+  ===================== ===================================================================================================================
+  Operator              Legal Operand Types            
+  ===================== ===================================================================================================================
+  ``=``                 ``int``, ``double``, ``string``, *animation block* (LHS must be the ``animation_block`` attribute of a game object)           
+  --------------------- -------------------------------------------------------------------------------------------------------------------
+  ``+=``                ``int``, ``double``, ``string``
+  --------------------- -------------------------------------------------------------------------------------------------------------------
+  ``-=``                ``int``, ``double``
+  --------------------- -------------------------------------------------------------------------------------------------------------------
+  ``++``                ``int``
+  --------------------- -------------------------------------------------------------------------------------------------------------------
+  ``--``                ``int``
+  ===================== ===================================================================================================================
+
+  In GPL ``++`` and ``--`` are standalone statements. They cannot be used as part of larger expressions such as::
+
+    next_gen = dial / value++;
+
+|
+
+* **if-statements**: the ``expression`` must evaluate to ``int``.  The ``statement_or_block`` must be either a single statement, or several statements grouped with a pair of curly braces.
+
+  .. code-block:: cpp
+
+    if( expression ) 
+      statement_or_block
+
+    if( expression ) 
+      statement_or_block 
+    else 
+      statement_or_block
+
+|
+
+* **for-statements**: ``assignment_expression`` is as described above, and ``expression`` must evaluate to ``int``. The ``statement_or_block`` must be either a single statement, or several statements grouped with a pair of curly braces.
+
+  .. code-block:: cpp
+
+    for(assignment_statement; expression; assignment_statement) 
+      statement_or_block
+
+|
+
+* **print statements**:  ``expression`` must evaluate to ``string``. Type promotion will occur if an ``int`` or ``double`` expression is provided. The string is displayed in the console along with the line number of the gpl program that the ``print`` statement appears on.
+
+  .. code-block:: python
+
+    print(expression);
+
+|
+
+* **exit statements**:  ``expression`` must evaluate to ``int``. The line number of the exit statement is displayed in the console as the program terminates.
+
+  .. code-block:: perl
+
+    exit(expression);
+
+
+====================
+Event Handler Blocks
+====================
+
+    .. raw:: html
+
+      <pre><span style="font-weight:bold;color:green;">on</span> <span style="font-style: italic;">event_type</span>
+      <span style="font-weight:bold;">{</span>
+        <span style="font-style: italic;">statement;</span>
+        <span style="font-style: italic;">statement;</span>
+        ...
+      <span style="font-weight:bold;">}</span></pre>
+
+The *event_type* is a keystroke or mouse action that triggers the event and executes the statements in the block.
+
+**Types of Events**
+
+.. hlist::
+   :columns: 4
+
+   * ``space``
+   * ``leftarrow``
+   * ``rightarrow``
+   * ``uparrow``
+   * ``downarrow``
+   * ``leftmouse_down``
+   * ``leftmouse_up``
+   * ``middlemouse_down``
+   * ``middlemouse_up``
+   * ``rightmouse_down``
+   * ``rightmouse_up``
+   * ``mouse_move``
+   * ``mouse_drag``
+   * ``f1``
+   * ``wkey``
+   * ``akey``
+   * ``skey``
+   * ``dkey``
+   * ``fkey``
+   * ``hkey``
+   * ``jkey``
+   * ``kkey``
+   * ``lkey``
+
+There may be any number of event handler blocks for each *event_type*. They are executed in the order they are declared. The mouse events set the current location of the mouse in the global variables ``mouse_x`` and ``mouse_y``. In order to use these variables, declare them as integers::
+
+  int mouse_x;
+  int mouse_y;
+
+These variables should be considered read-only. Assigning values to them has no effect.
+
+================
+Animation Blocks
+================
+
+    .. raw:: html
+
+      <pre><span style="font-weight:bold;color:green;">animation</span> <span style="font-style: italic;">block_name</span><span style="font-weight:bold;">(</span><span style="font-style:italic;font-weight:bold;">game_object_type</span> <span style="font-style:italic;">object_name</span><span style="font-weight:bold;">)</span>
+      <span style="font-weight:bold;">{</span>
+        <span style="font-style: italic;">statement;</span>
+        <span style="font-style: italic;">statement;</span>
+        ...
+      <span style="font-weight:bold;">}</span></pre>
+
+The `block_name` and `object_name` are legal identifiers (think function/variable name). The `game_object_type` is one of ``rectangle``, ``circle``, ``triangle``, ``pixmap``, or ``textbox``.
+
+Each game object has an ``animation_block`` attribute. This attribute can be assigned the `block_name` of an animation block.
+
+  .. code-block:: cpp
+
+    rectangle circuit_box(h=30, w=20);
+
+    animation pulsate(rectangle ac_dc)
+    {
+      ac_dc.user_int++;
+      ac_dc.h = 30 + ac_dc.user_int % 50;
+    }
+
+    //in some other block:
+    circuit_box.animation_block=pulsate;
+
+
+In the above example, once ``circuit_box`` is associated with ``pulsate``, the ``pulsate`` animation block will be called several times each second with ``circuit_box`` being passed in as the argument. The ``ac_dc`` argument is a reference to an existing game object.
+
+It is possible to assign an animation block to a game object at the time the game object is created. 
+
+  .. code-block:: cpp
+
+    forward animation pulsate(rectangle);//the object_name is optional here
+    rectangle circuit_box(h=30, w=20, animation_block=pulsate);
+
+    animation pulsate(rectangle ac_dc)
+    {
+      ac_dc.user_int++;
+      ac_dc.h = 30 + ac_dc.user_int % 50;
+    }
+
+Because game objects and variables are declared prior to defining any code blocks, a forward declaration is used (think function prototype) to ensure the yet-to-be-defined animation block can be assigned to the game object.
+
+
+The frequency with which game objects' animation blocks are called is controlled with the  ``animation_speed`` reserved variable.
+
+The `game_object_type` of the animation block must match the type of the game object it is assigned to. An animation block may be assigned to any number of game objects.
+
+During an iteration of the animation cycle, animation blocks are run prior to objects being drawn.
+
+=====================
+Initialization Blocks
+=====================
+
+    .. raw:: html
+
+      <pre><span style="font-weight:bold;color:green;">initialization</span>
+      <span style="font-weight:bold;">{</span>
+        <span style="font-style: italic;">statement;</span>
+        <span style="font-style: italic;">statement;</span>
+        ...
+      <span style="font-weight:bold;">}</span></pre>
+
+There may be zero or more initialization blocks. They are executed after input has been parsed, after the window has been created, and before the main event loop is entered.
+
+Initialization blocks are frequently used to initialize arrays of variables.
+
+==================
+Termination Blocks
+==================
+
+    .. raw:: html
+
+      <pre><span style="font-weight:bold;color:green;">termination</span>
+      <span style="font-weight:bold;">{</span>
+        <span style="font-style: italic;">statement;</span>
+        <span style="font-style: italic;">statement;</span>
+        ...
+      <span style="font-weight:bold;">}</span></pre>
+
+There may be zero or more termination blocks. They are executed after the user quits the program by typing ``q``, or after an exit statement is executed.
+
+Termination blocks are frequently used to print out variables at the end of game execution.
+
+=============
+Miscellaneous
+=============
+
+--------
+Comments
+--------
+As in C++, the ``//`` characters start a comment through the end of the line.
+
+------
+Colors
+------
+Red, green, and blue attributes range from 0.0 (none) to 1.0 (full). In other applications, these colors are frequently represented as integers from 0-255. This can be mapped to the 0.0-1.0 range by simply dividing each number by the double 255.0::
+
+  circle sun(x=1, y=1, radius=300 , red=255/255.0, blue=231/255.0, green=109/255.0);
+
+
+===============
+Version History
+===============
+
+Ver. 26 October 2021
+
+* Upper- to lower-case of a letter.
+
+Ver. 23 March 2021
+
+* Corrected footnote on `random()` to not be inclusive of the maximum number.
+
+Ver. 21 October 2020
+
+* Corrected ``!`` operator from "Binary" to "Unary"
+
+Ver. 15 October 2020
+
+* Corrected footnotes for the trigonometric functions
+
+Ver. 14 September 2020
+
+* Added line number verbiage for the ``exit`` and ``print`` statements.
+
+Ver. 27 August 2020
+
+* Corrected ``textbox`` attribute from ``space`` to ``spacing``.
+
+* Corrected description of ``window_title`` reserved variable.
+
+
+Ver. 13 August 2020
+
+* Initial version built from original manual.

@@ -1,0 +1,2 @@
+Semantic error on line 7: The given expression is not a legal type for the size of array <my_circle>.  The size must be an integer.  Given expression is of type double.
+Semantic error on line 8: The given expression is not a legal type for the size of array <my_triangle>.  The size must be an integer.  Given expression is of type string.

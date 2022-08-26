@@ -1,0 +1,5 @@
+string window_title = "Project 4 t39.gpl";
+
+rectangle my_rectangle[3];
+
+int x = my_rectangle[1].apex; //no such member. See also t015.gpl

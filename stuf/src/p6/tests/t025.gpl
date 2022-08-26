@@ -1,0 +1,14 @@
+// NO BODY PROVIDED FOR FORWARD error
+forward animation stretch(triangle);
+forward animation yawn(triangle);
+forward animation wakeup(triangle);
+forward animation gorgon(circle);
+
+triangle mister_trippy(animation_block=stretch);
+triangle missus_trippy(animation_block=yawn);
+triangle weeboy_trippy(animation_block=wakeup);
+
+animation gorgon(circle clippy)
+{
+  //do nothing
+}

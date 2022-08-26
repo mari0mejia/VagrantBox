@@ -1,0 +1,8 @@
+string window_title = "Project 4 t035.gpl ***PRESS q TO QUIT***";
+
+pixmap photo1(x = 100, y = 100, filename = "tests/1.bmp");
+pixmap photo2(x = 100, y = 300, filename = "tests/2.bmp");
+pixmap photo3(x = 300, y = 300, filename = "tests/3.bmp");
+pixmap photo4(x = 300, y = 100, filename = "tests/4.bmp");
+
+textbox title(x = 10, y = 10, text = "Four pixmaps");

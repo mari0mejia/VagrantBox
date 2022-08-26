@@ -1,0 +1,19 @@
+//If Scope_manager::push_table wasn't used to push another symbol table 
+//onto the stack while parsing the animation block,
+//an error will be incorrectly generated while parsing the animation block
+//
+//If Scope_manager::pop_table wasn't used to remove the symbol table after
+//the animation block is parsed, then the akey event block will generate
+//an error.
+circle syrup;
+
+animation dance(triangle syrup)
+{
+  print("The skew is: " + syrup.skew);
+  syrup.x+=5;
+  syrup.red=0.5;
+}
+
+on akey {
+  syrup.radius=23;
+}

@@ -1,0 +1,673 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sixth Project &#8212; Game Programming Language 2.1 documentation</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Game Programming Language (GPL) Reference Manual" href="GameProgrammingLanguage.html" />
+    <link rel="prev" title="Fifth Project" href="README_P5.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="GameProgrammingLanguage.html" title="Game Programming Language (GPL) Reference Manual"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="README_P5.html" title="Fifth Project"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sixth Project</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sixth-project">
+<h1>Sixth Project<a class="headerlink" href="#sixth-project" title="Permalink to this headline">¶</a></h1>
+<p>Ver. 2 November 2021</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>The remaining GPL functionality is implemented:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Initialization and Termination blocks</p></li>
+<li><p>Near and Touches operators.</p></li>
+<li><p>Animation blocks</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="manifest">
+<h2>Manifest<a class="headerlink" href="#manifest" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p6/tests</span></code></dt>
+<dd class="field-odd"><p>Testing suite directory, 31 tests.</p>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Copy all files from <code class="docutils literal notranslate"><span class="pre">p5</span></code> into <code class="docutils literal notranslate"><span class="pre">p6</span></code>.</p></li>
+</ol>
+<div class="sidebar">
+<p class="sidebar-title">Initialization and Termination blocks</p>
+<p>In addition to event blocks (code that is executed when a key is pressed) GPL has initialization blocks and termination blocks. As their names suggest, these blocks are executed prior to the start of, and after the end of the GPL program run. They are trivial to implement.</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>The actions for the <code class="docutils literal notranslate"><span class="pre">initialization_block:</span></code> and <code class="docutils literal notranslate"><span class="pre">termination_block:</span></code> productions are nearly identical to the <code class="docutils literal notranslate"><span class="pre">on_block:</span></code> production. The only adjustment to the action of each of these blocks is the keystroke provided to the <code class="docutils literal notranslate"><span class="pre">add_handler</span></code> function. Use <code class="docutils literal notranslate"><span class="pre">Window::INITIALIZE</span></code> and <code class="docutils literal notranslate"><span class="pre">Window::TERMINATE</span></code> when calling <code class="docutils literal notranslate"><span class="pre">add_handler</span></code> for these two blocks.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="3">
+<li><p>Enhance the GPL <code class="docutils literal notranslate"><span class="pre">exit()</span></code> call to support termination blocks. Revise <code class="docutils literal notranslate"><span class="pre">Exit::execute()</span></code> by executing termination block(s) prior to exiting the program:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Event_manager</span><span class="o">::</span><span class="n">instance</span><span class="p">().</span><span class="n">execute_handlers</span><span class="p">(</span><span class="n">Window</span><span class="o">::</span><span class="n">TERMINATE</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Pass the relevant tests</p>
+<ul class="simple">
+<li><p>Initialization blocks, tests <code class="docutils literal notranslate"><span class="pre">t001.gpl</span></code> and <code class="docutils literal notranslate"><span class="pre">t002.gpl</span></code></p></li>
+<li><p>Termination blocks, tests <code class="docutils literal notranslate"><span class="pre">t003.gpl</span></code>, <code class="docutils literal notranslate"><span class="pre">t004.gpl</span></code>, and <code class="docutils literal notranslate"><span class="pre">t005.gpl</span></code></p></li>
+</ul>
+</li>
+</ol>
+<div class="sidebar">
+<p class="sidebar-title"><code class="docutils literal notranslate"><span class="pre">near</span></code> and <code class="docutils literal notranslate"><span class="pre">touches</span></code> operators.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">near</span></code> and <code class="docutils literal notranslate"><span class="pre">touches</span></code> operators are the only operators in GPL that operate on entire game objects. All other operators operate on integers, doubles, strings, and attributes of game objects (which are either int, double, or string).</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="5">
+<li><p>To accommodate the <code class="docutils literal notranslate"><span class="pre">near</span></code> and <code class="docutils literal notranslate"><span class="pre">touches</span></code> operators, add a <code class="docutils literal notranslate"><span class="pre">Game_object_constant</span></code> class. The constant’s <code class="docutils literal notranslate"><span class="pre">GPL::Type</span></code> is <code class="docutils literal notranslate"><span class="pre">GAME_OBJECT</span></code>. Add a new virtual function to both the base class, <code class="docutils literal notranslate"><span class="pre">Constant</span></code> and the new <code class="docutils literal notranslate"><span class="pre">Game_object_constant</span></code> class:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">virtual</span> <span class="k">const</span> <span class="n">Game_object</span><span class="o">*</span> <span class="n">as_game_object</span><span class="p">()</span> <span class="k">const</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="6">
+<li><p>Once <code class="docutils literal notranslate"><span class="pre">Game_object_constant</span></code> has been written, Enhance the <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> class to create and return <code class="docutils literal notranslate"><span class="pre">Game_object_constant</span></code> objects:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Constant</span><span class="o">*</span> <span class="n">Symbol</span><span class="o">::</span><span class="n">as_constant</span><span class="p">()</span> <span class="k">const</span>
+<span class="n">Constant</span><span class="o">*</span> <span class="n">Symbol</span><span class="o">::</span><span class="n">as_constant</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span>
+</pre></div>
+</div>
+<p>These two member functions create <code class="docutils literal notranslate"><span class="pre">(Integer|Double|String)_constant</span></code> objects and return them to the caller (typically, <code class="docutils literal notranslate"><span class="pre">Variable::evaluate()</span></code> calls these functions). Enhance these two functions to create and return <code class="docutils literal notranslate"><span class="pre">Game_object_constant</span></code> objects. Tip: In the switch statement of these two functions, use the <code class="docutils literal notranslate"><span class="pre">GPL::Type</span></code> of the actual object for the cases (<code class="docutils literal notranslate"><span class="pre">GPL::RECTANGLE</span></code>, <code class="docutils literal notranslate"><span class="pre">GPL::CIRCLE</span></code>, etc.). Do <em>not</em> make a case for <code class="docutils literal notranslate"><span class="pre">GPL::GAME_OBJECT</span></code>.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="7">
+<li><p>Derive two additional Expression classes for the <code class="docutils literal notranslate"><span class="pre">near</span></code> and <code class="docutils literal notranslate"><span class="pre">touches</span></code> operators. Implement the <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> functions of these new expression classes by calling existing game object member functions provided to check for near &amp; touches:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">Game_object</span><span class="o">::</span><span class="n">near</span><span class="p">(</span><span class="k">const</span> <span class="n">Game_object</span><span class="o">*</span> <span class="n">obj</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">Game_object</span><span class="o">::</span><span class="n">touches</span><span class="p">(</span><span class="k">const</span> <span class="n">Game_object</span><span class="o">*</span> <span class="n">obj</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The functions return one and zero for true/false.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="8">
+<li><p>Add the actions for the <code class="docutils literal notranslate"><span class="pre">near</span></code> and <code class="docutils literal notranslate"><span class="pre">touches</span></code> binary operators in the grammar. A properly-formatted call to the <code class="docutils literal notranslate"><span class="pre">Bin_op_check</span></code> template is sufficient.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>Pass tests <code class="docutils literal notranslate"><span class="pre">t006.gpl</span></code>, <code class="docutils literal notranslate"><span class="pre">t007.gpl</span></code>, and <code class="docutils literal notranslate"><span class="pre">t008.gpl</span></code>.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="topic">
+<p class="topic-title">Animation blocks</p>
+<p>Animation blocks are GPL blocks that have a structure modeled after C/C++ functions. For example:</p>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">//The &quot;tri&quot; identifier is unnecessary in this forward</span>
+<span class="c1">//declaration. If provided, the parser ignores it.</span>
+<span class="n">forward</span> <span class="n">animation</span> <span class="nf">dance</span><span class="p">(</span><span class="n">triangle</span> <span class="n">tri</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="n">triangle</span> <span class="n">dancer</span><span class="p">(</span><span class="n">skew</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">animation_block</span><span class="o">=</span><span class="n">dance</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="n">animation</span> <span class="n">dance</span><span class="p">(</span><span class="n">triangle</span> <span class="n">tri</span><span class="p">){</span>
+  <span class="c1">//GPL statements, typically manipulating tri</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li><p>A forward declaration is like a C/C++ function prototype. It is always allowed, but is only required if the animation block is referenced prior to the block’s definition. The above code is an example of when it is required.</p></li>
+<li><p>In the forward declaration, the identifier following the game object parameter type is not required. It is ignored if provided.</p></li>
+<li><p>The forward declaration’s argument type must match the type specified in the block definition (a triangle in lines 3 and 7 above). The block must also only be assigned to the <code class="docutils literal notranslate"><span class="pre">animation_block</span></code> parameter of a triangle object (line 5).</p></li>
+<li><p>A forward declaration does not require the declared animation block to be defined unless the declared block is assigned to a game object’s <code class="docutils literal notranslate"><span class="pre">animation_block</span></code> parameter (assignment shown in line 5 above).</p></li>
+</ul>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="topic">
+<p class="topic-title"><code class="docutils literal notranslate"><span class="pre">Animation_code</span></code> class</p>
+<p>A partially implemented <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code> class has been provided. It encapsulates the required information contained in a GPL animation block. <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code> has four private data members:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">block_name</span></code> A string. From line 7 (and 3) above, <code class="docutils literal notranslate"><span class="pre">dance</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parameter_name</span></code> A string. From line 7 above, <code class="docutils literal notranslate"><span class="pre">tri</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parameter_type</span></code> A <code class="docutils literal notranslate"><span class="pre">GPL::Type</span></code>. From line 7 (and 3) above, <code class="docutils literal notranslate"><span class="pre">GPL::TRIANGLE</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">block</span></code> A <code class="docutils literal notranslate"><span class="pre">Statement*</span></code>. The head of the linked list of statements associated with the block.</p></li>
+</ol>
+<p>Three static sets (publicly accessible) are also provided by <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">declared_blocklist</span></code> is the set of names (strings) of animation blocks that have been declared (line 3 above).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">defined_blocklist</span></code> is the set of names (strings) of animation blocks that have been defined (lines 7-9 above).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">used_blocklist</span></code> is the set of names (strings) of animation blocks that have been assigned to game objects (line 5 above).</p></li>
+</ul>
+<p>When parsing is completed, these sets will be used for error checking and to remove declared but undefined (and unused) animation blocks from the symbol table.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code> class has its own <code class="docutils literal notranslate"><span class="pre">GPL::Type</span></code>, <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_CODE</span></code>, to distinguish it from an animation block. For example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">circle</span>    <span class="nf">hoop</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">);</span>
+<span class="n">circle</span>    <span class="n">wheel</span><span class="p">;</span>
+<span class="n">animation</span> <span class="nf">roll</span><span class="p">(</span><span class="n">circle</span> <span class="n">cir</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">cir</span><span class="p">.</span><span class="n">x</span><span class="o">+=</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">on</span> <span class="n">akey</span> <span class="p">{</span>
+  <span class="c1">//assign ANIMATION_BLOCK = ANIMATION_CODE</span>
+  <span class="n">hoop</span><span class="p">.</span><span class="n">animation_block</span> <span class="o">=</span> <span class="n">roll</span><span class="p">;</span>
+  <span class="c1">//assign ANIMATION_BLOCK to ANIMATION_BLOCK</span>
+  <span class="n">wheel</span><span class="p">.</span><span class="n">animation_block</span> <span class="o">=</span> <span class="n">hoop</span><span class="p">.</span><span class="n">animation_block</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Both <code class="docutils literal notranslate"><span class="pre">GPL::Type</span></code>s (<code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_BLOCK</span></code> and <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_CODE</span></code>) are <code class="docutils literal notranslate"><span class="pre">Animation_code*</span></code> in the underlying C++ code.</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="10">
+<li><p>The first step to supporting animation blocks is to enhance <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> to hold an <code class="docutils literal notranslate"><span class="pre">Animation_code*</span></code> as a value:</p></li>
+</ol>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">Animation_code*</span></code> to <code class="docutils literal notranslate"><span class="pre">union</span> <span class="pre">symbol_type</span></code>. Don’t forget to add a new constructor to <code class="docutils literal notranslate"><span class="pre">symbol_type</span></code> as well.</p></li>
+<li><p>Add a Symbol constructor that takes an <code class="docutils literal notranslate"><span class="pre">Animation_code*</span></code>. Initialize the Symbol’s type to <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_CODE</span></code>. Only one constructor is required. There are never arrays of <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code> objects.</p></li>
+<li><p>Add a case for <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_CODE</span></code> to Symbol’s destructor to release its memory.</p></li>
+<li><p>Depending on your implementation, Symbol’s <code class="docutils literal notranslate"><span class="pre">operator&lt;&lt;</span></code> may need modification to print animation blocks correctly. Printing an animation block is trivial. For example, <code class="docutils literal notranslate"><span class="pre">animation</span> <span class="pre">code</span> <span class="pre">roll</span></code> where “roll” is the name of the of the block of animation code. Note that <code class="docutils literal notranslate"><span class="pre">to_string(GPL::ANIMATION_CODE)</span></code> returns the string “animation code”.</p></li>
+</ol>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="11">
+<li><p>Add a member function to <code class="docutils literal notranslate"><span class="pre">Scope_manager</span></code> and <code class="docutils literal notranslate"><span class="pre">Symbol_table</span></code> to remove a named Symbol. This will be used to remove unused forward declarations when parsing finishes:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Simply call erase() on the unordered_map</span>
+<span class="kt">void</span> <span class="n">Symbol_table</span><span class="o">::</span><span class="n">erase</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">)</span>
+
+<span class="c1">//Use Scope_manager::lookup as a guide. Call erase() on Symbol table with matching symbol.</span>
+<span class="kt">void</span> <span class="n">Scope_manager</span><span class="o">::</span><span class="n">erase</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="12">
+<li><p>The forward animation declaration adds an entry into the symbol table (so that it is defined when assigned to a game object’s <code class="docutils literal notranslate"><span class="pre">animation_block</span></code> attribute).</p>
+<p>There are two grammar productions specific to forward animation declarations: <code class="docutils literal notranslate"><span class="pre">forward_declaration:</span></code> and <code class="docutils literal notranslate"><span class="pre">animation_parameter:</span></code>. Both actions of <code class="docutils literal notranslate"><span class="pre">animation_parameter:</span></code> should assign the <code class="docutils literal notranslate"><span class="pre">object_type</span></code> (whose semantic value is a <code class="docutils literal notranslate"><span class="pre">GPL::Type</span></code>) to <code class="docutils literal notranslate"><span class="pre">$$</span></code>. The <code class="docutils literal notranslate"><span class="pre">forward_declaration:</span></code> production should insert a dynamically allocated <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code> object into the <code class="docutils literal notranslate"><span class="pre">Scope_manager</span></code>. After inserting the <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code> object, insert the animation block name into <code class="docutils literal notranslate"><span class="pre">Animation_code::declared_blocklist</span></code>.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="13">
+<li><p>Take a few minutes to write a test program to ensure you can implement <code class="docutils literal notranslate"><span class="pre">std::set_difference</span></code> correctly. For example, subtracting set (“two”, “four”, “six”) from (“one”, “two”, “three”, “four”) should produce the result set (“one”, “three”).</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="14">
+<li><p>The the ‘program:’ production rule is matched after the GPL program has completed parsing. Write post-parsing actions for in this production. Use <code class="docutils literal notranslate"><span class="pre">std::set_difference</span></code> to subtract the <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code> sets:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">declared_blocklist</span> <span class="o">-</span> <span class="n">defined_blocklist</span> <span class="c1">//use std::set_difference of course</span>
+</pre></div>
+</div>
+<p>Iterate through the result set, calling <code class="docutils literal notranslate"><span class="pre">Scope_manager::erase</span></code> on each animation block that was declared but not defined. At this early point in the project implementation <code class="docutils literal notranslate"><span class="pre">Animation_code::defined_blocklist</span></code> will be empty (all symbols inserted from a forward declaration will be removed).</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="15">
+<li><p>Pass tests <code class="docutils literal notranslate"><span class="pre">t009.gpl</span></code> (proper forward declarations) and <code class="docutils literal notranslate"><span class="pre">t010.gpl</span></code> (redeclaration error).</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="16">
+<li><p><code class="docutils literal notranslate"><span class="pre">Animation_code</span></code> objects in the symbol table are accessed as <code class="docutils literal notranslate"><span class="pre">Constant</span></code> objects when assigned to a game object’s <code class="docutils literal notranslate"><span class="pre">animation_block</span></code> attribute:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">hoop</span><span class="p">.</span><span class="n">animation_block</span> <span class="o">=</span> <span class="n">roll</span><span class="p">;</span> <span class="c1">//The rhs variable is evalated, returning a constant object</span>
+</pre></div>
+</div>
+<p>Derive a new class from <code class="docutils literal notranslate"><span class="pre">Constant</span></code> named <code class="docutils literal notranslate"><span class="pre">Animation_block_constant</span></code>. Its private data type is <code class="docutils literal notranslate"><span class="pre">Animation_code*</span></code>.  Add a new member function to the base class, <code class="docutils literal notranslate"><span class="pre">Constant</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">virtual</span> <span class="k">const</span> <span class="n">Animation_code</span><span class="o">*</span> <span class="nf">as_animation_block</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">throw</span> <span class="n">intrinsic_type</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Override this function in <code class="docutils literal notranslate"><span class="pre">Animation_block_constant</span></code> to <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">data;</span></code>.</p>
+<p>Because all game objects have an animation block attribute, override <code class="docutils literal notranslate"><span class="pre">as_animation_block()</span></code> in the <code class="docutils literal notranslate"><span class="pre">Game_attribute_constant</span></code> class as well. This function is modeled after <code class="docutils literal notranslate"><span class="pre">Game_attribute_constant::as_int()</span></code>. That is, if the attribute’s type is <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_BLOCK</span></code> obtain the <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code> pointer via <code class="docutils literal notranslate"><span class="pre">read_attribute</span></code> and return it. Otherwise throw the object’s type as an exception.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="17">
+<li><p>Add a <code class="docutils literal notranslate"><span class="pre">case</span> <span class="pre">GPL::ANIMATION_CODE</span></code> to <code class="docutils literal notranslate"><span class="pre">Symbol::as_constant()</span></code> to create and return an <code class="docutils literal notranslate"><span class="pre">Animation_block_constant</span></code>.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="18">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Game_attribute_locator</span></code> class allows game object attributes to be modified. Add another <code class="docutils literal notranslate"><span class="pre">mutate()</span></code> function to this class (and the base class) to allow modification of the <code class="docutils literal notranslate"><span class="pre">animation_block</span></code> attribute of game objects.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="19">
+<li><p>The forward declaration adds animation code objects to the symbol table. However those animation code objects are incomplete. The private data members <code class="docutils literal notranslate"><span class="pre">std::string</span> <span class="pre">parameter_name</span></code> and <code class="docutils literal notranslate"><span class="pre">Statement*</span> <span class="pre">block</span></code> are not known at the forward declaration. They are initialized by the parser when the animation code block is defined.</p>
+<p>Derive another <code class="docutils literal notranslate"><span class="pre">Locator</span></code> class: <code class="docutils literal notranslate"><span class="pre">Animation_code_locator</span></code>. The purpose of this class is to allow easy modification/initialization of <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code>’s private data members, <code class="docutils literal notranslate"><span class="pre">parameter_name</span></code> and <code class="docutils literal notranslate"><span class="pre">block</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Animation_code_locator</span></code> has an <code class="docutils literal notranslate"><span class="pre">Animation_code*</span></code> as private data. In addition to the constructor, the class has two member functions:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">virtual</span> <span class="kt">void</span> <span class="nf">mutate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">);</span> <span class="c1">//set parameter_name</span>
+<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">mutate</span><span class="p">(</span><span class="k">const</span> <span class="n">Statement</span><span class="o">*</span> <span class="n">val</span><span class="p">);</span>   <span class="c1">//set block</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="20">
+<li><p>Add a <code class="docutils literal notranslate"><span class="pre">case</span> <span class="pre">GPL::ANIMATION_CODE</span></code> to <code class="docutils literal notranslate"><span class="pre">Symbol::as_lvalue()</span></code> to create and return an <code class="docutils literal notranslate"><span class="pre">Animation_code_locator</span></code>.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="topic">
+<p class="topic-title">Understanding symbol tables at parse time</p>
+<p>Two production rules drive the parsing of animation blocks:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="nl">animation_block</span><span class="p">:</span>
+    <span class="n">animation_declaration</span> <span class="n">statement_block</span>
+
+<span class="nl">animation_declaration</span><span class="p">:</span>
+      <span class="n">T_ANIMATION</span> <span class="n">T_ID</span> <span class="n">T_LPAREN</span> <span class="n">object_type</span> <span class="n">T_ID</span> <span class="n">T_RPAREN</span>
+</pre></div>
+</div>
+<p>The second production is parsed first. It is here that the animation code object is added to the symbol table if not already done by a forward declaration. After the <code class="docutils literal notranslate"><span class="pre">animation_declaration</span></code> production is parsed, the code block of statements is parsed. Take this example:</p>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">animation</span> <span class="nf">dance</span><span class="p">(</span><span class="n">triangle</span> <span class="n">tri</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">print</span><span class="p">(</span><span class="s">&quot;The skew is: &quot;</span> <span class="o">+</span> <span class="n">tri</span><span class="p">.</span><span class="n">skew</span><span class="p">);</span>
+  <span class="n">tri</span><span class="p">.</span><span class="n">x</span><span class="o">+=</span><span class="mi">5</span><span class="p">;</span>
+  <span class="n">tri</span><span class="p">.</span><span class="n">red</span><span class="o">=</span><span class="mf">0.5</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Line 1 is parsed by the <code class="docutils literal notranslate"><span class="pre">animation_declaration</span></code> production.</p>
+<p>Then lines 2-6 are parsed (a <code class="docutils literal notranslate"><span class="pre">statement_block</span></code> in the grammar).</p>
+<p>To parse the block successfully, the <code class="docutils literal notranslate"><span class="pre">tri</span></code> variable must be a declared symbol. The <code class="docutils literal notranslate"><span class="pre">animation_declaration</span></code> production will push a new symbol table onto the symbol table stack and insert the <code class="docutils literal notranslate"><span class="pre">tri</span></code> symbol into it. The <code class="docutils literal notranslate"><span class="pre">animation_block</span></code> production will pop the table off the stack.</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="21">
+<li><p>Write the action for the <code class="docutils literal notranslate"><span class="pre">animation_declaration</span></code> production:</p>
+<ol class="arabic simple">
+<li><p>If the animation block had a forward declaration, the <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code> object already exists in the symbol table. Confirm this. If not, add it now.</p></li>
+<li><p>If the symbol’s type is <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_CODE</span></code>, set the <code class="docutils literal notranslate"><span class="pre">parameter_name</span></code> of the symbol (via <code class="docutils literal notranslate"><span class="pre">as_lvalue()-&gt;mutate(*$5)</span></code>).</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">Scope_manager</span></code> to add a new symbol table for the new scope.</p></li>
+<li><p>Create a new game object symbol and insert it into the symbol table. Refer to the <code class="docutils literal notranslate"><span class="pre">object_declaration</span></code> production as a quick reminder (a simple switch statement will do the trick).</p></li>
+</ol>
+<p>The <code class="docutils literal notranslate"><span class="pre">animation_block</span></code> production will need to access the <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code> symbol to attach the statement block to it, so the name of the block needs to be passed to it as a semantic value, <code class="docutils literal notranslate"><span class="pre">$$=$2</span></code> (<code class="docutils literal notranslate"><span class="pre">%type</span> <span class="pre">&lt;union_string&gt;</span> <span class="pre">animation_declaration</span></code>).</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="22">
+<li><p>Add the action for the <code class="docutils literal notranslate"><span class="pre">animation_block</span></code> production:</p>
+<ol class="arabic simple">
+<li><p>Remove the current scope’s symbol table from the <code class="docutils literal notranslate"><span class="pre">Scope_manager</span></code> (this production is matched as soon as the statement block has finished parsing, when the block’s scope ends.).</p></li>
+<li><dl class="simple">
+<dt>If the animation block’s name (<code class="docutils literal notranslate"><span class="pre">$1</span></code>, a <code class="docutils literal notranslate"><span class="pre">std::string</span> <span class="pre">pointer</span></code>) isn’t <code class="docutils literal notranslate"><span class="pre">nullptr</span></code>:</dt><dd><ol class="arabic simple">
+<li><p>Retrieve the symbol and set its statement pointer. The statement pointer is available via <code class="docutils literal notranslate"><span class="pre">$2</span></code>.</p></li>
+<li><p>Insert the animation block’s name into <code class="docutils literal notranslate"><span class="pre">Animation_code::defined_blocklist</span></code>.</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+</ol>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="23">
+<li><p>Pass tests <code class="docutils literal notranslate"><span class="pre">t011.gpl</span></code> through <code class="docutils literal notranslate"><span class="pre">t015.gpl</span></code>.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="24">
+<li><p>Pass tests <code class="docutils literal notranslate"><span class="pre">t016.gpl</span></code>, <code class="docutils literal notranslate"><span class="pre">t017.gpl</span></code>, and <code class="docutils literal notranslate"><span class="pre">t018.gpl</span></code>. These tests should generate errors. Examine the <code class="docutils literal notranslate"><span class="pre">.gpl</span></code> and <code class="docutils literal notranslate"><span class="pre">.err</span></code> files for guidance. Note that with a redeclaration error (<code class="docutils literal notranslate"><span class="pre">t018.gpl</span></code>) The (uncreatable) <code class="docutils literal notranslate"><span class="pre">animation_declaration</span></code>  should set <code class="docutils literal notranslate"><span class="pre">$$=nullptr;</span></code>.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="25">
+<li><p>The parameter processing portion of the <code class="docutils literal notranslate"><span class="pre">object_declaration:</span></code> production must be able to initialize the object’s animation block:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">triangle</span> <span class="nf">teepee</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">animation_block</span><span class="o">=</span><span class="n">dance</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">38</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Add a case for the fourth parameter type, <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_BLOCK</span></code>. Be sure to insert the block’s name into <code class="docutils literal notranslate"><span class="pre">Animation_code::used_blocklist</span></code>.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="26">
+<li><p>Pass tests <code class="docutils literal notranslate"><span class="pre">t019.gpl</span></code> through <code class="docutils literal notranslate"><span class="pre">t022.gpl</span></code>.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="27">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">program:</span></code> production currently subtracts sets to remove from the symbol table those forward declarations that were not defined:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>declared - defined
+</pre></div>
+</div>
+<p>Before calculating this <code class="docutils literal notranslate"><span class="pre">set_difference</span></code>, insert another <code class="docutils literal notranslate"><span class="pre">set_difference</span></code> calculation:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>used - defined
+</pre></div>
+</div>
+<p>The result of this difference is the set of animation blocks that have a forward declaration and are used by game objects but are never defined. This is an error. For each item in this error set report a <code class="docutils literal notranslate"><span class="pre">NO_BODY_PROVIDED_FOR_FORWARD</span></code> error.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="28">
+<li><p>Pass tests <code class="docutils literal notranslate"><span class="pre">t023.gpl</span></code> through <code class="docutils literal notranslate"><span class="pre">t026.gpl</span></code>.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="topic">
+<p class="topic-title">Executing animation blocks</p>
+<p>Executing a game object’s animation block is similar to executing a function with an argument:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>A new symbol table is pushed onto the stack</p></li>
+<li><p>A symbol representing the function argument (the game object) is inserted into the table</p></li>
+<li><p>The function is executed</p></li>
+<li><p>The new symbol table is popped off the stack.</p></li>
+</ol>
+<p>The game object function argument is passed by reference. That is, the symbol inserted in step 2 is just a reference to a symbol that already exists in a different symbol table. Specifically, the reference refers to the <em>value</em> of an existing symbol.</p>
+</div></blockquote>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="29">
+<li><p>Derive a subclass from <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> named <code class="docutils literal notranslate"><span class="pre">Reference</span></code>.</p>
+<ol class="arabic">
+<li><p>(This substep has been done for you) Make the <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> class destructor virtual. Whenever inheritance is involved, if any member functions are virtual the destructor should <em>always</em> be virtual.</p></li>
+<li><p>Give the derived class direct access to <code class="docutils literal notranslate"><span class="pre">Symbol</span></code>’s data member, <code class="docutils literal notranslate"><span class="pre">value</span></code> variable. Change the access specifier for that variable from <code class="docutils literal notranslate"><span class="pre">private</span></code> to <code class="docutils literal notranslate"><span class="pre">protected</span></code>.</p></li>
+<li><p>To Symbol’s <code class="docutils literal notranslate"><span class="pre">union</span> <span class="pre">symbol_type</span></code> add a <code class="docutils literal notranslate"><span class="pre">game_object_pointer</span></code> (and a corresponding <code class="docutils literal notranslate"><span class="pre">symbol_type</span></code> constructor).</p></li>
+<li><p>Write a new <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> constructor with an access specifier of <code class="docutils literal notranslate"><span class="pre">protected</span></code>. It will only be invoked from the initialization list of the <code class="docutils literal notranslate"><span class="pre">Reference</span></code> class’s constructor:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Symbol</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span> <span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">type</span><span class="p">,</span> <span class="n">Game_object</span><span class="o">*</span> <span class="n">argument</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>The Reference class only has a constructor and a destructor:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Reference</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Symbol</span> <span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="n">Reference</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">parameter_name</span><span class="p">,</span>
+              <span class="n">GPL</span><span class="o">::</span><span class="n">Type</span>          <span class="n">parameter_type</span><span class="p">,</span>
+              <span class="n">Game_object</span><span class="o">*</span>       <span class="n">gop</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">,</span> <span class="n">parameter_type</span><span class="p">,</span> <span class="n">gop</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Reference</span><span class="p">()</span> <span class="p">{</span> <span class="n">value</span><span class="p">.</span><span class="n">game_object_pointer</span><span class="o">=</span><span class="k">nullptr</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The destructor for <code class="docutils literal notranslate"><span class="pre">Reference</span></code> is trivial but important to the functionality. As with all virtual destructors, after <code class="docutils literal notranslate"><span class="pre">Reference</span></code>’s destructor runs, the base class destructor runs (<code class="docutils literal notranslate"><span class="pre">Symbol::~Symbol()</span></code>). Assigning <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> to the reference’s data pointer ensures the <code class="docutils literal notranslate"><span class="pre">delete</span></code> statement in <code class="docutils literal notranslate"><span class="pre">~Symbol()</span></code> won’t release the memory the reference was referring to. That memory belongs to a Symbol in a different symbol table.</p>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="30">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code> class has an execute function that is automatically called when game objects are animated:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="n">Animation_code</span><span class="o">::</span><span class="n">execute</span><span class="p">(</span><span class="n">Game_object</span><span class="o">*</span> <span class="n">argument</span><span class="p">)</span> <span class="k">const</span>
+</pre></div>
+</div>
+<p>Write the body to this function:</p>
+<ol class="arabic simple">
+<li><p>Push a new symbol table onto the stack.</p></li>
+<li><p>Create a Reference object to the game object argument (for a guide on syntax, refer to the symbols created in <code class="docutils literal notranslate"><span class="pre">object_declaration:</span></code>)</p></li>
+<li><p>Call the <code class="docutils literal notranslate"><span class="pre">execute()</span></code> function on <code class="docutils literal notranslate"><span class="pre">Animation_code</span></code>’s private data member, <code class="docutils literal notranslate"><span class="pre">block</span></code>.</p></li>
+<li><p>Pop the symbol table off of the stack.</p></li>
+</ol>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="31">
+<li><p>Pass <code class="docutils literal notranslate"><span class="pre">t027.gpl</span></code>.</p></li>
+</ol>
+<div class="sidebar">
+<p class="sidebar-title">Example: two animation block assignments in <code class="docutils literal notranslate"><span class="pre">akey</span></code> event block</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>  <span class="n">circle</span>    <span class="nf">hoop</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">);</span>
+  <span class="n">circle</span>    <span class="nf">wheel</span><span class="p">();</span>
+  <span class="n">animation</span> <span class="nf">roll</span><span class="p">(</span><span class="n">circle</span> <span class="n">cir</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cir</span><span class="p">.</span><span class="n">x</span><span class="o">+=</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">on</span> <span class="n">akey</span> <span class="p">{</span>
+<span class="hll">    <span class="n">hoop</span><span class="p">.</span><span class="n">animation_block</span> <span class="o">=</span> <span class="n">roll</span><span class="p">;</span>
+</span>
+<span class="hll">    <span class="n">wheel</span><span class="p">.</span><span class="n">animation_block</span> <span class="o">=</span>
+</span><span class="hll">      <span class="n">hoop</span><span class="p">.</span><span class="n">animation_block</span><span class="p">;</span>
+</span>  <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="32">
+<li><p>Enhance the <code class="docutils literal notranslate"><span class="pre">assign_statement:</span></code> production to support the assignment of animation blocks to <code class="docutils literal notranslate"><span class="pre">animation_block</span></code> attributes of game objects.</p>
+<p>The lefthand side is valid if it is an <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_BLOCK</span></code> being assigned either <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_BLOCK</span></code> or <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_CODE</span></code>.  The <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_CODE</span></code> type may never appear on the LHS of an assignment.</p>
+<ol class="arabic simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_CODE</span></code> is on the lefthand side, <code class="docutils literal notranslate"><span class="pre">Error::CANNOT_ASSIGN_TO_ANIMATION_CODE</span></code>.</p></li>
+<li><p>If the lefthand side parameter type does not match the righthand side parameter type, <code class="docutils literal notranslate"><span class="pre">Error::ANIMATION_BLOCK_ASSIGNMENT_PARAMETER_TYPE_ERROR</span></code>.</p></li>
+<li><p>If the assignment is valid and the righthand side is <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_CODE</span></code>, insert the block’s name into <code class="docutils literal notranslate"><span class="pre">Animation_code::used_blocklist</span></code>.</p></li>
+</ol>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="33">
+<li><p>In <code class="docutils literal notranslate"><span class="pre">Assign::execute()</span></code> add a case for <code class="docutils literal notranslate"><span class="pre">GPL::ANIMATION_BLOCK</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">case</span> <span class="n">GPL</span><span class="o">::</span><span class="nl">ANIMATION_BLOCK</span><span class="p">:</span>
+  <span class="n">lvalue</span><span class="o">-&gt;</span><span class="n">mutate</span><span class="p">(</span><span class="n">rhs_constant</span><span class="o">-&gt;</span><span class="n">as_animation_block</span><span class="p">());</span>
+  <span class="k">break</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="34">
+<li><p>Pass remaining tests that exercise the assignment operator.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="35">
+<li><p>Try your gpl interpreter both the gpl game you wrote and the example games provided at the beginning of the semester.</p></li>
+</ol>
+</div>
+<div class="section" id="version-history">
+<h2>Version History<a class="headerlink" href="#version-history" title="Permalink to this headline">¶</a></h2>
+<p>Ver. 2 November 2021</p>
+<ul class="simple">
+<li><p>Converted Gpl_type to GPL::Type</p></li>
+</ul>
+<p>Ver. 23 August 2021</p>
+<ul class="simple">
+<li><p>Transitioned out <code class="docutils literal notranslate"><span class="pre">Table_handler</span></code>.</p></li>
+</ul>
+<p>Ver. 7 May 2021</p>
+<ul class="simple">
+<li><p>Rephrased sentence on how the Gpl_types are represented by the underlying C++ code.</p></li>
+<li><p>Other minor text changes.</p></li>
+<li><p>Updated number of tests</p></li>
+</ul>
+<p>Ver. 19 Dec 2020</p>
+<ul class="simple">
+<li><p>More test shuffling and additional test. Removed the downcasting direction in step #32.3. It is not required.</p></li>
+</ul>
+<p>Ver. 15 Dec 2020</p>
+<ul class="simple">
+<li><p>Added a test so renumbered in text.</p></li>
+<li><p>Renamed <code class="docutils literal notranslate"><span class="pre">Animation_block_locator</span></code> to <code class="docutils literal notranslate"><span class="pre">Animation_code_locator</span></code></p></li>
+</ul>
+<p>Ver. 12 Dec 2020</p>
+<ul class="simple">
+<li><p>Changed last couple of items</p></li>
+</ul>
+<p>Ver. 08 Dec 2020</p>
+<ul class="simple">
+<li><p>Corrected typo.</p></li>
+</ul>
+<p>Ver. 05 Nov 2020</p>
+<ul class="simple">
+<li><p>Added const to <code class="docutils literal notranslate"><span class="pre">dynamic_cast&lt;const</span> <span class="pre">Variable*&gt;</span></code></p></li>
+</ul>
+<p>Ver. 02 May 2020</p>
+<ul class="simple">
+<li><p>Added code highlights to a sidebar</p></li>
+</ul>
+<p>Ver. 01 May 2020</p>
+<ul class="simple">
+<li><p>Restructured document for use with Sphinx markup</p></li>
+</ul>
+<p>Ver. 29 Apr 2020</p>
+<ul class="simple">
+<li><p>Removed the penultimate step. It is no longer relevant.</p></li>
+</ul>
+<p>Ver. 28 Apr 2020</p>
+<ul class="simple">
+<li><p>Fixed typo and number of tests shown in manifest. Noted “virtual” keyword had been done already. Reworded last step.</p></li>
+</ul>
+<p>Ver. 13 Dec 2019</p>
+<ul class="simple">
+<li><p>Fixed invisible angle-braces around dynamic cast</p></li>
+</ul>
+<p>Ver. 12 Dec 2019</p>
+<ul class="simple">
+<li><p>Fixed private to protected.</p></li>
+</ul>
+<p>Ver. 10 Dec 2019</p>
+<ul class="simple">
+<li><p>Completed writeup.</p></li>
+</ul>
+<p>Ver. 08 Dec 2019</p>
+<ul class="simple">
+<li><p>Through step 26.</p></li>
+</ul>
+<p>Ver. 05 Dec 2019</p>
+<ul class="simple">
+<li><p>Added description through test 17</p></li>
+</ul>
+<p>Ver. 02 Dec 2019</p>
+<ul class="simple">
+<li><p>Initial version.</p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="GameProgrammingLanguage.html" title="Game Programming Language (GPL) Reference Manual"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="README_P5.html" title="Fifth Project"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sixth Project</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CSCI 515 Compiler Design.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+string window_title = "Project 4 t002.gpl -- compare to t002.jpg  ***PRESS q TO QUIT***";
+rectangle my_rectangle();
+circle    my_circle();
+triangle  my_triangle();
+pixmap    my_pixmap();
+textbox   my_textbox();

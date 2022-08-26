@@ -1,0 +1,7 @@
+rectangle brick[-3];//error: illegal array size
+int a=brick[0].x; //should work
+
+triangle one[0];//error: illegal array size
+
+circle parachute["fdsa"];//error: array size must be an integer
+int b=parachute[0].x; //should work

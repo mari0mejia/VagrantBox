@@ -1,0 +1,10 @@
+triangle chime;
+
+rectangle paddle(skew = chime);
+
+on akey
+{
+  print("string" + 42 + chime);
+  print(40 + 2 + paddle.skew);
+  print(paddle.skew + 42);
+}

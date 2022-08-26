@@ -1,0 +1,599 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Third Project &#8212; Game Programming Language 2.1 documentation</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Fourth Project" href="README_P4.html" />
+    <link rel="prev" title="Second Project" href="README_P2.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="README_P4.html" title="Fourth Project"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="README_P2.html" title="Second Project"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Third Project</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="third-project">
+<h1>Third Project<a class="headerlink" href="#third-project" title="Permalink to this headline">¶</a></h1>
+<p>Ver. 20 October 2021</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>For this third project, support is added for GPL expressions and variables.</p>
+</div>
+<div class="section" id="manifest">
+<h2>Manifest<a class="headerlink" href="#manifest" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p3/Constant.h</span></code></dt>
+<dd class="field-odd"><p>Class for storing integer/double/string constants</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p3/Constant.cpp</span></code></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p3/Expression.h</span></code></dt>
+<dd class="field-odd"><p>Class for managing expressions</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p3/Expression.cpp</span></code></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p3/tests</span></code></dt>
+<dd class="field-odd"><p>Testing suite directory, 200 tests.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="project-description">
+<h2>Project description<a class="headerlink" href="#project-description" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Copy the files from <code class="docutils literal notranslate"><span class="pre">p2</span></code> into <code class="docutils literal notranslate"><span class="pre">p3</span></code>:</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="2">
+<li><p>Assume a <code class="docutils literal notranslate"><span class="pre">.gpl</span></code> game file with:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">x</span><span class="o">=</span><span class="mi">682</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In the previous project, integer initialization was hard-coded to <code class="docutils literal notranslate"><span class="pre">42</span></code>. Begin this project by coaxing GPL to correctly initialize an integer with its <code class="docutils literal notranslate"><span class="pre">optional_initializer</span></code> from the <code class="docutils literal notranslate"><span class="pre">variable_declaration:</span></code> production (in this example, 682). A quick look at the scanner (<code class="docutils literal notranslate"><span class="pre">gpl.l</span></code>) reveals that integers generate the <code class="docutils literal notranslate"><span class="pre">T_INT_CONSTANT</span></code> token for the grammar.  In the parser (<code class="docutils literal notranslate"><span class="pre">gpl.y</span></code>) this constant is found in the <code class="docutils literal notranslate"><span class="pre">primary_expression:</span></code> production. Wrap the value passed from the scanner into an <code class="docutils literal notranslate"><span class="pre">Integer_constant</span></code> object:</p>
+<pre>primary_expression:
+    ...
+    | T_INT_CONSTANT <span style="font-weight:bold;color:DarkRed;">{ $$=new Integer_constant($1);}</span></pre><p>The type for <code class="docutils literal notranslate"><span class="pre">primary_expression</span></code> token must also be specified:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">type</span> <span class="o">&lt;</span><span class="n">union_expression_ptr</span><span class="o">&gt;</span> <span class="n">primary_expression</span>
+</pre></div>
+</div>
+<p>As well as adding adding the new type to the union:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">union</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="k">const</span> <span class="n">Expression</span><span class="o">*</span> <span class="n">union_expression_ptr</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>To the set of includes near the top of <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code> add <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&quot;Constant.h&quot;</span></code></p>
+<p>Compiling reveals <em>type clash</em> warnings in those rules of the <code class="docutils literal notranslate"><span class="pre">primary_expression:</span></code> production that have no action. To silence each, add an action to assign a <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> to <code class="docutils literal notranslate"><span class="pre">$$</span></code> (be sure to add a comment to indicate the code is temporary).</p>
+<pre>primary_expression:
+        T_LPAREN expression T_RPAREN <span style="font-weight:bold;color:DarkRed;">{$$=nullptr; /*CHANGE*/}</span>
+        | variable <span style="font-weight:bold;color:DarkRed;">{$$=nullptr; /*CHANGE*/}</span>
+        <span style="font-style:italic;">etc.</span>
+</pre></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Compile. Though we haven’t finished the task of integer initialization, the project should successfully compile current progress without warnings.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="4">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">primary_expression</span></code> token is a rule in the <code class="docutils literal notranslate"><span class="pre">expression:</span></code> production. Add an action to this rule:</p>
+<pre>
+    expression:
+        primary_expression <span style="font-weight:bold;color:DarkRed;">{$$=$1;}</span>
+        ...</pre><p>As was done with <code class="docutils literal notranslate"><span class="pre">primary_expression</span></code>, add a <code class="docutils literal notranslate"><span class="pre">%type</span></code> directive for <code class="docutils literal notranslate"><span class="pre">expression</span></code>.</p>
+<p>Add <code class="docutils literal notranslate"><span class="pre">{$$=nullptr;</span> <span class="pre">/*CHANGE*/}</span></code> to the remaining rules for the <code class="docutils literal notranslate"><span class="pre">expression:</span></code> production to eliminate compiler warnings.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Compile and confirm no warnings or errors.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="6">
+<li><p>Write actions for the two rules of the <code class="docutils literal notranslate"><span class="pre">optional_initializer:</span></code> production. The <code class="docutils literal notranslate"><span class="pre">empty</span></code> rule should assign <code class="docutils literal notranslate"><span class="pre">$$=nullptr;</span></code>. Note that in this case, <code class="docutils literal notranslate"><span class="pre">$$=nullptr;</span></code> is the proper action for <code class="docutils literal notranslate"><span class="pre">empty</span></code> (do not add a “CHANGE” comment). A <code class="docutils literal notranslate"><span class="pre">%type</span></code> directive for <code class="docutils literal notranslate"><span class="pre">optional_initializer</span></code> is required as well.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="7">
+<li><p>Compile and confirm no warnings or errors.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="8">
+<li><p>Modify the first rule’s action in the <code class="docutils literal notranslate"><span class="pre">variable_declaration:</span></code> production. For now, focus on the case when <code class="docutils literal notranslate"><span class="pre">simple_type</span></code> is an integer.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">optional_initializer</span></code> is empty (e.g., <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">x;</span></code>) it will contain <code class="docutils literal notranslate"><span class="pre">nullptr</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">optional_initializer</span></code> is not empty (e.g., <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">x=498;</span></code>) it will contain an <code class="docutils literal notranslate"><span class="pre">Expression*</span></code>.</p>
+<p>For an empty <code class="docutils literal notranslate"><span class="pre">optional_initializer</span></code>, create a <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> with a default value: <code class="docutils literal notranslate"><span class="pre">0</span></code>.  Otherwise, obtain a <code class="docutils literal notranslate"><span class="pre">Constant*</span></code> from the <code class="docutils literal notranslate"><span class="pre">Expression*</span></code> by calling <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code>. Then create a <code class="docutils literal notranslate"><span class="pre">Symbol</span></code>, initializing it with a value obtained from the <code class="docutils literal notranslate"><span class="pre">Constant*</span></code> by calling  <code class="docutils literal notranslate"><span class="pre">as_int()</span></code>.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="9">
+<li><p>Confirm that a simple program initializes integer values correctly:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">abc</span><span class="p">;</span>     <span class="c1">//should be initialized to 0</span>
+<span class="kt">int</span> <span class="n">def</span><span class="o">=</span><span class="mi">293</span><span class="p">;</span> <span class="c1">//should be initialized to 293</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="10">
+<li><p>Integrate similar changes for <code class="docutils literal notranslate"><span class="pre">double</span></code> and <code class="docutils literal notranslate"><span class="pre">string</span></code> (empty initialization defaults to <code class="docutils literal notranslate"><span class="pre">0.0</span></code> and the empty string <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> respectively). This requires changing the switch statement’s other cases in the first rule of the <code class="docutils literal notranslate"><span class="pre">variable_declaration:</span></code> production. Also required are changes to the <code class="docutils literal notranslate"><span class="pre">primary_expression:</span></code> production that are comparable to that made to accommodate integer constants.</p></li>
+</ol>
+<p>This is sufficient for the first six tests to pass. However, tests 7-9 will fail. Integer variables are being declared, but initialized with doubles and strings. Likewise, a double variable is being initialized a string. Find the expected error in <code class="docutils literal notranslate"><span class="pre">error.cpp</span></code>. Enhance the action for <code class="docutils literal notranslate"><span class="pre">variable_declaration:</span></code>’s first rule with a <code class="docutils literal notranslate"><span class="pre">try/catch</span></code> block to catch and report the error.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="11">
+<li><p>Ensure the first nine tests (<code class="docutils literal notranslate"><span class="pre">tests/t001.gpl</span></code> - <code class="docutils literal notranslate"><span class="pre">tests/t009.gpl</span></code>) pass.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="12">
+<li><p>Now is a good time to eliminate memory leaks with current progress.</p>
+<ol class="arabic">
+<li><p>Prior to the scanner returning <code class="docutils literal notranslate"><span class="pre">T_STRING_CONSTANT</span></code> its semantic value was set by dynamically allocating a <code class="docutils literal notranslate"><span class="pre">string</span></code>. The parser’s action for <code class="docutils literal notranslate"><span class="pre">T_STRING_CONSTANT</span></code> allocates a <code class="docutils literal notranslate"><span class="pre">String_constant</span></code>, initializing it with the semantic value. Once the scanner-allocated string’s value has been used it is no longer required and should be released (<code class="docutils literal notranslate"><span class="pre">delete</span> <span class="pre">$1;</span></code>). This had been in-place as part of the previous project but may have been inadvertently removed when updating to create the <code class="docutils literal notranslate"><span class="pre">String_constant</span></code>. The memory is released <em>after</em> it is used to allocate <code class="docutils literal notranslate"><span class="pre">String_constant</span></code>.</p></li>
+<li><p>The first rule of the <code class="docutils literal notranslate"><span class="pre">variable_declaration:</span></code> production is <code class="docutils literal notranslate"><span class="pre">simple_type</span> <span class="pre">T_ID</span> <span class="pre">optional_initializer</span></code>. The dynamically allocated semantic values associated with the second and third symbols in this rule must be released once they are no longer needed. <code class="docutils literal notranslate"><span class="pre">T_ID</span></code>’s semantic value is a string allocated in the scanner, and <code class="docutils literal notranslate"><span class="pre">optional_initializer</span></code> has a dynamically allocated <code class="docutils literal notranslate"><span class="pre">Expression</span></code>. Release them after they’ve been used in the <code class="docutils literal notranslate"><span class="pre">switch</span></code> statement.</p></li>
+<li><p>Test for memory leaks on the first nine tests. Writing a loop at the shell prompt is a convenient way to test a range:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> i in <span class="o">{</span><span class="m">1</span>..9<span class="o">}</span><span class="p">;</span> <span class="k">do</span> memvalidate.bash <span class="nv">$i</span><span class="p">;</span> <span class="k">done</span>
+</pre></div>
+</div>
+<p>The output of <code class="docutils literal notranslate"><span class="pre">valgrind</span></code> (which <code class="docutils literal notranslate"><span class="pre">memvalidate.bash</span></code> uses) is helpful identifying the origin of leaked memory. The leak-check enables <code class="docutils literal notranslate"><span class="pre">valgrind</span></code> to report on the location of memory leaks:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>valgrind --leak-check<span class="o">=</span>full ./gpl tests/t003.gpl
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="13">
+<li><p>Write the <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> and <code class="docutils literal notranslate"><span class="pre">type()</span></code> member functions for <code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">Plus</span></code>. The <code class="docutils literal notranslate"><span class="pre">type()</span></code> function should return the resulting <code class="docutils literal notranslate"><span class="pre">GPL::Type</span></code> of the expression based on the resulting type of the operator’s two operands.</p>
+<blockquote>
+<div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">Plus</span><span class="o">::</span><span class="n">type</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+  <span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">lht</span><span class="o">=</span><span class="n">lhs</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">();</span>
+  <span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">rht</span><span class="o">=</span><span class="n">rhs</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">();</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">lht</span><span class="o">==</span><span class="n">GPL</span><span class="o">::</span><span class="n">STRING</span> <span class="o">||</span> <span class="n">rht</span><span class="o">==</span><span class="n">GPL</span><span class="o">::</span><span class="n">STRING</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">GPL</span><span class="o">::</span><span class="n">STRING</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">lht</span><span class="o">==</span><span class="n">GPL</span><span class="o">::</span><span class="n">DOUBLE</span> <span class="o">||</span> <span class="n">rht</span><span class="o">==</span><span class="n">GPL</span><span class="o">::</span><span class="n">DOUBLE</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">GPL</span><span class="o">::</span><span class="n">DOUBLE</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">GPL</span><span class="o">::</span><span class="n">INT</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">Constant</span><span class="o">*</span> <span class="n">Plus</span><span class="o">::</span><span class="n">evaluate</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+  <span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">lht</span><span class="o">=</span><span class="n">lhs</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">();</span>
+  <span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">rht</span><span class="o">=</span><span class="n">rhs</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">();</span>
+  <span class="k">const</span> <span class="n">Constant</span><span class="o">*</span> <span class="n">lhs_constant</span><span class="o">=</span><span class="n">lhs</span><span class="o">-&gt;</span><span class="n">evaluate</span><span class="p">();</span>
+  <span class="k">const</span> <span class="n">Constant</span><span class="o">*</span> <span class="n">rhs_constant</span><span class="o">=</span><span class="n">rhs</span><span class="o">-&gt;</span><span class="n">evaluate</span><span class="p">();</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">lht</span><span class="o">==</span><span class="n">GPL</span><span class="o">::</span><span class="n">STRING</span> <span class="o">||</span> <span class="n">rht</span><span class="o">==</span><span class="n">GPL</span><span class="o">::</span><span class="n">STRING</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span><span class="p">(</span><span class="k">new</span> <span class="n">String_constant</span><span class="p">(</span><span class="n">lhs_constant</span><span class="o">-&gt;</span><span class="n">as_string</span><span class="p">()</span> <span class="o">+</span> <span class="c1">//&lt;--addition</span>
+                                   <span class="n">rhs_constant</span><span class="o">-&gt;</span><span class="n">as_string</span><span class="p">()));</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">lht</span><span class="o">==</span><span class="n">GPL</span><span class="o">::</span><span class="n">DOUBLE</span> <span class="o">||</span> <span class="n">rht</span><span class="o">==</span><span class="n">GPL</span><span class="o">::</span><span class="n">DOUBLE</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span><span class="p">(</span><span class="k">new</span> <span class="n">Double_constant</span><span class="p">(</span><span class="n">lhs_constant</span><span class="o">-&gt;</span><span class="n">as_double</span><span class="p">()</span> <span class="o">+</span> <span class="c1">//&lt;--addition</span>
+                                   <span class="n">rhs_constant</span><span class="o">-&gt;</span><span class="n">as_double</span><span class="p">()));</span>
+  <span class="k">return</span> <span class="nf">ret</span><span class="p">(</span><span class="k">new</span> <span class="n">Integer_constant</span><span class="p">(</span><span class="n">lhs_constant</span><span class="o">-&gt;</span><span class="n">as_int</span><span class="p">()</span> <span class="o">+</span>     <span class="c1">//&lt;--addition</span>
+                                  <span class="n">rhs_constant</span><span class="o">-&gt;</span><span class="n">as_int</span><span class="p">()));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">ret()</span></code> function is a wrapper function that prevents memory leaks. In all <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> functions, wrap dynamically allocated objects that are returned as shown above.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="14">
+<li><p>Modify the rule for addition in the expression production:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span> <span class="p">{</span> <span class="err">$$</span><span class="o">=</span><span class="k">new</span> <span class="n">Plus</span><span class="p">(</span><span class="err">$</span><span class="mi">1</span><span class="p">,</span> <span class="err">$</span><span class="mi">3</span><span class="p">);</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>This is sufficient for tests 10-14 to pass.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="15">
+<li><p>Write the <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> and <code class="docutils literal notranslate"><span class="pre">type()</span></code> member functions for <code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">Multiply</span></code>:</p>
+<blockquote>
+<div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// GPL::DOUBLE and GPL::INT are the only valid types for multiplication</span>
+<span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">Multiply</span><span class="o">::</span><span class="n">type</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+  <span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">lht</span><span class="o">=</span><span class="n">lhs</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">();</span>
+  <span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">rht</span><span class="o">=</span><span class="n">rhs</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">();</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">lht</span><span class="o">==</span><span class="n">GPL</span><span class="o">::</span><span class="n">DOUBLE</span> <span class="o">||</span> <span class="n">rht</span><span class="o">==</span><span class="n">GPL</span><span class="o">::</span><span class="n">DOUBLE</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">GPL</span><span class="o">::</span><span class="n">DOUBLE</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">GPL</span><span class="o">::</span><span class="n">INT</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">Constant</span><span class="o">*</span> <span class="n">Multiply</span><span class="o">::</span><span class="n">evaluate</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+  <span class="k">const</span> <span class="n">Constant</span><span class="o">*</span> <span class="n">lhs_constant</span><span class="o">=</span><span class="n">lhs</span><span class="o">-&gt;</span><span class="n">evaluate</span><span class="p">();</span>
+  <span class="k">const</span> <span class="n">Constant</span><span class="o">*</span> <span class="n">rhs_constant</span><span class="o">=</span><span class="n">rhs</span><span class="o">-&gt;</span><span class="n">evaluate</span><span class="p">();</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">lhs</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">()</span><span class="o">==</span><span class="n">GPL</span><span class="o">::</span><span class="n">DOUBLE</span> <span class="o">||</span> <span class="n">rhs</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">()</span><span class="o">==</span><span class="n">GPL</span><span class="o">::</span><span class="n">DOUBLE</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span><span class="p">(</span><span class="k">new</span> <span class="n">Double_constant</span><span class="p">(</span><span class="n">lhs_constant</span><span class="o">-&gt;</span><span class="n">as_double</span><span class="p">()</span> <span class="o">*</span> <span class="c1">//&lt;--multiply</span>
+                                   <span class="n">rhs_constant</span><span class="o">-&gt;</span><span class="n">as_double</span><span class="p">()));</span>
+  <span class="k">return</span> <span class="nf">ret</span><span class="p">(</span><span class="k">new</span> <span class="n">Integer_constant</span><span class="p">(</span><span class="n">lhs_constant</span><span class="o">-&gt;</span><span class="n">as_int</span><span class="p">()</span> <span class="o">*</span>     <span class="c1">//&lt;--multiply</span>
+                                  <span class="n">rhs_constant</span><span class="o">-&gt;</span><span class="n">as_int</span><span class="p">()));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the binary and unary operators, the member functions <code class="docutils literal notranslate"><span class="pre">type()</span></code> and <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> assume the operand types are valid. The code above assumes that both <code class="docutils literal notranslate"><span class="pre">rhs</span></code> and <code class="docutils literal notranslate"><span class="pre">lhs</span></code> are either <code class="docutils literal notranslate"><span class="pre">GPL::INT</span></code> or <code class="docutils literal notranslate"><span class="pre">GPL::DOUBLE</span></code> (A <code class="docutils literal notranslate"><span class="pre">GPL::STRING</span></code> is an illegal type with multiplication). The valid-type assumption is safe because type-checking is done while the GPL code is being parsed. If either operand is an invalid type, the error is reported and <code class="docutils literal notranslate"><span class="pre">new</span> <span class="pre">Integer_constant(0)</span></code> is created instead of <code class="docutils literal notranslate"><span class="pre">new</span> <span class="pre">Multiply($1,</span> <span class="pre">$3)</span></code>.</p>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="sidebar">
+<p class="sidebar-title">Operator type-checking</p>
+<p>As noted above, actions coded for each operator require validating types. A technique for using templates will be presented in class for dramatically reducing the copy/paste/modify that is otherwise required for type-checking the operators.</p>
+</div>
+<ol class="arabic" start="16">
+<li><p>The first 94 tests facilitate developing the binary and unary operators. Run each test individually.</p>
+<p>Use the contents of the test’s GPL file <code class="docutils literal notranslate"><span class="pre">tests/tXXX.gpl</span></code> to determine the operator being tested. Write and debug the class associated with tested operator before proceeding to the next test. Don’t move on until your code passes the first 94 tests.</p>
+<p>For several operations (e.g., <code class="docutils literal notranslate"><span class="pre">random</span></code>, <code class="docutils literal notranslate"><span class="pre">floor</span></code>, boolean operations) consult the GPL manual for acceptable usage and error conditions. Some operations behave differently than in C/C++.</p>
+<p>At the end of this writeup are two brief sections on division/modulus and squashing memory leaks. Pause now and read through those sections. It is good information to have while completing the remaining work.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="17">
+<li><p>Add actions to the remaining rules for the <code class="docutils literal notranslate"><span class="pre">primary_expression:</span></code> production except for <code class="docutils literal notranslate"><span class="pre">variable</span></code> (that will be done later).</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="18">
+<li><p>Undo the change made in the previous project to the array rule in the <code class="docutils literal notranslate"><span class="pre">variable_declaration:</span></code> production.</p>
+<p>Original:</p>
+<pre>variable_declaration:
+   ...
+   | simple_type  T_ID T_LBRACKET <span style="font-weight:bold;color:green;">T_INT_CONSTANT</span> T_RBRACKET</pre><p>Revised:</p>
+<pre>variable_declaration:
+   ...
+   | simple_type  T_ID T_LBRACKET <span style="font-weight:bold;color:DarkRed;">expression</span> T_RBRACKET</pre><p>Change <code class="docutils literal notranslate"><span class="pre">$4</span></code> in the action for that rule to get the code to compile again. The $4 parameter is now an expression that needs something like</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="err">$</span><span class="mi">4</span><span class="o">-&gt;</span><span class="n">evaluate</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">as_int</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Additional code will be required; an error is reported if the expression isn’t an integer. Tests 95 and 96 are helpful here.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="19">
+<li><p>In preparation for the next step, write two member functions for <code class="docutils literal notranslate"><span class="pre">Symbol</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span> <span class="n">Constant</span><span class="o">*</span> <span class="n">Symbol</span><span class="o">::</span><span class="n">as_constant</span><span class="p">()</span> <span class="k">const</span>          <span class="c1">//Symbol value is not an array</span>
+<span class="k">const</span> <span class="n">Constant</span><span class="o">*</span> <span class="n">Symbol</span><span class="o">::</span><span class="n">as_constant</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span> <span class="c1">//Symbol value is an array</span>
+</pre></div>
+</div>
+<p>These functions create and return an <code class="docutils literal notranslate"><span class="pre">(Integer|Double|String)_constant</span></code> object matching the symbol’s type, initialized to the symbol’s value.  For the array version, return <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> if <code class="docutils literal notranslate"><span class="pre">index</span></code> is out-of-bounds.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">type</span></code> contains something other than <code class="docutils literal notranslate"><span class="pre">GPL::INT</span></code>, <code class="docutils literal notranslate"><span class="pre">GPL::DOUBLE</span></code>, or <code class="docutils literal notranslate"><span class="pre">GPL::STRING</span></code>, then <code class="docutils literal notranslate"><span class="pre">throw</span> <span class="pre">type;</span></code>. This exception becomes relevant in the next project when game objects (e.g. <code class="docutils literal notranslate"><span class="pre">RECTANGLE</span></code>) are introduced as additional types.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="20">
+<li><p>Up until now only the declaration of variables has been handled. The <code class="docutils literal notranslate"><span class="pre">variable:</span></code> production handles variables used in expressions:</p>
+<pre>5 + <span style="font-weight:bold;color:green;">myvar</span> * 8 / <span style="font-weight:bold;color:green;">anothervar[3]</span></pre><p>Add a <code class="docutils literal notranslate"><span class="pre">Variable</span></code> class to manage variables in expressions. The <code class="docutils literal notranslate"><span class="pre">Variable</span></code> class stores the symbol’s name and retrieves the symbol as needed via a <code class="docutils literal notranslate"><span class="pre">lookup</span></code> call to <code class="docutils literal notranslate"><span class="pre">Scope_manager</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Variable</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Expression</span> <span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="c1">// initialize unused array_index_expression to nullptr</span>
+    <span class="n">Variable</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">symbol_name</span><span class="p">);</span>
+
+    <span class="c1">// initialize array_index_expression to index_expr</span>
+    <span class="n">Variable</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">symbol_name</span><span class="p">,</span> <span class="k">const</span> <span class="n">Expression</span><span class="o">*</span> <span class="n">index_expr</span><span class="p">);</span>
+
+    <span class="k">virtual</span> <span class="k">const</span> <span class="n">Constant</span><span class="o">*</span> <span class="nf">evaluate</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">type</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Variable</span><span class="p">();</span>
+
+    <span class="n">Variable</span><span class="p">(</span><span class="k">const</span> <span class="n">Variable</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+    <span class="n">Variable</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Variable</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+  <span class="k">protected</span><span class="o">:</span> <span class="c1">//allow derived class access</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">symbol_name</span><span class="p">;</span>
+    <span class="k">const</span> <span class="n">Expression</span><span class="o">*</span> <span class="n">array_index_expression</span><span class="p">;</span>
+
+    <span class="c1">//The symbol() function eases access to the symbol</span>
+    <span class="c1">//use it within Variable&#39;s member functions</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;</span> <span class="n">symbol</span><span class="p">()</span>
+    <span class="p">{</span> <span class="k">return</span> <span class="n">Scope_manager</span><span class="o">::</span><span class="n">instance</span><span class="p">().</span><span class="n">lookup</span><span class="p">(</span><span class="n">symbol_name</span><span class="p">);</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;</span> <span class="n">symbol</span><span class="p">()</span> <span class="k">const</span>
+    <span class="p">{</span> <span class="k">return</span> <span class="n">Scope_manager</span><span class="o">::</span><span class="n">instance</span><span class="p">().</span><span class="n">lookup</span><span class="p">(</span><span class="n">symbol_name</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p><code class="docutils literal notranslate"><span class="pre">Variable::evaluate()</span></code> returns <code class="docutils literal notranslate"><span class="pre">ret(new</span> <span class="pre">Integer_constant(0))</span></code> if <code class="docutils literal notranslate"><span class="pre">symbol_name</span></code> is the empty string. Otherwise call <code class="docutils literal notranslate"><span class="pre">Symbol::as_constant</span></code>.</p>
+<p>Call the appropriate <code class="docutils literal notranslate"><span class="pre">Symbol::as_constant</span></code> function written in the previous step. If the variable is not an array, call and return the <code class="docutils literal notranslate"><span class="pre">as_constant()</span></code> function that takes no arguments. Wrap the return value in the <code class="docutils literal notranslate"><span class="pre">ret()</span></code> function before returning it to the caller of <code class="docutils literal notranslate"><span class="pre">Variable::evaluate()</span></code>.</p>
+<p>If the variable is an array, evaluate the <code class="docutils literal notranslate"><span class="pre">array_index_expression</span></code> as an integer and pass the integer to <code class="docutils literal notranslate"><span class="pre">Symbol::as_constant(int)</span></code>.  If it returns <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> due to an out-of-bounds index, <code class="docutils literal notranslate"><span class="pre">Variable::evaluate()</span></code> should report the error and return the symbol’s first array element instead.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p><code class="docutils literal notranslate"><span class="pre">Variable::type()</span></code> returns <code class="docutils literal notranslate"><span class="pre">GPL::INT</span></code> if <code class="docutils literal notranslate"><span class="pre">symbol_name</span></code> is empty. Otherwise return the type of the symbol.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p><code class="docutils literal notranslate"><span class="pre">Variable::~Variable()</span></code> releases <code class="docutils literal notranslate"><span class="pre">array_index_expression</span></code>.</p></li>
+</ol>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="topic">
+<p class="topic-title">Parsing and the <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> function</p>
+<p>For this project and the next project the GPL programs used as tests are parsed but not executed. File <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code> contains the grammar and actions taken <cite>while the GPL program is being parsed, not executed</cite>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> functions are intended to be called <cite>while the GPL program is running</cite> not while it is being parsed. Statements are executed and expressions are evaluated while the program runs.</p>
+<p>The big exception to this intended use of <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> is when variables are declared (and when game objects are declared in the next project). Variable declarations have optional initializers and arrays have sizes. These must be determined while the program is being parsed. The tasks in this project have relied heavily on <cite>evaluate()</cite> because of its role in evaluating optional initializers and array sizes.</p>
+<p>For grammar rules not part of the <cite>variable_declaration:</cite> production (and not part of <cite>object_declaration:</cite> in the next project) avoid the use of <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code>. Find a different way. Calling <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> while parsing is wrong.</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="21">
+<li><p>Add actions to the first two rules of the <code class="docutils literal notranslate"><span class="pre">variable:</span></code> production. The actions for the first two rules <code class="docutils literal notranslate"><span class="pre">lookup</span></code> symbol from <code class="docutils literal notranslate"><span class="pre">Scope_manager</span></code> to validate it. If valid, create a <code class="docutils literal notranslate"><span class="pre">Variable</span></code> object. Recover from parse errors in the <code class="docutils literal notranslate"><span class="pre">variable:</span></code> production by creating <code class="docutils literal notranslate"><span class="pre">new</span> <span class="pre">Variable(&quot;&quot;)</span></code>. The third and fourth rules of the <code class="docutils literal notranslate"><span class="pre">variable:</span></code> production are implemented in a future project.</p>
+<p>Configure the type of the <code class="docutils literal notranslate"><span class="pre">variable:</span></code> production as <code class="docutils literal notranslate"><span class="pre">Variable*</span></code>, not <code class="docutils literal notranslate"><span class="pre">Expression*</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">type</span> <span class="o">&lt;</span><span class="n">union_variable_ptr</span><span class="o">&gt;</span> <span class="n">variable</span>
+</pre></div>
+</div>
+<p>Enhance <code class="docutils literal notranslate"><span class="pre">%union</span></code> as well.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="22">
+<li><p>Ensure all rules for the <code class="docutils literal notranslate"><span class="pre">primary_expression:</span></code> production have valid actions. The <code class="docutils literal notranslate"><span class="pre">variable</span></code> rule simply assigns the previously-created <code class="docutils literal notranslate"><span class="pre">Variable</span></code> object to the lefthand side of the production.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="note-on-parsing-division-and-modulus">
+<h3>Note on parsing division and modulus<a class="headerlink" href="#note-on-parsing-division-and-modulus" title="Permalink to this headline">¶</a></h3>
+<p>The division and modulus operators do not check for divide-by-zero errors while the GPL program is running. However, a check is done while the program is being parsed. The function <code class="docutils literal notranslate"><span class="pre">Error::runtime()</span></code> returns false if the program is parsing (not yet running). Use this function to add divide-by-zero error-checking in your division and modulus <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> functions. For example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">rhs_val</span><span class="o">=</span><span class="n">rhs_constant</span><span class="o">-&gt;</span><span class="n">as_double</span><span class="p">();</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">Error</span><span class="o">::</span><span class="n">runtime</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">rhs_val</span><span class="o">==</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">Error</span><span class="o">::</span><span class="n">error</span><span class="p">(</span><span class="n">Error</span><span class="o">::</span><span class="n">DIVIDE_BY_ZERO_AT_PARSE_TIME</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nf">ret</span><span class="p">(</span><span class="k">new</span> <span class="n">Integer_constant</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tips-for-eliminating-memory-leaks">
+<h3>Tips for eliminating memory leaks<a class="headerlink" href="#tips-for-eliminating-memory-leaks" title="Permalink to this headline">¶</a></h3>
+<p>Any token assigned a <code class="docutils literal notranslate"><span class="pre">%type</span></code> directive of <code class="docutils literal notranslate"><span class="pre">union_string</span></code> has a semantic value that is dynamically allocated and needs to be released after it is used. For example, in the <code class="docutils literal notranslate"><span class="pre">variable:</span></code> production, <code class="docutils literal notranslate"><span class="pre">T_ID</span></code> should be released in the first rule after:</p>
+<ol class="arabic simple">
+<li><p>generating an error because the variable is undeclared</p></li>
+<li><p>generating an error because the variable is erroneously used as an array (<code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">a;</span> <span class="pre">a[3];//error!</span></code>)</p></li>
+<li><p>creating a <code class="docutils literal notranslate"><span class="pre">Variable</span></code> object</p></li>
+</ol>
+<p>If a binary operator object (Plus, Divide, etc.) is successfully created, the right-hand-side and left-hand-side expression pointers will be managed and released by the created operator object. However, if there is an error (e.g. <code class="docutils literal notranslate"><span class="pre">3/&quot;apple&quot;</span></code>), then the expression pointers must be released when the error is detected. Similarly for the unary operators.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">optional_initializer</span></code> in the first rule of the <code class="docutils literal notranslate"><span class="pre">variable_declaration:</span></code> production must be released after it is used. Similarly, in the second rule of the <code class="docutils literal notranslate"><span class="pre">variable_declaration:</span></code> production, release/delete <code class="docutils literal notranslate"><span class="pre">expression</span></code> (<code class="docutils literal notranslate"><span class="pre">$4</span></code>).</p>
+</div>
+</div>
+<div class="section" id="version-history">
+<h2>Version History<a class="headerlink" href="#version-history" title="Permalink to this headline">¶</a></h2>
+<p>Ver. 2 November 2021</p>
+<ul class="simple">
+<li><p>Converted Gpl_type to GPL::Type</p></li>
+</ul>
+<p>Ver. 20 October 2021</p>
+<ul class="simple">
+<li><p>Corrected a typo</p></li>
+</ul>
+<p>Ver. 19 October 2021</p>
+<ul class="simple">
+<li><p>Changed verbiage of step 8.</p></li>
+</ul>
+<p>Ver. 5 October 2021</p>
+<ul class="simple">
+<li><p>Minor grammar modification</p></li>
+</ul>
+<p>Ver. 23 August 2021</p>
+<ul class="simple">
+<li><p>Transitioned out <code class="docutils literal notranslate"><span class="pre">Table_handler</span></code>.</p></li>
+</ul>
+<p>Ver. 16 August 2021</p>
+<ul class="simple">
+<li><p>Corrected errant backslashes in two code comments.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">only::</span> <span class="pre">latex</span></code> boxes following <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">raw::</span> <span class="pre">html</span></code> boxes.</p></li>
+<li><p>Change of font on file suffix</p></li>
+</ul>
+<p>Ver. 2 May 2021</p>
+<ul class="simple">
+<li><p>Elaborated on <code class="docutils literal notranslate"><span class="pre">Variable::evaluate()</span></code>, describing that both array variables and non-array variables must be handled.</p></li>
+</ul>
+<p>Ver. 8 Dec 2020</p>
+<ul class="simple">
+<li><p>Added an explanation of the relationship between parsing, executing, and the <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> function.</p></li>
+</ul>
+<p>Ver. 4 Nov 2020</p>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">const</span></code> to the <code class="docutils literal notranslate"><span class="pre">Expression*</span></code> in Variable</p></li>
+</ul>
+<p>Ver. 22 Oct 2020</p>
+<ul class="simple">
+<li><p>More test number corrections in writeup and modest text corrections</p></li>
+</ul>
+<p>Ver. 16 Oct 2020</p>
+<ul class="simple">
+<li><p>Added five tests early on to exercize error-checking and compiler recovery for bad types provided to the optional initializer.
+Adjusted some test numbers mentioned in directions.</p></li>
+</ul>
+<p>Ver. 3 May 2020</p>
+<ul class="simple">
+<li><p>Restructured document for use with Sphinx markup</p></li>
+</ul>
+<p>Ver. 12 March 2020</p>
+<ul class="simple">
+<li><p>Added verbiage for <code class="docutils literal notranslate"><span class="pre">ret()</span></code> and <code class="docutils literal notranslate"><span class="pre">Error::runtime()</span></code></p></li>
+</ul>
+<p>Ver. 2 March 2020</p>
+<ul class="simple">
+<li><p>Removed need to change directory of valgrind.</p></li>
+<li><p>Added const to evaluate functions, <code class="docutils literal notranslate"><span class="pre">Symbol::as_constant</span></code> return type, and Constant pointers.</p></li>
+</ul>
+<p>Ver. 31 October 2019</p>
+<ul class="simple">
+<li><p>Changed <code class="docutils literal notranslate"><span class="pre">Variable</span></code> to use symbol’s name.</p></li>
+</ul>
+<p>Ver. 22 October 2019 - B</p>
+<ul class="simple">
+<li><p>Added direction on Variable’s destructor.</p></li>
+</ul>
+<p>Ver. 22 October 2019 - A</p>
+<ul class="simple">
+<li><p>Reworded a coding comment</p></li>
+</ul>
+<p>Ver. 22 October 2019</p>
+<ul class="simple">
+<li><p>Reorganized the material around the <code class="docutils literal notranslate"><span class="pre">Variable</span></code> class</p></li>
+</ul>
+<p>Ver. 21 October 2019</p>
+<ul class="simple">
+<li><p>Clarified text in the section that discusses the <code class="docutils literal notranslate"><span class="pre">Variable</span></code> class.</p></li>
+</ul>
+<p>Ver. 20 October 2019</p>
+<ul class="simple">
+<li><p>Clarified and revised some items based on redesigned architecture in downstream projects.</p></li>
+</ul>
+<p>Ver. 15 October 2019</p>
+<ul class="simple">
+<li><p>Typo: 99 changed to 682</p></li>
+</ul>
+<p>Ver. 1 October 2019</p>
+<ul class="simple">
+<li><p>Grammar errata removed (no longer needed)</p></li>
+<li><p>Reviewed and revised entire document.</p></li>
+</ul>
+<p>Ver. 9 May 2019</p>
+<ul class="simple">
+<li><p>Added text for the variable production to create a variable object on parser errors.</p></li>
+<li><p>Added direction to <code class="docutils literal notranslate"><span class="pre">%type</span></code> the variable production as a variable pointer, not an expression pointer.</p></li>
+</ul>
+<p>Ver. 7 April 2019</p>
+<ul class="simple">
+<li><p>Revised the tips for managing memory.</p></li>
+</ul>
+<p>Ver. 5 April 2019</p>
+<ul class="simple">
+<li><p>Fixed verbiage on item #13</p></li>
+</ul>
+<p>Ver. 2 April 2019</p>
+<ul class="simple">
+<li><p>Reordered steps–moved first errata item to #11</p></li>
+</ul>
+<p>Ver. 1 April 2019</p>
+<ul class="simple">
+<li><p>Corrected Multiply::type()</p></li>
+<li><p>Added steps 12 and beyond</p></li>
+</ul>
+<p>Ver. 25 March 2019</p>
+<ul class="simple">
+<li><p>Initial version</p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="README_P4.html" title="Fourth Project"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="README_P2.html" title="Second Project"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Third Project</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CSCI 515 Compiler Design.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.0.
+    </div>
+  </body>
+</html>

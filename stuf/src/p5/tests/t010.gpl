@@ -1,0 +1,28 @@
+int    lhs_int;
+double lhs_double;
+string lhs_string;
+
+int    rhs_int=22;
+double rhs_double=33.33;
+string rhs_string="Blobo";
+
+on hkey
+{
+  print("Plus-assign. h-key pressed");
+  lhs_int    += rhs_int;
+  lhs_double += rhs_double;
+  lhs_string += rhs_string;
+}
+
+on jkey
+{
+  print("Plus-assign. j-key pressed");
+  lhs_double += rhs_int;
+  lhs_string += rhs_int;
+}
+
+on kkey
+{
+  print("Plus-assign. k-key pressed");
+  lhs_string += rhs_double;
+}

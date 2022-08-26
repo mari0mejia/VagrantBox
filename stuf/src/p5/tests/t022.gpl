@@ -1,0 +1,6 @@
+int i=99;
+on akey 
+{
+  for(i=0; i<5; i++)
+    print("Counting: " + i);
+}

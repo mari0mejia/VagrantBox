@@ -1,0 +1,12 @@
+// The negative and plus signs have their own tokens, T_MINUS and T_PLUS.  
+// If there is a syntax error, then the cause is likely that the regular
+// expression for T_INT_CONSTANT and/or T_DOUBLE_CONSTANT incorrectly captures
+// the leading + or -.
+double somedouble;
+int    someint;
+
+double negative = somedouble-98.7;
+int    nosiree  = someint-24;
+
+int    positive = negative+32;
+double affirmitive = nosiree+3.14;

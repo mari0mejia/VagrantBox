@@ -1,0 +1,3 @@
+Semantic error on line 9: LHS of -- must be INT.  Variable 'lhs_double' is of type 'double'.
+Semantic error on line 10: LHS of -- must be INT.  Variable 'lhs_string' is of type 'string'.
+Semantic error on line 11: LHS of -- must be INT.  Variable 'lhs_triangle' is of type 'triangle'.

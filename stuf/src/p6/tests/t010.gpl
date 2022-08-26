@@ -1,0 +1,7 @@
+double handle;
+
+forward animation teapot(triangle troglodyte);
+//Redeclaration error. Trap this error in the
+//forward_declaration: production
+forward animation handle(circle grabem);
+forward animation spout(pixmap pourem);

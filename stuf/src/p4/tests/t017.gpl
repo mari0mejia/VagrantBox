@@ -1,0 +1,2 @@
+rectangle dollar[10];
+int top=dollar.x; //error: variable is an array

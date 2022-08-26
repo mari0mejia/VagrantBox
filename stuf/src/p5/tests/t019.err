@@ -1,0 +1,3 @@
+Semantic error on line 9: LHS of minus-assignment must be (INT || DOUBLE).  Variable 'pyramid.user_string' is of type 'string'.
+Semantic error on line 10: LHS of ++ must be INT.  Variable 'pyramid.skew' is of type 'double'.
+Semantic error on line 11: LHS of -- must be INT.  Variable 'pyramid.skew' is of type 'double'.

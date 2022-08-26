@@ -1,0 +1,12 @@
+rectangle windowsill(x = 0, y = 100);
+
+animation move(circle cur_circle)
+{
+  print("nonsense!");
+  cur_circle.radius=23;
+}
+
+//mismatched animation block of circle and object of rectangle
+on akey {
+  windowsill.animation_block=move;//bad assignment statement, parameter type
+}

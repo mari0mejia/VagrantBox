@@ -1,0 +1,26 @@
+gpl.cpp::main()
+  input file(tests/t002.gpl)
+  random seed(42)
+  read_keypresses_from_standard_input(true)
+  dump_pixels(false)
+  symbol_table(true)
+  graphics(true)
+
+gpl.cpp::main() Calling yyparse()
+
+
+gpl.cpp::main() after call to yyparse().
+
+
+Printing the symbol table from main()
+int a = 5
+gpl.cpp::main() Calling window->initialize().
+
+print[4]: This is one initialization block. a=5
+print[6]: Now a=10
+print[10]: There can be more than one initialization block. a=10
+print[12]: And now a=20
+
+gpl.cpp::main() Passing control to window->main_loop().
+
+User quit program.  Executing termination blocks

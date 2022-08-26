@@ -1,0 +1,30 @@
+rectangle r[3];
+
+on akey
+{
+  r[0].x = 100;
+  r[0].y = 100;
+  r[0].blue = .777;
+  r[0].green = .333;
+  r[1].x = 200;
+  r[1].y = 200;
+  r[1].blue = .777;
+  r[1].green = .333;
+  r[2].x = 300;
+  r[2].y = 300;
+  r[2].blue = .777;
+  r[2].green = .333;
+
+  print("r[0].x = " + r[0].x);
+  print("r[0].y = " + r[0].y);
+  print("r[0].blue = " + r[0].blue);
+  print("r[0].green = " + r[0].green);
+  print("r[1].x = " + r[1].x);
+  print("r[1].y = " + r[1].y);
+  print("r[1].blue = " + r[1].blue);
+  print("r[1].green = " + r[1].green);
+  print("r[2].x = " + r[2].x);
+  print("r[2].y = " + r[2].y);
+  print("r[2].blue = " + r[2].blue);
+  print("r[2].green = " + r[2].green);
+}

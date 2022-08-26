@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+
+
+
+
+
+
+
+  <meta http-equiv="Pragma" content="no-cache">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>515 How to Test Projects</title></head><body style="color: rgb(0, 0, 0); background-color: rgb(227, 227, 227);" alink="#000099" link="#000099" vlink="#990099">
+
+
+
+
+
+How to Test Projects<br>
+
+
+
+
+
+515 Compiler Design<br>
+
+
+
+
+
+<hr style="width: 100%; height: 2px;">Overview:<br>
+
+
+<br>
+
+
+For each project there are a set of tests. A bash script have been written to automate the running of the tests.<br>
+
+
+<br>
+
+
+The script is called <code>gt</code> (short for <b>g</b>pl <b>t</b>est;
+This script can be found in the <code>bin</code> directory.
+
+<br>
+
+Each test that the <code>gt</code> script runs has three files for input, output, and error output:<br>
+
+<br>
+
+
+<div style="margin-left: 40px;">$ gpl tests/t001.gpl &gt; results/t001.out 2&gt; results/t001.err<br>
+
+
+<br>
+
+
+</div>
+
+
+
+If results/t001.out is identical to tests/t001.out and
+results/t001.err is identical to tests/t001.err then the program
+passed this test.<br>
+
+
+<br>
+
+
+<hr style="width: 100%; height: 2px;"><span style="font-weight: bold;">Running the Tests:</span><br>
+
+
+<br>Run all the tests using the <code>gt</code> script:<br>
+
+
+<pre>
+  $ gt
+
+  Failed t000: stdout incorrect
+  Passed t001
+  Failed t002: stderr incorrect
+  Failed t005: stdout &amp; stderr incorrect
+  ...
+</pre>
+
+<br>
+
+
+The <code>gt</code> script will execute your program, <code>gpl</code>,
+for each of the tests in the <code>tests</code> directory.&nbsp; It will
+put the results in the directory <code>./results</code> and then compare your
+  results to the results in the <code>./tests</code> directory.&nbsp; If these files
+differ the test has failed.<br>
+<br>
+<br>
+For a failed test the <code>diff</code> or the <code>vimdiff</code> utility will show the differences:
+
+<pre><blockquote>
+$ vimdiff tests/t001.out results/t001.out
+
+-and/or-
+
+$ vimdiff tests/t001.err results/t001.err
+</blockquote> </pre>
+There are two scripts that automate this, generating an HTML file (<code>diff.html</code>) of the differences. <code>vd</code> creates <code>diff.html</code> on the standard output, and <code>vde</code> creates <code>diff.html</code> on the standard error.
+<pre><blockquote>
+$ vd 1
+
+-and/or-
+
+$ vd 2
+</blockquote> </pre>
+The preceding zeros of a test number do not need to be specified with the <code>vd</code> and <code>vde</code>
+commands. If the files match a "files match" message is printed. If
+they don't match, the <code>diff.html</code> file is generated.
+<br>
+<br>
+<code>gt</code> does not run tests that have already passed.&nbsp; Force the running of all tests (including those previously passed) using the <code>-all</code> option<br>
+<div style="margin-left: 40px;">
+<pre>$ gt -all</pre>
+</div>
+
+Run a single test by specifying the test's number.&nbsp; No need to specify leading zeros.<br>
+<br>
+<pre style="margin-left: 40px;">$ gt 4<br>$ gt 42<br>$ gt 100<br></pre>
+
+<br>
+<br>
+</div>
+
+
+
+
+</body></html>

@@ -1,0 +1,35 @@
+on akey {
+  if(42 == 42)
+    print("Test-A, they are equal.");
+
+  print("Confirm If::execute() ends with:");
+  print("    if(next!=nullptr) next->execute();");
+}
+
+on akey {
+  if(42 == 41)
+    print("Test-B, should not see this message.");
+
+  print("Confirm If::execute() ends with:");
+  print("    if(next!=nullptr) next->execute();");
+}
+
+on akey {
+  if(42 == 41)
+    print("Test-C, should not see this message.");
+  else
+    print("Test-C, they are not equal.");
+
+  print("Confirm If::execute() ends with:");
+  print("    if(next!=nullptr) next->execute();");
+}
+
+on akey {
+  if(42 == 42)
+    print("Test-D, they are equal.");
+  else
+    print("Test-D, should not see this message.");
+
+  print("Confirm If::execute() ends with:");
+  print("    if(next!=nullptr) next->execute();");
+}

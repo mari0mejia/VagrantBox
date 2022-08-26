@@ -1,0 +1,29 @@
+int theend=2;
+
+termination {
+  print("First termination block. Confirming is called after an GPL exit() call");
+}
+
+
+
+
+termination {
+  print("  This is one termination block. theend=" + theend);
+  theend=12;
+  print("  Now theend=" + theend);
+}
+
+termination {
+  print("  There can be more than one termination block. theend=" + theend);
+  theend=22;
+  print("  And now theend=" + theend);
+}
+
+on akey {
+  print("Inside event block for akey. About to call exit()");
+  exit(1);
+}
+
+on akey {
+  print("Should never reach this");
+}

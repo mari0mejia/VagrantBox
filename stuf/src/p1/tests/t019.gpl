@@ -1,0 +1,2 @@
+//variables can't begin with a digit
+string 5this_aint_right;

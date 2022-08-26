@@ -1,0 +1,18 @@
+gpl.cpp::main()
+  input file(tests/t006.gpl)
+  random seed(42)
+  read_keypresses_from_standard_input(false)
+  dump_pixels(false)
+  symbol_table(false)
+  graphics(false)
+
+gpl.cpp::main() Calling yyparse()
+
+Integer constant -->1<--
+Integer constant -->2<--
+Integer constant -->3<--
+
+gpl.cpp::main() after call to yyparse().
+
+1 error found.
+gpl giving up.

@@ -1,0 +1,35 @@
+gpl.cpp::main()
+  input file(tests/t020.gpl)
+  random seed(42)
+  read_keypresses_from_standard_input(true)
+  dump_pixels(false)
+  symbol_table(true)
+  graphics(true)
+
+gpl.cpp::main() Calling yyparse()
+
+
+gpl.cpp::main() after call to yyparse().
+
+
+Printing the symbol table from main()
+gpl.cpp::main() Calling window->initialize().
+
+
+gpl.cpp::main() Passing control to window->main_loop().
+print[6]: Test-A, they are equal.
+print[18]: Test-C, they are not equal.
+print[23]: Test-D, they are equal.
+print[28]: 
+print[35]: Test-E, they are equal.
+print[47]: Test-G, they are not equal.
+print[52]: Test-H, they are equal.
+print[57]: 
+print[65]: Test-I, they are equal.
+print[66]: Test-I, they are still equal.
+print[86]: Test-K, they are not equal.
+print[87]: Test-K, they are still not equal.
+print[94]: Test-L, they are equal.
+print[95]: Test-L, they are still equal.
+
+User quit program. Printing the symbol table.

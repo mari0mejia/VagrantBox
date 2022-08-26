@@ -1,0 +1,6 @@
+Semantic error on line 8: Variable 'dblarr' is an array.
+Semantic error on line 10: Variable 'my_rectangle' is an array.
+Semantic error on line 10: Variable 'dblarr' is not an object.  Only objects may be on the left of a period.
+Semantic error on line 11: Variable 'justanumber' is not an object.  Only objects may be on the left of a period.
+Semantic error on line 12: Incorrect type (circle) for initial value of variable 'nearit' of type (int).
+Semantic error on line 13: Incorrect type (rectangle) for initial value of variable 'dearit' of type (int).

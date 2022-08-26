@@ -1,0 +1,5 @@
+//Should report errors on array size
+
+int ii=-5;
+rectangle my_rectangle[ii]; //should default to size of 1
+circle    my_circle[0]; //should default to size of 1

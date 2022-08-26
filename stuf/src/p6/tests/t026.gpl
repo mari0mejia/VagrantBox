@@ -1,0 +1,24 @@
+forward animation stretch(triangle);
+forward animation yawn(triangle);
+forward animation wakeup(triangle);
+forward animation gorgon(circle);
+
+triangle mister_trippy(animation_block=stretch);
+// yawn is used here but there is NO BODY PROVIDED FOR FORWARD
+triangle missus_trippy(animation_block=yawn);
+triangle weeboy_trippy(animation_block=wakeup);
+
+animation gorgon(circle clippy)
+{
+  //do nothing
+}
+
+animation stretch(triangle triarg)
+{
+  //do nothing
+}
+
+animation wakeup(triangle triarg)
+{
+  //do nothing
+}

@@ -1,0 +1,5 @@
+string window_title = "Project 4 t040.gpl";
+
+rectangle my_rectangle[2];
+
+int x = my_rectangle[-5].x;

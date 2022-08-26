@@ -1,0 +1,2 @@
+triangle my_rectangle(x=4.2);
+pixmap mypixmap(red="rover", y=20, blue="moody");

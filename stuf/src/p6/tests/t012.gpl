@@ -1,0 +1,6 @@
+//without foward declaration
+
+animation belch(circle stomach)
+{
+  stomach.radius -= 1;
+}

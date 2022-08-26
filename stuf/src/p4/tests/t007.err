@@ -1,0 +1,2 @@
+Semantic error on line 4: The array 'my_rectangle' was declared with illegal size '-5'. Arrays sizes must be integers of 1 or larger.
+Semantic error on line 5: The array 'my_circle' was declared with illegal size '0'. Arrays sizes must be integers of 1 or larger.

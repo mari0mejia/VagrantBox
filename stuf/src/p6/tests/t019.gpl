@@ -1,0 +1,9 @@
+//initialize animation_block parameter with animation block
+forward animation stretch(triangle);
+
+triangle mister_trippy(animation_block=stretch);
+
+animation stretch(triangle tri)
+{
+  //do nothing
+}

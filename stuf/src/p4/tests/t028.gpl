@@ -1,0 +1,5 @@
+string window_title = "Project 4 t030.gpl ***PRESS q TO QUIT***";
+
+pixmap aho(x = 100, y = 200, filename = "tests/aho.bmp");
+
+textbox title(x = 10, y = 10, text = "Al Aho (the author of the book)");

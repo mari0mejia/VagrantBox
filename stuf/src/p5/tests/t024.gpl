@@ -1,0 +1,33 @@
+int i=99;
+on akey 
+{
+  i=0;
+  //Empty initializer. Should be fine
+  for(; i<5; i++)
+    print("Counting: " + i);
+}
+
+on akey{print("");}
+
+on akey 
+{
+  //Empty post-loop statement. Should be fine
+  for(i=0; i<5;)
+  {
+    print("Counting: " + i);
+    i++;
+  }
+}
+
+on akey{print("");}
+
+on akey 
+{
+  i=0;
+  //Empty initializer, empty post-loop statement. Should be fine
+  for(;i<5;)
+  {
+    print("Counting: " + i);
+    i++;
+  }
+}

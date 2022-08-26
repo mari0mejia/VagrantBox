@@ -1,0 +1,22 @@
+//This code is error-free. A common bug is to get "Variable ... was not declared" errors.
+//The source of this bug is in the four rules of the variable: production. 
+//
+//Using Scope_manager::defined_in_current_scope() to determine if a variable has been
+//declared is incorrect. That only checks the top table in the stack. The correct
+//call is Scope_manager::lookup() because it will check all tables for the existence
+//of the variable.
+
+int my_single_integer;
+int my_integer_array[3];
+triangle my_single_triangle;
+triangle my_triangle_array[3];
+
+forward animation belch(circle);
+
+animation belch(circle stomach)
+{
+  my_single_integer=5;
+  my_integer_array[1]=5;
+  my_single_triangle.red=0.75;
+  my_triangle_array[2].blue=0.36;
+}

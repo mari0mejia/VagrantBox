@@ -1,0 +1,12 @@
+int i = 7000;
+rectangle rect[5];
+
+on akey
+{
+  i = 2;
+  // This should not be an error. If an out-of-bounds error is reported
+  // it is invariably caused by calls to evaluate() in the variable:
+  // production. Go through the four variable: production rules removing
+  // any calls to evaluate()
+  rect[i].x = 21;
+}

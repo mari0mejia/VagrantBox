@@ -1,0 +1,8 @@
+forward animation belch(triangle);
+
+//argument should be triangle, not circle
+//ANIMATION_PARAM_DOES_NOT_MATCH_FORWARD
+animation belch(circle stomach)
+{
+  stomach.radius -= 1;
+}

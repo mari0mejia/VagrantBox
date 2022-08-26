@@ -1,0 +1,40 @@
+int    lhs_int;
+double lhs_double;
+string lhs_string;
+triangle lhs_triangle();
+
+int    rhs_int=3;
+double rhs_double=33.33;
+string rhs_string="Blobo";
+triangle rhs_triangle();
+circle rhs_circle();
+
+on hkey
+{
+  print("Bad plus-assign to int");
+  lhs_int += rhs_double;
+  lhs_int += rhs_string;
+  lhs_int += rhs_circle;
+}
+
+on jkey
+{
+  print("Bad plus-assign to double");
+  lhs_double += rhs_string;
+  lhs_double += rhs_circle;
+}
+
+on kkey
+{
+  print("Bad plus-assign to string");
+  lhs_string += rhs_circle;
+}
+
+on lkey
+{
+  print("Bad plus-assign. Triangle");
+  lhs_triangle += rhs_int;
+  lhs_triangle += rhs_double;
+  lhs_triangle += rhs_string;
+  lhs_triangle += rhs_circle;
+}

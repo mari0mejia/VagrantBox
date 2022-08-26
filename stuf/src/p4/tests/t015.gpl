@@ -1,0 +1,2 @@
+triangle pyramid;
+int top=pyramid.apex; //error: undeclared member

@@ -1,0 +1,12 @@
+triangle pyramid;
+
+on akey
+{
+  //This tests confirms that the name for Member_variable objects
+  //is different than the name for Variable objects
+  //The name for Member_variable objects should include not only
+  //the object name, but also the attribute name;
+  pyramid.user_string-=65;
+  pyramid.skew++;
+  pyramid.skew--;
+}

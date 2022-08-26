@@ -1,0 +1,10 @@
+forward animation gorgon(circle);
+
+//Parameter mismatch triangle mister_trippy does not match circle
+//This is a GAME_OBJECT_ANIMATION_BLOCK_PARAMETER_TYPE_ERROR
+triangle mister_trippy(animation_block=gorgon);
+
+animation gorgon(circle clippy)
+{
+  //do nothing
+}

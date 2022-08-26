@@ -1,0 +1,2 @@
+felx first.l && g++ lex.yy.c
+

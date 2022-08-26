@@ -1,0 +1,39 @@
+int    lhs_int;
+double lhs_double;
+string lhs_string;
+circle lhs_circle();
+
+int    rhs_int=3;
+double rhs_double=33.33;
+string rhs_string="Blobo";
+circle rhs_circle();
+
+on hkey
+{
+  print("Bad assignments to int");
+  lhs_int = rhs_double;
+  lhs_int = rhs_string;
+  lhs_int = rhs_circle;
+}
+
+on jkey
+{
+  print("Bad assignment to double");
+  lhs_double = rhs_string;
+  lhs_double = rhs_circle;
+}
+
+on kkey
+{
+  print("Bad assignment to string");
+  lhs_string = rhs_circle;
+}
+
+on lkey
+{
+  print("Bad assignment. Circle");
+  lhs_circle = rhs_int;
+  lhs_circle = rhs_double;
+  lhs_circle = rhs_string;
+  lhs_circle = rhs_circle;
+}

@@ -1,0 +1,3 @@
+Semantic error on line 15: No body was provided for animation block 'stretch' which was declared in a forward statement.
+Semantic error on line 15: No body was provided for animation block 'wakeup' which was declared in a forward statement.
+Semantic error on line 15: No body was provided for animation block 'yawn' which was declared in a forward statement.

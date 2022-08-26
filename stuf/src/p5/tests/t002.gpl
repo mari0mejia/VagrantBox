@@ -1,0 +1,6 @@
+circle traffic_circle();
+
+on space
+{
+    print(traffic_circle);
+}

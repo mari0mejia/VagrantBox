@@ -1,0 +1,10 @@
+Semantic error on line 14: Cannot assign an expression of type 'double' to a variable of type 'int'.
+Semantic error on line 15: Cannot assign an expression of type 'string' to a variable of type 'int'.
+Semantic error on line 16: Cannot assign an expression of type 'circle' to a variable of type 'int'.
+Semantic error on line 22: Cannot assign an expression of type 'string' to a variable of type 'double'.
+Semantic error on line 23: Cannot assign an expression of type 'circle' to a variable of type 'double'.
+Semantic error on line 29: Cannot assign an expression of type 'circle' to a variable of type 'string'.
+Semantic error on line 35: LHS of assignment must be (INT || DOUBLE || STRING || ANIMATION_BLOCK).  Variable 'lhs_circle' is of type 'circle'.
+Semantic error on line 36: LHS of assignment must be (INT || DOUBLE || STRING || ANIMATION_BLOCK).  Variable 'lhs_circle' is of type 'circle'.
+Semantic error on line 37: LHS of assignment must be (INT || DOUBLE || STRING || ANIMATION_BLOCK).  Variable 'lhs_circle' is of type 'circle'.
+Semantic error on line 38: LHS of assignment must be (INT || DOUBLE || STRING || ANIMATION_BLOCK).  Variable 'lhs_circle' is of type 'circle'.

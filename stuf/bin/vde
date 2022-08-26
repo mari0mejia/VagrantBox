@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Mon Aug 23 23:24:04 PDT 2021
+# minor tweaks by TAG
+
+printf -v test_output_file "tests/t%03d.err" $1
+printf -v result_output_file "results/t%03d.err" $1
+
+if [ ! -f $test_output_file ] && [ ! -f $result_output_file ] ; then
+  echo "tests/t$1.err AND tests/t$1.err do not exist"
+  exit 1
+fi
+
+if [ ! -f $test_output_file ] ; then
+  echo "$test_output_file does not exist"
+  exit 1
+fi
+
+if [ ! -f $result_output_file ] ; then
+  echo "$result_output_file does not exist"
+  exit 1
+fi
+
+if diff $test_output_file $result_output_file ; then
+  echo "Files match"
+else
+  #vimdiff $test_output_file $result_output_file -c TOhtml -c 'w! diff.html' -c 'qa!'
+  vimdiff -R $test_output_file $result_output_file
+fi

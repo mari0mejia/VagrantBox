@@ -1,0 +1,263 @@
+// updated October 2021
+
+//---------------------------------------------------------------------
+program:
+    declaration_list block_list
+
+
+//---------------------------------------------------------------------
+declaration_list:
+    declaration_list declaration
+    | %empty
+
+
+//---------------------------------------------------------------------
+declaration:
+    variable_declaration T_SEMIC
+    | object_declaration T_SEMIC
+    | forward_declaration T_SEMIC
+
+
+//---------------------------------------------------------------------
+variable_declaration:
+    simple_type  T_ID  optional_initializer
+    | simple_type  T_ID T_LBRACKET expression T_RBRACKET
+
+
+//---------------------------------------------------------------------
+simple_type:
+    T_INT
+    | T_DOUBLE
+    | T_STRING
+
+
+//---------------------------------------------------------------------
+optional_initializer:
+    T_ASSIGN expression
+    | %empty
+
+
+//---------------------------------------------------------------------
+object_declaration:
+    object_type T_ID parameter_list_or_empty
+    | object_type T_ID T_LBRACKET expression T_RBRACKET
+
+
+//---------------------------------------------------------------------
+object_type:
+    T_TRIANGLE
+    | T_PIXMAP
+    | T_CIRCLE
+    | T_RECTANGLE
+    | T_TEXTBOX
+
+
+//---------------------------------------------------------------------
+parameter_list_or_empty :
+    T_LPAREN parameter_list T_RPAREN
+    | T_LPAREN T_RPAREN
+    | %empty
+
+
+//---------------------------------------------------------------------
+parameter_list :
+    parameter_list T_COMMA parameter
+    | parameter
+
+
+//---------------------------------------------------------------------
+parameter:
+    T_ID T_ASSIGN expression
+
+
+//---------------------------------------------------------------------
+block_list:
+    block_list block
+    | %empty
+
+
+//---------------------------------------------------------------------
+block:
+    initialization_block
+    | termination_block
+    | animation_block
+    | on_block
+
+
+//---------------------------------------------------------------------
+initialization_block:
+    T_INITIALIZATION statement_block
+
+
+//---------------------------------------------------------------------
+termination_block:
+    T_TERMINATION statement_block
+
+
+//---------------------------------------------------------------------
+forward_declaration:
+    T_FORWARD T_ANIMATION T_ID T_LPAREN animation_parameter T_RPAREN
+
+
+//---------------------------------------------------------------------
+animation_parameter:
+    object_type T_ID
+    | object_type
+
+
+//---------------------------------------------------------------------
+animation_block:
+    animation_declaration statement_block
+
+
+//---------------------------------------------------------------------
+animation_declaration:
+    T_ANIMATION T_ID T_LPAREN object_type T_ID T_RPAREN
+
+
+//---------------------------------------------------------------------
+on_block:
+    T_ON keystroke statement_block
+
+
+//---------------------------------------------------------------------
+keystroke:
+    T_SPACE
+    | T_UPARROW
+    | T_DOWNARROW
+    | T_LEFTARROW
+    | T_RIGHTARROW
+    | T_LEFTMOUSE_DOWN
+    | T_MIDDLEMOUSE_DOWN
+    | T_RIGHTMOUSE_DOWN
+    | T_LEFTMOUSE_UP
+    | T_MIDDLEMOUSE_UP
+    | T_RIGHTMOUSE_UP
+    | T_MOUSE_MOVE
+    | T_MOUSE_DRAG
+    | T_AKEY
+    | T_SKEY
+    | T_DKEY
+    | T_FKEY
+    | T_HKEY
+    | T_JKEY
+    | T_KKEY
+    | T_LKEY
+    | T_WKEY
+    | T_ZKEY
+    | T_F1
+
+
+//---------------------------------------------------------------------
+statement_or_block_of_statements:
+    statement_block
+    | statement
+
+
+//---------------------------------------------------------------------
+statement_block:
+    T_LBRACE statement_list T_RBRACE
+    | T_LBRACE T_RBRACE
+
+
+
+//---------------------------------------------------------------------
+statement_list:
+    statement_list statement
+    | statement
+
+
+//---------------------------------------------------------------------
+statement:
+    if_statement
+    | for_statement
+    | assign_statement T_SEMIC
+    | print_statement T_SEMIC
+    | exit_statement T_SEMIC
+
+
+//---------------------------------------------------------------------
+if_statement:
+    T_IF T_LPAREN expression T_RPAREN statement_or_block_of_statements
+    | T_IF T_LPAREN expression T_RPAREN statement_or_block_of_statements T_ELSE statement_or_block_of_statements
+
+
+//---------------------------------------------------------------------
+for_statement:
+    T_FOR T_LPAREN assign_statement_or_empty T_SEMIC expression T_SEMIC assign_statement_or_empty T_RPAREN statement_or_block_of_statements
+
+
+//---------------------------------------------------------------------
+print_statement:
+    T_PRINT T_LPAREN expression T_RPAREN
+
+
+//---------------------------------------------------------------------
+exit_statement:
+    T_EXIT T_LPAREN expression T_RPAREN
+
+
+//---------------------------------------------------------------------
+assign_statement_or_empty:
+    assign_statement
+    | %empty
+
+
+//---------------------------------------------------------------------
+assign_statement:
+    variable T_ASSIGN expression
+    | variable T_PLUS_ASSIGN expression
+    | variable T_MINUS_ASSIGN expression
+    | variable T_PLUS_PLUS
+    | variable T_MINUS_MINUS
+
+
+//---------------------------------------------------------------------
+variable:
+    T_ID
+    | T_ID T_LBRACKET expression T_RBRACKET
+    | T_ID T_PERIOD T_ID
+    | T_ID T_LBRACKET expression T_RBRACKET T_PERIOD T_ID
+
+
+//---------------------------------------------------------------------
+expression:
+    primary_expression
+    | expression T_OR expression
+    | expression T_AND expression
+    | expression T_LESS_EQUAL expression
+    | expression T_GREATER_EQUAL  expression
+    | expression T_LESS expression
+    | expression T_GREATER  expression
+    | expression T_EQUAL expression
+    | expression T_NOT_EQUAL expression
+    | expression T_PLUS expression
+    | expression T_MINUS expression
+    | expression T_MULTIPLY expression
+    | expression T_NEAR expression
+    | expression T_TOUCHES expression
+    | expression T_DIVIDE expression
+    | expression T_MOD expression
+    | T_MINUS  expression
+    | T_NOT  expression
+    | T_SIN T_LPAREN expression T_RPAREN
+    | T_COS T_LPAREN expression T_RPAREN
+    | T_TAN T_LPAREN expression T_RPAREN
+    | T_ASIN T_LPAREN expression T_RPAREN
+    | T_ACOS T_LPAREN expression T_RPAREN
+    | T_ATAN T_LPAREN expression T_RPAREN
+    | T_SQRT T_LPAREN expression T_RPAREN
+    | T_ABS T_LPAREN expression T_RPAREN
+    | T_FLOOR T_LPAREN expression T_RPAREN
+    | T_RANDOM T_LPAREN expression T_RPAREN
+
+
+//---------------------------------------------------------------------
+primary_expression:
+    T_LPAREN  expression T_RPAREN
+    | variable
+    | T_INT_CONSTANT { std::cout << "Integer constant -->" << $1 << "<--\n";}
+    | T_TRUE
+    | T_FALSE
+    | T_DOUBLE_CONSTANT { std::cout << "Double constant -->" << $1 << "<--\n";}
+    | T_STRING_CONSTANT { std::cout << "String constant -->" << *$1 << "<--\n";}

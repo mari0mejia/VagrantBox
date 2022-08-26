@@ -1,0 +1,463 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>First Project &#8212; Game Programming Language 2.1 documentation</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Second Project" href="README_P2.html" />
+    <link rel="prev" title="Welcome to Game Programming Language’s documentation!" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="README_P2.html" title="Second Project"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Game Programming Language’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">First Project</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="first-project">
+<h1>First Project<a class="headerlink" href="#first-project" title="Permalink to this headline">¶</a></h1>
+<p>Ver. 18 Oct 2021</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>For this first project, the tokens and grammar that comprise the Game Programming Language (GPL) will be integrated into files used by “flex” the scanner, (<code class="docutils literal notranslate"><span class="pre">gpl.l</span></code>) and “bison” the parser (<code class="docutils literal notranslate"><span class="pre">gpl.y</span></code>).</p>
+</div>
+<div class="section" id="manifest">
+<h2>Manifest<a class="headerlink" href="#manifest" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./doc/html/index.html</span></code></dt>
+<dd class="field-odd"><p>documentation for all projects in the course</p>
+</dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p1/gpl_scanner_skel.txt</span></code></dt>
+<dd class="field-odd"><p>Stub scanner file. Copy to gpl.l to use.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p1/gpl_parser_skel.txt</span></code></dt>
+<dd class="field-even"><p>Stub parser file. Copy to gpl.y to use.</p>
+</dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p1/tokens_for_bison.txt</span></code></dt>
+<dd class="field-odd"><p>Premade tokens to be added to gpl.y</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p1/grammar_for_parser.txt</span></code></dt>
+<dd class="field-even"><p>Premade GPL grammar to be added to gpl.y</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p1/reg_exp_for_scanner.txt</span></code></dt>
+<dd class="field-odd"><p>List of tokens to be integrated into gpl.l</p>
+</dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p1/Makefile</span></code></dt>
+<dd class="field-odd"><p>Self-explanatory (I hope)</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p1/tests</span></code></dt>
+<dd class="field-even"><p>Testing suite directory, 18 tests.</p>
+</dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p1/gpl.cpp</span></code></dt>
+<dd class="field-odd"><p>main() function. Don’t change.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p1/error.h</span></code></dt>
+<dd class="field-even"><p>Header for error reporting functions. Don’t change.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p1/error.cpp</span></code></dt>
+<dd class="field-odd"><p>Source for error reporting functions. Don’t change.</p>
+</dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./bin/gt</span></code></dt>
+<dd class="field-odd"><p>run project tests</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./bin/vde</span></code></dt>
+<dd class="field-even"><p>examine test differences in expected and actual stderr</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./bin/vd</span></code></dt>
+<dd class="field-odd"><p>examine test differences in expected and actual stdout</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./bin/memvalidate.bash</span></code></dt>
+<dd class="field-even"><p>Test for memory leaks using valgrind.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="format-of-files">
+<h2>Format of files<a class="headerlink" href="#format-of-files" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Grammar file (.y extension)     |       Scanner file (.l extension)
+---------------------------     |       ---------------------------
+%{                              |       %{
+Prologue (code)                 |       Prologue (code)
+%}                              |       %}
+                                |
+Bison Declarations              |       Flex definitions
+                                |
+%%                              |       %%
+                                |
+Grammar Rules                   |       Scanner rules
+                                |
+%%                              |       %%
+                                |
+Epilogue                        |       Epilogue
+</pre></div>
+</div>
+</div>
+<div class="section" id="project-description">
+<h2>Project description<a class="headerlink" href="#project-description" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p>Copy the skeleton files over to <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code> and <code class="docutils literal notranslate"><span class="pre">gpl.l</span></code> as a starting point</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cp gpl_scanner_skel.txt gpl.l
+cp gpl_parser_skel.txt gpl.y
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Because the parser (<code class="docutils literal notranslate"><span class="pre">gpl.y</span></code>) generates the tokens that are included by the scanner (<code class="docutils literal notranslate"><span class="pre">gpl.l</span></code>) the parser should be built first. Begin by copying <code class="docutils literal notranslate"><span class="pre">tokens_for_bison.txt</span></code> into <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code> just below the comment <code class="docutils literal notranslate"><span class="pre">//tokens</span> <span class="pre">declared</span> <span class="pre">here</span></code>.</p></li>
+</ol>
+<div class="sidebar">
+<p class="sidebar-title">Semantic values</p>
+<p>The scanner passes semantic values to the parser. For example, when the scanner encounters <code class="docutils literal notranslate"><span class="pre">3.14</span></code> in a gpl program, it returns the token <code class="docutils literal notranslate"><span class="pre">T_DOUBLE_CONSTANT</span></code> to the parser and sets the token’s semantic value to <code class="docutils literal notranslate"><span class="pre">3.14</span></code>. There are three types of semantic value returned: <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, and <code class="docutils literal notranslate"><span class="pre">string*</span></code>.</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Complete the <code class="docutils literal notranslate"><span class="pre">%union</span></code> declaration in <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code> with the three types of semantic value, <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, and <code class="docutils literal notranslate"><span class="pre">string*</span></code>. Two of these three types have already been added for you. Add the third.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Several of the parser’s tokens have empty angle-braces <code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">&gt;</span></code>. These are the tokens that have semantic values found by the scanner. Inside the angle braces add the appropriate union member (e.g., <code class="docutils literal notranslate"><span class="pre">union_int</span></code>) to specify the type of that token’s semantic value.</p></li>
+</ol>
+<div class="sidebar">
+<p class="sidebar-title">Grammar actions</p>
+<p>We will spend much of the semester developing actions to accompany the grammar in <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code>. To assist testing this first project, three actions (<code class="docutils literal notranslate"><span class="pre">cout</span></code> statements) have been added to the rules of the <cite>primary_expression:</cite> production. Those will be replaced in the next project.</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">grammar_for_parser.txt</span></code> into the “Grammar Rules” section of <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code> (see <strong>Format of files</strong> above).</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="6">
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">bison</span> <span class="pre">-d</span> <span class="pre">gpl.y</span></code>. There should be 256 shift/reduce conflict warnings, but no errors.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="7">
+<li><p>Copy the <code class="docutils literal notranslate"><span class="pre">reg_exp_for_scanner.txt</span></code> file into the “Scanner rules” section of <code class="docutils literal notranslate"><span class="pre">gpl.l</span></code> (see <strong>Format of files</strong> above).</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="8">
+<li><p>Each of the matched literal/keyword expressions in <code class="docutils literal notranslate"><span class="pre">gpl.l</span></code> should return the corresponding token that is defined in <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code>. For example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;int&quot;</span> <span class="p">{</span><span class="k">return</span> <span class="n">T_INT</span><span class="p">;}</span>
+<span class="p">...</span>
+<span class="s">&quot;!=&quot;</span> <span class="p">{</span><span class="k">return</span> <span class="n">T_NOT_EQUAL</span><span class="p">;}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>Append to the list of regular expressions an expression that matches a newline. The action should  increment <code class="docutils literal notranslate"><span class="pre">line_count</span></code> whenever a newline is encountered.  <code class="docutils literal notranslate"><span class="pre">line_count</span></code> is a global variable that keeps track of the current line number being analyzed by the scanner. The global declaration of this variable has been provided in the prologue of <code class="docutils literal notranslate"><span class="pre">gpl.l</span></code>.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="10">
+<li><p>In GPL, the <code class="docutils literal notranslate"><span class="pre">print</span></code> and <code class="docutils literal notranslate"><span class="pre">exit</span></code> functions print the line number they appear on in their output. When their regular expressions are matched, set their semantic values by assigning to the appropriate union member from <code class="docutils literal notranslate"><span class="pre">yylval</span></code>. For example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;print&quot;</span> <span class="p">{</span><span class="n">yylval</span><span class="p">.</span><span class="n">union_int</span> <span class="o">=</span> <span class="n">line_count</span><span class="p">;</span> <span class="k">return</span> <span class="n">T_PRINT</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="11">
+<li><p>Create the regular expressions and associated actions for the more complex tokens:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>integer constant</strong> - A sequence of one or more digits (0 - 9). Place the value of the integer in the <code class="docutils literal notranslate"><span class="pre">union_int</span></code> field <code class="docutils literal notranslate"><span class="pre">yylval</span></code>.</p></li>
+<li><p><strong>double constant</strong> - A sequence of one or more digits (0 - 9) that contains a period. May start with a period or end with a period (<code class="docutils literal notranslate"><span class="pre">.1</span></code>, <code class="docutils literal notranslate"><span class="pre">1.</span></code>, <code class="docutils literal notranslate"><span class="pre">1.1</span></code>, <code class="docutils literal notranslate"><span class="pre">123.123</span></code> are all legal). Place the value of the double in the <code class="docutils literal notranslate"><span class="pre">union_double</span></code> field of <code class="docutils literal notranslate"><span class="pre">yylval</span></code>.  Ensure a period <code class="docutils literal notranslate"><span class="pre">&quot;.&quot;</span></code> is not matched as a double.</p></li>
+<li><p><strong>string constant</strong> - Any sequence of characters enclosed in double quotes (<code class="docutils literal notranslate"><span class="pre">&quot;one&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;123&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;one</span> <span class="pre">two</span> <span class="pre">three&quot;</span></code> are all legal). Dynamically allocate a new string for the found expression and assign it to the <code class="docutils literal notranslate"><span class="pre">union_string</span></code> field of <code class="docutils literal notranslate"><span class="pre">yylval</span></code>. For example:  <code class="docutils literal notranslate"><span class="pre">yylval.union_string=new</span> <span class="pre">string(yytext);</span></code> Note that this example is incomplete. <code class="docutils literal notranslate"><span class="pre">yytext</span></code> contains the string <em>with</em> double quotes. Be sure to write C++ code in the action that strips the double quotes from the string.</p></li>
+<li><p><strong>identifier</strong> - Any letter (<code class="docutils literal notranslate"><span class="pre">a-z</span></code> or <code class="docutils literal notranslate"><span class="pre">A-Z</span></code>) or underscore followed by zero or more letters, underscores, and digits (<code class="docutils literal notranslate"><span class="pre">0-9</span></code>). Place the value of the string in the <code class="docutils literal notranslate"><span class="pre">union_string</span></code> field of <code class="docutils literal notranslate"><span class="pre">yylval</span></code>. Dynamically allocate a new string for each token.</p></li>
+<li><p><strong>comments</strong> - Like the C++ <code class="docutils literal notranslate"><span class="pre">//</span></code> comment. Ignore everything to the end of the line</p></li>
+</ul>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="12">
+<li><p>In <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code> just below the <code class="docutils literal notranslate"><span class="pre">%token</span></code> declarations, add precedence declarations (e.g., <code class="docutils literal notranslate"><span class="pre">%left,</span> <span class="pre">%right,</span> <span class="pre">%nonassoc</span></code>) for the following operators:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="o">*</span>   <span class="o">/</span>    <span class="o">&amp;&amp;</span>   <span class="o">||</span>
+<span class="o">+</span>   <span class="o">-</span>   <span class="o">&lt;</span>   <span class="o">&gt;</span>   <span class="o">&lt;=</span>
+<span class="o">%</span>   <span class="o">&gt;=</span>   <span class="o">==</span>   <span class="o">!=</span>
+</pre></div>
+</div>
+<p>Place operators with the same precedence on the same line. For example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">left</span> <span class="n">T_PLUS</span> <span class="n">T_MINUS</span>
+<span class="o">%</span><span class="n">left</span> <span class="n">T_MULTIPLY</span> <span class="n">T_DIVIDE</span> <span class="n">T_MOD</span>
+</pre></div>
+</div>
+<p>Entries that appear earlier in the file have lower precedence. Shown above, addition and subtraction have lower precedence than multiplication, division, and modulus. Refer to an operator precedence table to ensure the correct order for the operators listed above.
+Only set precedence for these specific operators. Precedence tables for C/C++ include many operators that are not part of GPL. Do not set precedence rules for operators found in a precedence table but absent from the above list.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="13">
+<li><p>Add precedence for the <code class="docutils literal notranslate"><span class="pre">near</span></code> (<code class="docutils literal notranslate"><span class="pre">T_NEAR</span></code>) and <code class="docutils literal notranslate"><span class="pre">touches</span></code> (<code class="docutils literal notranslate"><span class="pre">T_TOUCHES</span></code>) operators. They should be non-associative (directive written as: <code class="docutils literal notranslate"><span class="pre">%nonassoc</span></code>) and have the highest precedence (appear last in the current list of precedence rules).</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="14">
+<li><p>The unary operator <code class="docutils literal notranslate"><span class="pre">!</span></code> (<code class="docutils literal notranslate"><span class="pre">T_NOT</span></code>) is also non-associative. Add it at the correct level of precedence. Another non-associative operator to add is the unary minus sign for negation (e.g., <code class="docutils literal notranslate"><span class="pre">-var</span></code>). The problem is the the token <code class="docutils literal notranslate"><span class="pre">T_MINUS</span></code> is already being used to specify precedence for the binary subtraction operator. To get around this, create/name a precedence for negation (at its appropriate level), like this:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">nonassoc</span> <span class="n">UNARY_OPS</span>
+</pre></div>
+</div>
+<p>Apply this new precedence token to the existing grammar rule for negation by appending a <code class="docutils literal notranslate"><span class="pre">%prec</span></code> directive at the end of the rule:</p>
+<pre>expression:
+...
+| T_MINUS expression <span style="font-weight:bold;color:DarkRed;">%prec UNARY_OPS</span></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="15">
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">bison</span> <span class="pre">-d</span> <span class="pre">gpl.y</span></code> again. Adding the precedence directives above eliminates nearly all shift/reduce conflicts. There will now only be one remaining shift/reduce conflict warning, and no errors.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="16">
+<li><p>The if-statement production has the last remaining shift/reduce conflict. The conflict is between if statements with else clauses and if statements without else clauses. To remove the conflict, the two types of if-statements must be given different precedence levels. The if-else statement should have a higher precedence than the if-statement without an “else”. Add two <code class="docutils literal notranslate"><span class="pre">%nonassoc</span></code> precedence directives: one for the existing <code class="docutils literal notranslate"><span class="pre">T_ELSE</span></code> token and a new token for the if without an else, <code class="docutils literal notranslate"><span class="pre">IF_NO_ELSE</span></code>:</p>
+<p>Ensure that the precedence of <code class="docutils literal notranslate"><span class="pre">T_ELSE</span></code> is  higher than <code class="docutils literal notranslate"><span class="pre">IF_NO_ELSE</span></code></p>
+<p>As was done with the <code class="docutils literal notranslate"><span class="pre">UNARY_OPS</span></code>, add a <code class="docutils literal notranslate"><span class="pre">%prec</span></code> directive at the end of the production rule for an if-statement that does not have an else clause.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="17">
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">make</span></code> to build the project. Once built successfully (and with no shift/reduce conflicts), use <code class="docutils literal notranslate"><span class="pre">gt</span></code> to run the tests. Information on using <code class="docutils literal notranslate"><span class="pre">gt</span></code> can be found below. Be sure to read <cite>Tips for debugging errors reported by gt</cite> below as well.</p></li>
+</ol>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">bison</span> <span class="pre">-d</span> <span class="pre">gpl.y</span></code> to check for shift/reduce conflicts. If there are any, there is more work to be done. Adding the verbose flag: <code class="docutils literal notranslate"><span class="pre">bison</span> <span class="pre">-vd</span> <span class="pre">gpl.y</span></code> will produce <code class="docutils literal notranslate"><span class="pre">gpl.output</span></code> which can be helpful in debugging <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code>.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>Each project directory has a <code class="docutils literal notranslate"><span class="pre">tests</span></code> directory. Each test is identified by a number and has three files associated with it (where NNN is a number 001, 128, etc.)</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tNNN.gpl</span></code> - The Game Programming Language code comprising the test</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tNNN.out</span></code> - The standard output expected by the test</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tNNN.err</span></code> - The standard error expected by the test</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">bin</span></code> directory has tools to aid in running the tests. To make your life easier, add the <code class="docutils literal notranslate"><span class="pre">bin</span></code> directory to your PATH.</p>
+<div class="section" id="gt">
+<h3><code class="docutils literal notranslate"><span class="pre">gt</span></code><a class="headerlink" href="#gt" title="Permalink to this headline">¶</a></h3>
+<p>Runs the <code class="docutils literal notranslate"><span class="pre">tNNN.gpl</span></code> files in the <code class="docutils literal notranslate"><span class="pre">tests</span></code> directory using your gpl executable. A <code class="docutils literal notranslate"><span class="pre">results</span></code> directory is created if it doesn’t already exist. When <code class="docutils literal notranslate"><span class="pre">gt</span></code> runs a test it redirects your executable’s <code class="docutils literal notranslate"><span class="pre">stderr</span></code> and <code class="docutils literal notranslate"><span class="pre">stdout</span></code> to files in the results directory. The <code class="docutils literal notranslate"><span class="pre">gt</span></code> utility then compares your program’s <code class="docutils literal notranslate"><span class="pre">stderr</span></code> and stdout in the <code class="docutils literal notranslate"><span class="pre">results</span></code> with the expected <code class="docutils literal notranslate"><span class="pre">stderr</span></code> and stdout files in the <code class="docutils literal notranslate"><span class="pre">tests</span></code> directory. If they are not identical <code class="docutils literal notranslate"><span class="pre">gt</span></code> reports that the test does not pass.</p>
+<blockquote>
+<div><p>Examples of usage:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gt      <span class="c1">#run all tests that have not yet passed</span>
+gt -all <span class="c1">#force all tests to run even if passed previously</span>
+gt <span class="m">38</span>   <span class="c1">#run test 38</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="vde">
+<h3><code class="docutils literal notranslate"><span class="pre">vde</span></code><a class="headerlink" href="#vde" title="Permalink to this headline">¶</a></h3>
+<p>For a given test, examines the differences between the test’s expected <code class="docutils literal notranslate"><span class="pre">stderr</span></code> and your program’s <code class="docutils literal notranslate"><span class="pre">stderr</span></code>. For folks who don’t use vim, type <code class="docutils literal notranslate"><span class="pre">:qa</span></code> to quit all editor windows and return to a shell prompt.</p>
+<blockquote>
+<div><p>Usage example (showing differences in stderr for test 13):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vde <span class="m">13</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="vd">
+<h3><code class="docutils literal notranslate"><span class="pre">vd</span></code><a class="headerlink" href="#vd" title="Permalink to this headline">¶</a></h3>
+<p>For a given test, examines the differences between the test’s expected <code class="docutils literal notranslate"><span class="pre">stdout</span></code> and your program’s <code class="docutils literal notranslate"><span class="pre">stdout</span></code>. For folks who don’t use vim, type <code class="docutils literal notranslate"><span class="pre">:qa</span></code> to quit all editor windows and return to a shell prompt.</p>
+<blockquote>
+<div><p>Usage example (showing differences in stdout for test 126):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vd <span class="m">126</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="tips-for-debugging-errors-reported-by-gt">
+<h2>Tips for debugging errors reported by gt<a class="headerlink" href="#tips-for-debugging-errors-reported-by-gt" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>When <code class="docutils literal notranslate"><span class="pre">gt</span></code> complains that both <code class="docutils literal notranslate"><span class="pre">stderr</span></code> and <code class="docutils literal notranslate"><span class="pre">stdout</span></code> fail, the problem can usually be uncovered by looking at <code class="docutils literal notranslate"><span class="pre">stderr</span></code>. Therefore, Examine the output of <code class="docutils literal notranslate"><span class="pre">vde</span></code> before taking a look at <code class="docutils literal notranslate"><span class="pre">vd</span></code>.</p></li>
+<li><p>Run the program manually! For example, for test 12: <code class="docutils literal notranslate"><span class="pre">./gpl</span> <span class="pre">tests/t012.gpl</span></code>.</p></li>
+<li><p>Examine the <code class="docutils literal notranslate"><span class="pre">tNNN.gpl</span></code> test file. This is vital. It’s difficult to troubleshoot a problem if you don’t know the gpl code that is being tested.</p></li>
+<li><p>Many tests contain several lines of gpl code. Create a copy of <code class="docutils literal notranslate"><span class="pre">tNNN.gpl</span></code> and start commenting out lines of code to isolate the specific line in <code class="docutils literal notranslate"><span class="pre">tNNN.gpl</span></code> that is not behaving as expected. This is very important. Troubleshooting is the process of narrowing down possible causes.</p></li>
+</ol>
+</div>
+<div class="section" id="version-history">
+<h2>Version History<a class="headerlink" href="#version-history" title="Permalink to this headline">¶</a></h2>
+<p>Ver. 18 Oct 2021</p>
+<ul class="simple">
+<li><p>Added red coloring for <code class="docutils literal notranslate"><span class="pre">%prec</span> <span class="pre">UNARY_OPS</span></code></p></li>
+</ul>
+<p>Ver. 5 Oct 2021</p>
+<ul class="simple">
+<li><p>Broke out and added new item for <code class="docutils literal notranslate"><span class="pre">exit</span></code> and <code class="docutils literal notranslate"><span class="pre">print</span></code>.</p></li>
+</ul>
+<p>Ver. 15 Sep 2020</p>
+<ul class="simple">
+<li><p>Reworded the step for unary negation and logical “not”.</p></li>
+</ul>
+<p>Ver. 14 Sep 2020</p>
+<ul class="simple">
+<li><p>Removed <code class="docutils literal notranslate"><span class="pre">forward</span></code> from the list of commands requiring a semantic value. Elaborated on why <code class="docutils literal notranslate"><span class="pre">print</span></code> and <code class="docutils literal notranslate"><span class="pre">exit</span></code> require line number as semantic value.</p></li>
+</ul>
+<p>Ver. 11 Sep 2020</p>
+<ul class="simple">
+<li><p>Changed filenames of text files imported into <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code> and <code class="docutils literal notranslate"><span class="pre">gpl.l</span></code>.</p></li>
+<li><p>Modest reworking of some text, including separating into additional steps.</p></li>
+<li><p>Added step at end to make explicit the use of <code class="docutils literal notranslate"><span class="pre">make</span></code> and <code class="docutils literal notranslate"><span class="pre">gt</span></code>.</p></li>
+</ul>
+<p>Ver. 2 May 2020</p>
+<ul class="simple">
+<li><p>Restructured document for use with Sphinx markup</p></li>
+</ul>
+<p>Ver. 27 Apr 2020</p>
+<ul class="simple">
+<li><p>Reworked to eliminate <code class="docutils literal notranslate"><span class="pre">parser.h</span></code></p></li>
+</ul>
+<p>Ver. 6 Apr 2020</p>
+<ul class="simple">
+<li><p>Modest verbiage clarifications.</p></li>
+</ul>
+<p>Ver. 11 Feb 2020</p>
+<ul class="simple">
+<li><p>Added information on the testing tools in the bin directory.</p></li>
+</ul>
+<p>Ver. 16 Jan 2020</p>
+<ul class="simple">
+<li><p>Minor verbiage improvements</p></li>
+</ul>
+<p>Ver. 3 Jan 2020</p>
+<ul class="simple">
+<li><p>Modified manifest</p></li>
+</ul>
+<p>Ver. 14 Dec 2019</p>
+<ul class="simple">
+<li><p>Minor typographical changes.</p></li>
+</ul>
+<p>Ver. 19 September 2019</p>
+<ul class="simple">
+<li><p>Added explanation of where <code class="docutils literal notranslate"><span class="pre">near</span></code> and <code class="docutils literal notranslate"><span class="pre">touches</span></code> appear in bison’s precedence declarations.</p></li>
+<li><p>Rewrote last section on adding precedence to <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code></p></li>
+<li><p>Revised Troubleshooting section at end.</p></li>
+</ul>
+<p>Ver. 20 February 2019</p>
+<ul class="simple">
+<li><p>Added additional prose around operator precedence.</p></li>
+<li><p>Renamed starting gpl.l and gpl.y to avoid clobbering existing work if archive is updated and extracted in-place.</p></li>
+</ul>
+<p>Ver. 19 February 2019</p>
+<ul class="simple">
+<li><p>Added troubleshooting section</p></li>
+</ul>
+<p>Ver. 16 February 2019</p>
+<ul class="simple">
+<li><p>Minor typos and formatting</p></li>
+</ul>
+<p>Ver. 10 February 2019</p>
+<ul class="simple">
+<li><p>Initial version</p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="README_P2.html" title="Second Project"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Game Programming Language’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">First Project</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CSCI 515 Compiler Design.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.0.
+    </div>
+  </body>
+</html>

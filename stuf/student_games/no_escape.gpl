@@ -1,0 +1,2081 @@
+//No Escape
+//Written by Calvin Martinez
+//Survive for as long as possible while all manner of angry blocks attack you.
+//Get your high scores up to unlock new levels!
+//Features 15 different enemy varieties, 20 levels, and a save and load system!
+//Total build time: About four days
+
+int window_width = 600;
+int window_height = 400;
+string window_title = "No Escape";
+int animation_speed = 90;
+int mouse_x;
+int mouse_y;
+
+//Various tracking variables
+int i = 0;
+int j = 0;
+int k = 0;
+int l = 0;
+double x = 0;
+double y = 0;
+double z = 0;
+string s;
+
+//Special variables levels use for tracking.
+int level_int = 0;
+int level_int2 = 0;
+int level_int3 = 0;
+
+//How long the current round has left
+int timer = 30;
+//About how long each phase lasts
+int phase_length = 130;
+
+//Player width and height
+int PLAYER_SIZE = 15;
+//Enemy width and height
+int ENEMY_SIZE = 25;
+//Stretch width and height
+int ENEMY_SIZE2 = 40;
+//Projectile width and height
+int PROJ_SIZE = 12;
+//The place blocks reside before they're deployed in
+int WAIT_POINT = -666;
+
+//The number of levels in the game
+int NUM_LEVELS = 20;
+
+//How many points the player has ammased in the current level
+int score = 0;
+int scores[NUM_LEVELS];
+int megascore = 0;
+
+//The path used for the "follow" block
+//Values are fractions of the game width and height. Between 0 and 1.
+double path_x[4];
+double path_y[4];
+
+//Set once the player dies
+int dead = 0;
+
+//Moves in a sinewave pattern
+forward animation wave(rectangle c_wave);
+//Appears at the top of the screen, then accelerates downward.
+forward animation fall(rectangle c_fall);
+//Moves diagonally, bouncing off walls
+forward animation bounce(rectangle c_bounce);
+//Comes from the side of the screen and returns back from where it came once it reaches the end
+forward animation drift(rectangle c_drift);
+//Moves in a warped eliptical shape.
+forward animation swirl(rectangle c_swirl);
+//Comes off the screen, then parks out somewhere
+forward animation park(rectangle c_park);
+//Jitters around erratically.
+forward animation jitter(rectangle c_jitter);
+//Chases the player relentlessly, if slowly
+forward animation chase(rectangle c_chase);
+//Like bounce, but its direction is random once it hits the wall
+forward animation spider(rectangle c_spider);
+//Like drift, but it stops and stretches out after a random amount of time
+forward animation stretch(rectangle c_stretch);
+//Like drift, but it deploys projectiles periodically
+forward animation deploy(rectangle c_deploy);
+//Follows a set preset path
+forward animation follow(rectangle c_follow);
+//Accelerates back and forth
+forward animation shuffle(rectangle c_shuffle);
+//Moves in the direction it points. Periorically stops to spin around toward the player
+forward animation compass(rectangle c_compass);
+//Like compass, but spins randomly. Only used for the title screen
+forward animation compass2(rectangle c_compass2);
+//Homes in toward the player, but has limited turning ability
+forward animation missile(rectangle c_missile);
+
+//Used with park after the block freezes
+forward animation still(rectangle c_still);
+
+//Used for the projectiles of the deployer enemy
+forward animation projectile(rectangle c_projectile);
+
+//The player's animation block
+forward animation playermove(rectangle r);
+
+//Used for button highlighting
+forward animation button(rectangle btn);
+
+//Used for the code display
+forward animation code_display(textbox cd);
+
+//Used for the code display
+forward animation code_output_display(textbox cod);
+
+//Used for the blinking bar underneath the code entry
+forward animation blink(rectangle bl);
+
+//Used for level select button highlighting
+forward animation button2(rectangle btn2);
+
+//Holds the current state of the menu screens
+//-1: title screen
+//-2: level select
+//-3: save and load
+//0-19: in a level
+int current_level = -1;
+//These arrays hold metadata about each level
+int level_costs[NUM_LEVELS];
+int high_scores[NUM_LEVELS];
+
+//UI Elements
+textbox level_names[NUM_LEVELS];
+textbox level_costs_text[NUM_LEVELS];
+textbox level_scores_text[NUM_LEVELS];
+//The height of the box at the top of the level select screen
+double TITLE_HEIGHT = .15;
+
+//Title text
+textbox title_text(x=5, y=floor(window_height*.84), size = .35, text="No Escape");
+textbox credit_text(x=5, y=floor(window_height*.78), size = .15, text="by Calvin Martinez");
+rectangle title_background(x=0, y=floor(window_height*.75), w=floor(window_width*.5), h=floor(window_height*.2), red=1, green=.4, blue=.4);
+
+//Navigation button
+textbox nav_text(x=5, y=floor(window_height*.27), size = .2, text="Select Level");
+rectangle nav_button(x=0, y=floor(window_height*.25), w=floor(window_width*.33), h=floor(window_height*.125), animation_block=button);
+
+textbox enter_text(x=5, y=floor(window_height*.27), size = .2, text="Confirm", visible=0);
+rectangle enter_button(x=0, y=floor(window_height*.25), w=floor(window_width*.33), h=floor(window_height*.125), animation_block=button, visible=0);
+textbox verify_text(x=floor(window_width*.33) + 20, y=floor(window_height*.27), size = .15, text="", red = 1, visible=0);
+textbox code_output_note(x=5, y=30, size = .15, text="Play the game to get a save code", visible=0);
+textbox code_output(x=5, y=8, size = .12, text="", visible=0, animation_block=code_output_display, user_int = 1);
+
+rectangle columns[2];
+rectangle rows[NUM_LEVELS];
+
+//Buttons for level selection
+rectangle level_buttons[NUM_LEVELS];
+
+//Tracks which projectile is currently ready to fire
+int proj = 0;
+int MAX_PROJ = 32;
+//Holds the projectiles for the deployer enemy
+rectangle projectiles[MAX_PROJ];
+
+//Holds the arrows for the compass enemy
+int MAX_SCORE = 99;
+triangle arrows[MAX_SCORE];
+
+//The player you control
+rectangle player(x = WAIT_POINT, y = WAIT_POINT, w = PLAYER_SIZE, h = PLAYER_SIZE, animation_block = playermove, red = 0, visible = 0);
+//Displays your score
+textbox score_text(x=10,y=10,text = "0",visible=0);
+//The block array
+rectangle blocks[MAX_SCORE];
+
+int VERIFICATION_DIGITS = 4;
+int CODE_LENGTH = (NUM_LEVELS * 2) + VERIFICATION_DIGITS;
+int entercode[CODE_LENGTH];
+int code_cursor = 0;
+textbox code_text(animation_block=code_display, size=.12, x=10, y=floor(window_height*.7),visible=0);
+int code_output_array[CODE_LENGTH];
+rectangle enter_text_hint(x = 5, y = floor(window_height*.7) - 4, w = 20, h = 1, visible = 0, red = 0, animation_block = blink);
+
+//The red backdrop that fades in after you die
+rectangle backdrop(x=0,y=0,w=window_width,h=window_height,red=1,green=1,blue=1,drawing_order=-2);
+
+initialization {
+	//Initialize blocks
+	for (i = 0; i < MAX_SCORE; i ++) {
+		blocks[i].w = ENEMY_SIZE;
+		blocks[i].h = ENEMY_SIZE;
+		blocks[i].x = WAIT_POINT;
+		blocks[i].y = WAIT_POINT;
+		blocks[i].user_int2 = i;
+	}
+	
+	//Initialize projectiles
+	for (i = 0; i < MAX_PROJ; i ++) {
+		projectiles[i].red = .6;
+		projectiles[i].green = 0;
+		projectiles[i].blue = .6;
+		projectiles[i].w = PROJ_SIZE;
+		projectiles[i].h = PROJ_SIZE;
+		projectiles[i].x = WAIT_POINT;
+		projectiles[i].y = WAIT_POINT;
+		projectiles[i].user_double3 = 3.5;
+	}
+	
+	//Initialize arrows
+	for (i = 0; i < MAX_SCORE; i ++) {
+		arrows[i].red = 0;
+		arrows[i].green = 0;
+		arrows[i].blue = 0;
+		arrows[i].size = 11;
+		arrows[i].skew = 2;
+		arrows[i].x = WAIT_POINT;
+		arrows[i].y = WAIT_POINT;
+	}
+	
+	//Define level names
+	level_names[0].text = "Your Favorite Screensaver";
+	level_names[1].text = "Omnidirectional Attack";
+	level_names[2].text = "Watch For Falling Rocks!";
+	level_names[3].text = "Mini-Mixer";
+	level_names[4].text = "Compass Warfare";
+	level_names[5].text = "Waveforms";
+	level_names[6].text = "March of the Spiders";
+	level_names[7].text = "Solemn Defenders";
+	level_names[8].text = "Minefield Ahead";
+	level_names[9].text = "Medium-Mixer";
+	level_names[10].text = "He's Comin' Right For Us!";
+	level_names[11].text = "The Taffy Factory";
+	level_names[12].text = "Cat and Mouse";
+	level_names[13].text = "Ground Zero";
+	level_names[14].text = "Mega-Mixer";
+	level_names[15].text = "Boxed In";
+	level_names[16].text = "Missile Mayhem";
+	level_names[17].text = "Shadow Tanks";
+	level_names[18].text = "Monster-Mixer";
+	level_names[19].text = "The Gang's All Here!";
+	
+	level_costs[0] = 0;
+	level_costs[1] = 8;
+	level_costs[2] = 8;
+	level_costs[3] = 35;
+	level_costs[4] = 55;
+	level_costs[5] = 80;
+	level_costs[6] = 80;
+	level_costs[7] = 120;
+	level_costs[8] = 120;
+	level_costs[9] = 170;
+	level_costs[10] = 200;
+	level_costs[11] = 205;
+	level_costs[12] = 240;
+	level_costs[13] = 260;
+	level_costs[14] = 285;
+	level_costs[15] = 300;
+	level_costs[16] = 330;
+	level_costs[17] = 345;
+	level_costs[18] = 380;
+	level_costs[19] = 430;
+	
+	//for (i = 0; i < NUM_LEVELS; i ++) {level_costs[i]=0;}
+	
+	//Level select columns
+	for (i = 0; i < 2; i ++) {
+		columns[i].red = 0;
+		columns[i].w = 1;
+		columns[i].h = window_height;
+		columns[i].y = 0;
+		columns[i].visible = 0;
+	}
+	columns[0].x = floor(window_width*.1);
+	columns[1].x = floor(window_width*.9);
+	
+	//Level select rows and textboxes
+	j = floor(window_height * TITLE_HEIGHT);
+	for (i = 0; i < NUM_LEVELS; i ++) {
+		rows[i].red = 0;
+		rows[i].w = window_width;
+		rows[i].h = 1;
+		rows[i].x = 0;
+		rows[i].y = floor((window_height - j) * (1.0 * (NUM_LEVELS-i)/NUM_LEVELS));
+		rows[i].visible = 0;
+		level_names[i].x = 3 + floor(window_width*.1);
+		level_names[i].y = rows[i].y - 13;
+		level_names[i].visible = 0;
+		level_costs_text[i].x = 3;
+		level_costs_text[i].y = rows[i].y - 13;
+		level_costs_text[i].visible = 0;
+		level_costs_text[i].text = level_costs[i];
+		level_scores_text[i].x = 3 + floor(window_width*.9);
+		level_scores_text[i].y = rows[i].y - 13;
+		level_scores_text[i].visible = 0;
+		level_buttons[i].x = 0;
+		level_buttons[i].y = floor((window_height - j) * (1.0 * (NUM_LEVELS-(i + 1))/NUM_LEVELS));
+		level_buttons[i].w = window_width;
+		level_buttons[i].h = 1+floor((window_height - j) * 1.0 / NUM_LEVELS);
+		level_buttons[i].user_int = i;
+		level_buttons[i].animation_block = button2;
+		level_buttons[i].visible = 0;
+	}
+}
+
+//Changing levels
+on leftmouse_down {
+	//Tracks target level
+	k = -10;
+	if (mouse_x > nav_button.x && mouse_y > nav_button.y && mouse_x < nav_button.x + nav_button.w && mouse_y < nav_button.y + nav_button.h) {
+		if (current_level == -1) {
+			//From title screen to level select
+			k = -2;
+		}
+		else if (current_level == -2) {
+			//From level select to save/load
+			k = -3;
+		}
+		else if (current_level == -3) {
+			//From save/load to level select
+			k = -2;
+		}
+	}
+	if (dead == 1 && current_level >= 0) {
+		//After dying, back to level select
+		k = -2;
+	}
+	if (current_level == -2) {
+		for (i = 0; i < NUM_LEVELS; i ++) {
+			if (mouse_x > level_buttons[i].x &&
+			mouse_y > level_buttons[i].y &&
+			mouse_x < level_buttons[i].x + level_buttons[i].w &&
+			mouse_y < level_buttons[i].y + level_buttons[i].h)
+			{
+				if (megascore >= level_costs[i]) {
+					//From level select screen to level
+					k = i;
+					i = NUM_LEVELS;
+				}
+			}
+		}
+	}
+	
+	//Move to new screen
+	if (k != -10) {
+		if (k >= -1) {
+			title_background.visible = 0;
+			title_text.visible = 0;
+			nav_button.visible = 0;
+			nav_text.visible = 0;
+			player.visible = 1;
+			score_text.visible = 1;
+			player.x = window_width/2;
+			player.y = window_height/2;
+		} else if (current_level >= -1) {
+			title_background.visible = 1;
+			title_text.visible = 1;
+			nav_button.visible = 1;
+			nav_text.visible = 1;
+			player.visible = 0;
+			score_text.visible = 0;
+			backdrop.green = 1;
+			backdrop.blue = 1;
+			level_int = 0;
+			level_int2 = 0;
+			level_int3 = 0;
+			dead = 0;
+			timer = 30;
+			for (i = 0; i < MAX_SCORE; i ++) {
+				blocks[i].animation_block = still;
+				blocks[i].x = WAIT_POINT;
+				blocks[i].y = WAIT_POINT;
+				blocks[i].w = ENEMY_SIZE;
+				blocks[i].h = ENEMY_SIZE;
+				arrows[i].x = WAIT_POINT;
+				arrows[i].y = WAIT_POINT;
+			}
+			for (i = 0; i < MAX_PROJ; i ++) {
+				projectiles[i].animation_block = still;
+				projectiles[i].x = WAIT_POINT;
+				projectiles[i].y = WAIT_POINT;
+			}
+			if (current_level != -1) {
+				if (score > scores[current_level]) {
+					scores[current_level] = score;
+				}
+			}
+			score = 0;
+		}
+		if (k == -2) {
+			for (i = 0; i < NUM_LEVELS; i ++) {
+				rows[i].visible = 1;
+				level_buttons[i].visible = 1;
+				level_names[i].visible = 1;
+				level_costs_text[i].visible = 1;
+				level_scores_text[i].visible = 1;
+				
+				//Update scores
+				level_scores_text[i].text = scores[i];
+			}
+			columns[0].visible = 1;
+			columns[1].visible = 1;
+			
+			nav_button.x = floor(window_width * .7);
+			nav_button.y = window_height - floor(window_height * TITLE_HEIGHT);
+			nav_button.w = floor(window_width * .3);
+			nav_button.h = floor(window_height * TITLE_HEIGHT);
+			nav_text.x = floor(window_width * .7) + 20;
+			nav_text.y = window_height - floor(window_height * TITLE_HEIGHT) + 15;
+			
+			title_background.x = 0;
+			title_background.y = window_height - floor(window_height * TITLE_HEIGHT);
+			title_background.w = floor(window_width * .7);
+			title_background.h = floor(window_height * TITLE_HEIGHT);
+			title_text.x = 20;
+			title_text.y = window_height - floor(window_height * TITLE_HEIGHT) + 10;
+			
+			credit_text.visible = 0;
+			
+			//Update megascore
+			megascore = 0;
+			for (i = 0; i < NUM_LEVELS; i ++) {
+				megascore += scores[i];
+			}
+			
+			nav_text.text = "Save/Load";
+			title_text.text = "Total Score: " + megascore;
+			title_text.size = .3;
+		} else {
+			//Not level select screen
+			for (i = 0; i < NUM_LEVELS; i ++) {
+				rows[i].visible = 0;
+				level_buttons[i].visible = 0;
+				level_names[i].visible = 0;
+				level_costs_text[i].visible = 0;
+				level_scores_text[i].visible = 0;
+			}
+			columns[0].visible = 0;
+			columns[1].visible = 0;
+		}
+		if (k == -3) {
+			title_text.text = "Enter code:";
+			title_text.size = .3;
+			nav_text.text = "Back";
+			code_text.visible = 1;
+			code_cursor = 0;
+			enter_button.visible = 1;
+			enter_text.visible = 1;
+			code_output.visible = 1;
+			code_output_note.visible = 1;
+			enter_text_hint.visible = 1;
+			code_output.user_int = 0;
+			for (i = 0; i < CODE_LENGTH; i ++) {
+				entercode[i] = 0;
+			}
+		} else {
+			code_text.visible = 0;
+			enter_button.visible = 0;
+			enter_text.visible = 0;
+			verify_text.visible = 0;
+			code_output.visible = 0;
+			code_output_note.visible = 0;
+			enter_text_hint.visible = 0;
+		}
+		//Set current level
+		current_level = k;
+	}
+	
+	if (mouse_x > enter_button.x && mouse_y > enter_button.y && mouse_x < enter_button.x + enter_button.w && mouse_y < enter_button.y + enter_button.h) {
+		if (current_level == -3) {
+			//Confirm the code is valid
+			j = 0;
+			for (i = VERIFICATION_DIGITS; i < code_cursor; i ++) {
+				j += entercode[i] * i;
+			}
+			j += 4518;
+			j = j % 10000;
+			
+			k = 0;
+			k += entercode[0] * 1;
+			k += entercode[1] * 10;
+			k += entercode[2] * 100;
+			k += entercode[3] * 1000;
+			if (k == 1999 && code_cursor == 4) {
+				verify_text.visible = 1;
+				verify_text.text = "Cheat code loaded!";
+				for (i = 0; i < NUM_LEVELS; i ++) {
+					level_costs[i] = 0;
+					level_costs_text[i].text = "0";
+				}
+			}
+			else if (j != k) {
+				verify_text.visible = 1;
+				verify_text.text = "Invalid code";
+			}
+			else {
+				verify_text.visible = 1;
+				verify_text.text = "Save loaded!";
+				code_output.user_int = 0;
+				//Load code
+				j = 0;
+				for (i = VERIFICATION_DIGITS; i < CODE_LENGTH; i += 2) {
+					scores[j] = 0;
+					scores[j] += entercode[i] * 10;
+					scores[j] += entercode[i+1];
+					j ++;
+				}
+			}
+		}
+	}
+}
+
+//For entering the save and load codes
+on akey {
+	if (current_level == -3 && code_cursor < CODE_LENGTH) {
+		entercode[code_cursor] = 1;
+		code_cursor ++;
+	}
+}
+
+on skey {
+	if (current_level == -3 && code_cursor < CODE_LENGTH) {
+		entercode[code_cursor] = 2;
+		code_cursor ++;
+	}
+}
+
+on dkey {
+	if (current_level == -3 && code_cursor < CODE_LENGTH) {
+		entercode[code_cursor] = 3;
+		code_cursor ++;
+	}
+}
+
+on fkey {
+	if (current_level == -3 && code_cursor < CODE_LENGTH) {
+		entercode[code_cursor] = 4;
+		code_cursor ++;
+	}
+}
+
+on hkey {
+	if (current_level == -3 && code_cursor < CODE_LENGTH) {
+		entercode[code_cursor] = 5;
+		code_cursor ++;
+	}
+}
+
+on jkey {
+	if (current_level == -3 && code_cursor < CODE_LENGTH) {
+		entercode[code_cursor] = 6;
+		code_cursor ++;
+	}
+}
+
+on kkey {
+	if (current_level == -3 && code_cursor < CODE_LENGTH) {
+		entercode[code_cursor] = 7;
+		code_cursor ++;
+	}
+}
+
+on lkey {
+	if (current_level == -3 && code_cursor < CODE_LENGTH) {
+		entercode[code_cursor] = 8;
+		code_cursor ++;
+	}
+}
+
+on wkey {
+	if (current_level == -3 && code_cursor < CODE_LENGTH) {
+		entercode[code_cursor] = 9;
+		code_cursor ++;
+	}
+}
+
+on space {
+	if (current_level == -3 && code_cursor < CODE_LENGTH) {
+		entercode[code_cursor] = 0;
+		code_cursor ++;
+	}
+}
+
+on leftarrow {
+	if (current_level == -3 && code_cursor > 0) {
+		code_cursor --;
+		entercode[code_cursor] = 0;
+	}
+}
+
+animation code_display(textbox cd) {
+	if (cd.visible == 1) {
+		s = "";
+		for (i = 0; i < code_cursor; i ++) {
+			if (entercode[i] == 1)		{s = s + "a";}
+			else if (entercode[i] == 2)	{s = s + "s";}
+			else if (entercode[i] == 3)	{s = s + "d";}
+			else if (entercode[i] == 4)	{s = s + "f";}
+			else if (entercode[i] == 5)	{s = s + "h";}
+			else if (entercode[i] == 6)	{s = s + "j";}
+			else if (entercode[i] == 7)	{s = s + "k";}
+			else if (entercode[i] == 8)	{s = s + "l";}
+			else if (entercode[i] == 9)	{s = s + "w";}
+			else						{s = s + "_";}
+		}
+		cd.text = s;
+	}
+}
+
+animation code_output_display(textbox cod) {
+	if (cod.user_int == 0) {
+		k = 0;
+		for (i = 0; i < NUM_LEVELS; i ++) {
+			if (scores[i] != 0) {
+				k = 1;
+				i = NUM_LEVELS;
+			}
+		}
+		//Only display a code if the player has scored at least some points
+		if (k == 1) {
+			//Find the max level with a score attached to it
+			k = 0;
+			for (i = 0; i < NUM_LEVELS; i ++) {
+				if (scores[i] != 0) {
+					k = i+1;
+				}
+			}
+			//Determine the code
+			j = VERIFICATION_DIGITS;
+			for (i = 0; i < k; i ++) {
+				code_output_array[j] = (floor(scores[i] / 10.0)) % 10;
+				code_output_array[j+1] = (floor(scores[i] / 1.0)) % 10;
+				j += 2;
+			}
+			//Determine verification code
+			j = 0;
+			for (i = VERIFICATION_DIGITS; i < (2*k)+VERIFICATION_DIGITS; i ++) {
+				j += code_output_array[i] * i;
+			}
+			j += 4518;
+			j = j % 10000;
+			//Fill in verification digits
+			code_output_array[0] = (floor(j / 1.0)) % 10;
+			code_output_array[1] = (floor(j / 10.0)) % 10;
+			code_output_array[2] = (floor(j / 100.0)) % 10;
+			code_output_array[3] = (floor(j / 1000.0)) % 10;
+			//Print the code
+			s = "";
+			for (i = 0; i < (2*k)+VERIFICATION_DIGITS; i ++) {
+				if (code_output_array[i] == 1)		{s = s + "a";}
+				else if (code_output_array[i] == 2)	{s = s + "s";}
+				else if (code_output_array[i] == 3)	{s = s + "d";}
+				else if (code_output_array[i] == 4)	{s = s + "f";}
+				else if (code_output_array[i] == 5)	{s = s + "h";}
+				else if (code_output_array[i] == 6)	{s = s + "j";}
+				else if (code_output_array[i] == 7)	{s = s + "k";}
+				else if (code_output_array[i] == 8)	{s = s + "l";}
+				else if (code_output_array[i] == 9)	{s = s + "w";}
+				else								{s = s + "_";}
+			}
+			cod.text = s;
+			print("Your save code is: " + s);
+			code_output_note.text = "Your save code is:";
+			
+		}
+		//Done writing text
+		//Wait for next update
+		cod.user_int = 1;
+	}
+}
+
+animation blink(rectangle bl) {
+	if (bl.visible == 1) {
+		bl.user_int ++;
+		if (bl.user_int > 50) {
+			bl.user_int = 0;
+		}
+		if (bl.user_int > 25 && code_cursor == 0) {
+			bl.red = 0;
+			bl.green = 0;
+			bl.blue = 0;
+		} else {
+			bl.red = 1;
+			bl.green = 1;
+			bl.blue = 1;
+		}
+	}
+}
+
+animation playermove(rectangle r) {
+	if (current_level >= 0) {
+		//Player movement
+		if (dead == 0) {
+			r.x = floor(mouse_x - (PLAYER_SIZE/2));
+			r.y = floor(mouse_y - (PLAYER_SIZE/2));
+			if (r.x < 0) {
+				r.x = 0;
+			}
+			if (r.x > window_width - r.w) {
+				r.x = window_width - r.w;
+			}
+			if (r.y < 0) {
+				r.y = 0;
+			}
+			if (r.y > window_height - r.h) {
+				r.y = window_height - r.h;
+			}
+		}
+		//Kill the player if they touch an enemy or projectile
+		for (i = 0; i < MAX_SCORE; i ++) {
+			if (player touches blocks[i]) {
+				dead = 1;
+				player.visible = 0;
+			}
+		}
+		for (i = 0; i < MAX_PROJ; i ++) {
+			if (player touches projectiles[i]) {
+				dead = 1;
+				player.visible = 0;
+			}
+		}
+		
+		//Increment timer
+		if (dead == 0) {
+			timer --;
+		} else {
+			if (backdrop.blue > .2) {
+				backdrop.blue -= .02;
+				backdrop.green -= .02;
+			}
+		}
+	}
+	
+	//Timer also counts down on title screen
+	if (current_level == -1) {
+		timer --;
+	}
+	
+	//Update score display text
+	score_text.text = score;
+	
+	k = 0;
+	if (timer <= 0) {
+		if (score < 99 && (score < 15 || current_level >= 0)) {
+			//Signals to spawn a block
+			k = -1;
+		}
+		timer = phase_length + random(50);
+	}
+	
+	//Spawn blocks
+	if (k == -1) {
+		if (current_level == -1) {
+			timer = 50;
+			i = random(11);
+			
+			if (i < 4)			{blocks[score].animation_block = drift;}
+			else if (i < 8)		{blocks[score].animation_block = bounce;}
+			else if (i == 8)	{blocks[score].animation_block = deploy;}
+			else if (i == 9)	{blocks[score].animation_block = compass2;}
+			else				{blocks[score].animation_block = spider;}
+		}
+		else if (current_level == 0) {
+			blocks[score].animation_block = bounce;
+		}
+		else if (current_level == 1) {
+			blocks[score].animation_block = drift;
+		}
+		else if (current_level == 2) {
+			timer = floor(phase_length * .7) + random(40);
+			blocks[score].animation_block = fall;
+		}
+		else if (current_level == 3) {
+			i = random(3);
+			
+			if (i == 0)			{blocks[score].animation_block = drift;}
+			else if (i == 1)	{blocks[score].animation_block = bounce;}
+			else 				{blocks[score].animation_block = fall;}
+		}
+		else if (current_level == 4) {
+			blocks[score].animation_block = compass;
+		}
+		else if (current_level == 5) {
+			timer = floor(phase_length * .8) + random(40);
+			if (score == 0 || score == 22) {
+				blocks[score].animation_block = wave;
+			}
+			else if (score == 15) {
+				blocks[score].animation_block = swirl;
+			}
+			else {
+				i = random(2);
+				
+				if (i == 0)			{blocks[score].animation_block = drift;}
+				else				{blocks[score].animation_block = bounce;}
+			}
+		}
+		else if (current_level == 6) {
+			blocks[score].animation_block = spider;
+		}
+		else if (current_level == 7) {
+			i = random(2);
+			if (i == 0 && level_int < 6) {
+				blocks[score].animation_block = shuffle;
+				level_int ++;
+			} else {
+				blocks[score].animation_block = bounce;
+			}
+		}
+		else if (current_level == 8) {
+			timer = floor(phase_length * .6) + random(30);
+			
+			i = random(4);
+			if (i < 2 || score == 0)	{blocks[score].animation_block = park;}
+			else if (i == 2)			{blocks[score].animation_block = compass;}
+			else						{blocks[score].animation_block = drift;}
+		}
+		else if (current_level == 9) {
+			//Randomly chosen spawn time for the wave
+			if (level_int2 == 0) {
+				level_int2 = 7 + random(4);
+			}
+			if (score == level_int2) {
+				blocks[score].animation_block = wave;
+			} else {
+				i = random(8);
+				if (i == 0) {
+					if (level_int < 2) {
+						level_int ++;
+						blocks[score].animation_block = shuffle;
+					} else {
+						blocks[score].animation_block = park;
+					}
+				}
+				else if (i < 4)		{blocks[score].animation_block = fall;}
+				else 				{blocks[score].animation_block = spider;}
+			}
+		}
+		else if (current_level == 10) {
+			timer = floor(phase_length * .6) + random(30);
+			if (score == 0) {
+				blocks[score].animation_block = chase;
+			} else {
+				i = random(2);
+				
+				if (i == 0)			{blocks[score].animation_block = fall;}
+				else				{blocks[score].animation_block = park;}
+			}
+		}
+		else if (current_level == 11) {
+			blocks[score].animation_block = stretch;
+		}
+		else if (current_level == 12) {
+			if (score < 12) {
+				timer = floor(phase_length * .6) + random(40);
+			}
+			if (score == 3) {
+				blocks[score].animation_block = chase;
+			}
+			else if (score % 8 == 3) {
+				blocks[score].animation_block = shuffle;
+			} else {
+				i = random(2);
+				if (i == 0 || score == 0)	{blocks[score].animation_block = jitter;}
+				else						{blocks[score].animation_block = bounce;}
+			}
+		}
+		else if (current_level == 13) {
+			blocks[score].animation_block = missile;
+		}
+		else if (current_level == 14) {
+			//Randomly chosen spawn time for the chase
+			if (level_int2 == 0) {
+				level_int2 = 5 + random(4);
+			}
+			if (score == level_int2) {
+				blocks[score].animation_block = chase;
+			} else {
+				i = random(3);
+				if (i == 0) {
+					if (level_int < 2) {
+						level_int ++;
+						blocks[score].animation_block = stretch;
+					}
+					else if (level_int3 < 1) {
+						level_int3 ++;
+						blocks[score].animation_block = swirl;
+					}
+					else {
+						blocks[score].animation_block = spider;
+					}
+				}
+				else if (i == 1)	{blocks[score].animation_block = jitter;}
+				else 				{blocks[score].animation_block = spider;}
+			}
+		}
+		else if (current_level == 15) {
+			//Square path
+			path_x[0] = .25;
+			path_y[0] = .25;
+			
+			path_x[1] = .25;
+			path_y[1] = .75;
+			
+			path_x[2] = .75;
+			path_y[2] = .75;
+			
+			path_x[3] = .75;
+			path_y[3] = .25;
+			
+			timer = floor(phase_length * .7) + random(40);
+			i = random(3);
+			if (i == 0 || score == 0)	{blocks[score].animation_block = follow;}
+			else if (i == 1)	{blocks[score].animation_block = spider;}
+			else if (i == 2) {
+				if (score > 13) {
+					blocks[score].animation_block = jitter;
+				} else {
+					blocks[score].animation_block = fall;
+				}
+			}
+		}
+		else if (current_level == 16) {
+			if (score % 7 == 1) {
+				blocks[score].animation_block = stretch;
+			} else {
+				blocks[score].animation_block = missile;
+			}
+		}
+		else if (current_level == 17) {
+			blocks[score].animation_block = deploy;
+			//i = score % 7;
+			//if (i == 0 || i == 4)	{blocks[score].animation_block = deploy;}
+			//else if (i == 3)		{blocks[score].animation_block = shuffle;}
+			//else					{blocks[score].animation_block = spider;}
+		}
+		else if (current_level == 18) {
+			//Diamond path
+			path_x[0] = .5;
+			path_y[0] = 1;
+			
+			path_x[1] = .25;
+			path_y[1] = .5;
+			
+			path_x[2] = .5;
+			path_y[2] = 0;
+			
+			path_x[3] = .75;
+			path_y[3] = .5;
+			
+			i = score % 8;
+			if (i == 3) {
+				blocks[score].animation_block = stretch;
+			} else {
+				i = random(4);
+				if (i == 0)			{blocks[score].animation_block = follow;}
+				else if (i == 1)	{blocks[score].animation_block = deploy;}
+				else				{blocks[score].animation_block = fall;}
+			}
+		}
+		else {
+			//Figure 8 path
+			path_x[0] = 0;
+			path_y[0] = .4;
+			
+			path_x[1] = 1;
+			path_y[1] = .6;
+			
+			path_x[2] = 1;
+			path_y[2] = .4;
+			
+			path_x[3] = 0;
+			path_y[3] = .6;
+			
+			i = random(10);
+			if (i == 0) {
+				i = random(6);
+				if (i == 0) 		{blocks[score].animation_block = chase;}
+				else if (i == 1)	{blocks[score].animation_block = wave;}
+				else if (i == 2)	{blocks[score].animation_block = swirl;}
+				else if (i == 3)	{blocks[score].animation_block = shuffle;}
+				else if (i == 4)	{blocks[score].animation_block = missile;}
+				else				{blocks[score].animation_block = stretch;}
+			}
+			else if (i == 1)	{blocks[score].animation_block = bounce;}
+			else if (i == 2)	{blocks[score].animation_block = drift;}
+			else if (i == 3)	{blocks[score].animation_block = fall;}
+			else if (i == 4)	{blocks[score].animation_block = follow;}
+			else if (i == 5)	{blocks[score].animation_block = park;}
+			else if (i == 6)	{blocks[score].animation_block = spider;}
+			else if (i == 7)	{blocks[score].animation_block = jitter;}
+			else if (i == 8)	{blocks[score].animation_block = compass;}
+			else if (i == 9)	{blocks[score].animation_block = deploy;}
+		}
+		//Then increment score
+		score ++;
+	}
+}
+
+animation button(rectangle btn) {
+	if (mouse_x > btn.x && mouse_y > btn.y && mouse_x < btn.x + btn.w && mouse_y < btn.y + btn.h) {
+		btn.red = .6;
+		btn.green = .6;
+		btn.blue = .6;
+	} else {
+		btn.red = .4;
+		btn.green = .4;
+		btn.blue = .4;
+	}
+}
+
+animation button2(rectangle btn2) {
+	if (megascore >= level_costs[btn2.user_int]) {
+		if (mouse_x > btn2.x && mouse_y > btn2.y && mouse_x < btn2.x + btn2.w && mouse_y < btn2.y + btn2.h) {
+			btn2.red = 1;
+			btn2.green = 1;
+			btn2.blue = .7;
+		} else {
+			btn2.red = 1;
+			btn2.green = 1;
+			btn2.blue = 1;
+		}
+	} else {
+		btn2.red = .7;
+		btn2.green = .7;
+		btn2.blue = .7;
+	}
+}
+
+animation wave(rectangle c_wave) {
+	//Initialization
+	if (c_wave.x == WAIT_POINT) {
+		c_wave.red = 1;
+		c_wave.green = .5;
+		c_wave.blue = 0;
+		c_wave.user_double3 = 2;
+		c_wave.user_double4 = random(window_width);
+		c_wave.user_double = 0 - c_wave.w;
+	}
+	
+	//Movement left and right
+	c_wave.user_double += c_wave.user_double3;
+	
+	//Reflect movement in world
+	c_wave.x = floor(c_wave.user_double);
+	c_wave.y = floor((window_height - c_wave.h)/2.0 + ((window_height - c_wave.h)/2.0 * sin((360.0 * 3)*(c_wave.user_double+c_wave.user_double4)/(window_width - c_wave.w))));
+	
+	//Change directions if it leaves the screen
+	if (c_wave.x > (window_width - c_wave.w)) {
+		c_wave.user_double3 = abs(c_wave.user_double3) * -1;
+	}
+	if (c_wave.x < 0) {
+		c_wave.user_double3 = abs(c_wave.user_double3);
+	}
+}
+
+animation fall(rectangle c_fall) {
+	//Initialization
+	if (c_fall.x == WAIT_POINT) {
+		c_fall.red = 1;
+		c_fall.green = .5;
+		c_fall.blue = .5;
+		
+		//Speed
+		c_fall.user_double3 = 0;
+		//Acceleration
+		c_fall.user_double4 = .2;
+		
+		//Position
+		c_fall.user_double = random(window_width - c_fall.w);
+		c_fall.user_double2 = window_height + random(50);
+		
+		//Tracks how long until the block falls
+		c_fall.user_int5 = 35;
+	}
+	
+	//Phase 0, the block comes down a bit from the top
+	if (c_fall.user_double2 > window_height - (c_fall.w * .75)) {
+		c_fall.user_double2 -= 1.5;
+	}
+	//Phase 1, the block sits at the top for a little bit.
+	else if (c_fall.user_int5 > 0) {
+		c_fall.user_int5 --;
+	}
+	//Phase 2, the block falls
+	else {
+		//Accelerate the block downward
+		c_fall.user_double3 += c_fall.user_double4;
+		c_fall.user_double2 -= c_fall.user_double3;
+	}
+	
+	//Reflect movement in world
+	c_fall.x = floor(c_fall.user_double);
+	c_fall.y = floor(c_fall.user_double2);
+	
+	//Reset the block once it hits the bottom
+	if (c_fall.y < (0 - c_fall.h)) {
+		//Signals code to reset this block
+		c_fall.x = WAIT_POINT;
+	}
+}
+
+animation bounce(rectangle c_bounce) {
+	//Initialization
+	if (c_bounce.x == WAIT_POINT) {
+		c_bounce.user_int4 = 0;
+		c_bounce.red = 0;
+		c_bounce.green = 0;
+		c_bounce.blue = 1;
+		c_bounce.user_int4 = 0;
+		i = random(4);
+		if (i == 0) {
+			c_bounce.user_double = 0 - c_bounce.w;
+			c_bounce.user_double2 = random(window_height - c_bounce.h);
+			c_bounce.user_double3 = 2.5;
+			c_bounce.user_double4 = 2.5;
+		}
+		else if (i == 1) {
+			c_bounce.user_double = random(window_width - c_bounce.w);
+			c_bounce.user_double2 = 0 - c_bounce.h;
+			c_bounce.user_double3 = -2.5;
+			c_bounce.user_double4 = 2.5;
+		}
+		else if (i == 2) {
+			c_bounce.user_double = window_width;
+			c_bounce.user_double2 = random(window_height - c_bounce.h);
+			c_bounce.user_double3 = -2.5;
+			c_bounce.user_double4 = -2.5;
+		}
+		else if (i == 3) {
+			c_bounce.user_double = random(window_width - c_bounce.w);
+			c_bounce.user_double2 = window_height;
+			c_bounce.user_double3 = 2.5;
+			c_bounce.user_double4 = -2.5;
+		}
+	}
+	//How long the block has been alive
+	c_bounce.user_int4 ++;
+	
+	//Calculate movement
+	c_bounce.user_double += c_bounce.user_double3;
+	c_bounce.user_double2 += c_bounce.user_double4;
+	
+	//If the block hits an edge, it bounces off
+	if (c_bounce.user_double > window_width - c_bounce.w && c_bounce.user_int4 > 10) {
+		c_bounce.user_double = (window_width - c_bounce.w) - 1;
+		c_bounce.user_double3 = c_bounce.user_double3 * -1;
+	}
+	if (c_bounce.user_double2 > window_height - c_bounce.h && c_bounce.user_int4 > 10) {
+		c_bounce.user_double2 = (window_height - c_bounce.h) - 1;
+		c_bounce.user_double4 = c_bounce.user_double4 * -1;
+	}
+	if (c_bounce.user_double < 0 && c_bounce.user_int4 > 10) {
+		c_bounce.user_double = 1;
+		c_bounce.user_double3 = c_bounce.user_double3 * -1;
+	}
+	if (c_bounce.user_double2 < 0 && c_bounce.user_int4 > 10) {
+		c_bounce.user_double2 = 1;
+		c_bounce.user_double4 = c_bounce.user_double4 * -1;
+	}
+	
+	//Reflect movement in world
+	c_bounce.x = floor(c_bounce.user_double);
+	c_bounce.y = floor(c_bounce.user_double2);
+}
+
+animation drift(rectangle c_drift) {
+	//Initialization
+	if (c_drift.x == WAIT_POINT) {
+		c_drift.red = 1;
+		c_drift.green = 0;
+		c_drift.blue = 0;
+		c_drift.user_double3 = 3;
+		i = random(4);
+		if (i == 0) {
+			c_drift.user_double = 0 - c_drift.w;
+			c_drift.user_double2 = random(window_height - c_drift.h);
+			c_drift.user_int = 0;
+		}
+		else if (i == 1) {
+			c_drift.user_double = random(window_width - c_drift.w);
+			c_drift.user_double2 = 0 - c_drift.h;
+			c_drift.user_int = 90;
+		}
+		else if (i == 2) {
+			c_drift.user_double = window_width;
+			c_drift.user_double2 = random(window_height - c_drift.h);
+			c_drift.user_int = 180;
+		}
+		else if (i == 3) {
+			c_drift.user_double = random(window_width - c_drift.w);
+			c_drift.user_double2 = window_height;
+			c_drift.user_int = 270;
+		}
+	}
+	
+	//Movement
+	c_drift.user_double += cos(c_drift.user_int) * c_drift.user_double3;
+	c_drift.user_double2 += sin(c_drift.user_int) * c_drift.user_double3;
+	
+	//Reflect movement in world
+	c_drift.x = floor(c_drift.user_double);
+	c_drift.y = floor(c_drift.user_double2);
+	
+	//If the block goes off screen, reset it
+	if (c_drift.x > window_width || c_drift.y > window_height || c_drift.x < 0 - c_drift.w || c_drift.y < 0 - c_drift.h) {
+		c_drift.x = WAIT_POINT;
+		//This flags the code to reinitialize this block next frame
+	}
+}
+
+animation swirl(rectangle c_swirl) {
+	//Initialization
+	if (c_swirl.x == WAIT_POINT) {
+		c_swirl.red = .9;
+		c_swirl.green = .9;
+		c_swirl.blue = 0;
+		c_swirl.user_int = 0;
+	}
+	c_swirl.user_int += 2;
+	c_swirl.y = floor((window_height - c_swirl.h)/2.0 + ((window_height - c_swirl.h)/2.0 * sin((360.0)*c_swirl.user_int/(window_height - c_swirl.w))));
+	c_swirl.x = floor((window_width - c_swirl.w)/2.0 + ((window_width - c_swirl.w)/2.0 * cos((360.0)*c_swirl.user_int*1.5/(window_width - c_swirl.h))));
+}
+
+animation park(rectangle c_park) {
+	//Initialization
+	if (c_park.x == WAIT_POINT) {
+		c_park.user_double3 = 3;
+		c_park.red = 0;
+		c_park.green = .8;
+		c_park.blue = 0;
+		i = random(4);
+		if (i == 0) {
+			c_park.user_double = 0 - c_park.w;
+			c_park.user_double2 = random(window_height - c_park.h);
+		}
+		else if (i == 1) {
+			c_park.user_double = random(window_width - c_park.w);
+			c_park.user_double2 = 0 - c_park.h;
+		}
+		else if (i == 2) {
+			c_park.user_double = window_width;
+			c_park.user_double2 = random(window_height - c_park.h);
+		}
+		else if (i == 3) {
+			c_park.user_double = random(window_width - c_park.w);
+			c_park.user_double2 = window_height;
+		}
+		//Move block to its destination for calculation
+		c_park.x = floor(c_park.user_double);
+		c_park.y = floor(c_park.user_double2);
+		//Pick random destination
+		c_park.user_double4 = random(window_width - c_park.w);
+		c_park.user_double5 = random(window_height - c_park.h);
+		//Figure out angle that takes the block toward its destination
+		if (c_park.user_double4 - c_park.x == 0) {
+			//Safety to prevent divide by zero
+			if (c_park.y > c_park.user_double5) {
+				c_park.user_int = 270;
+			} else {
+				c_park.user_int = 90;
+			}
+		} else {
+			//Chase equation
+			c_park.user_int = floor(atan(((c_park.y - c_park.user_double5)*1.0)/((c_park.x - c_park.user_double4)*1.0)));
+			//We don't have access to atan2, so we gotta do it ourselves
+			if (c_park.user_double4 < c_park.x) {
+				c_park.user_int += 180;
+			}
+		}
+	}
+	
+	//Movement
+	if (abs(c_park.x - c_park.user_double4) < 8 && abs(c_park.y - c_park.user_double5) < 8) {
+		//Arrived at location, stop moving
+		c_park.animation_block = still;
+	} else {
+		//Calculate movement
+		c_park.user_double += cos(c_park.user_int) * c_park.user_double3;
+		c_park.user_double2 += sin(c_park.user_int) * c_park.user_double3;
+		
+		//Reflect movement in world
+		c_park.x = floor(c_park.user_double);
+		c_park.y = floor(c_park.user_double2);
+	}
+}
+
+animation still(rectangle c_still) {}
+
+animation jitter(rectangle c_jitter) {
+	//Initialization
+	if (c_jitter.x == WAIT_POINT) {
+		c_jitter.user_double3 = 2;
+		c_jitter.red = 0;
+		c_jitter.green = 0;
+		c_jitter.blue = .35;
+		i = random(4);
+		if (i == 0) {
+			c_jitter.user_double = 0 - c_jitter.w;
+			c_jitter.user_double2 = random(window_height - c_jitter.h);
+		}
+		else if (i == 1) {
+			c_jitter.user_double = random(window_width - c_jitter.w);
+			c_jitter.user_double2 = 0 - c_jitter.h;
+		}
+		else if (i == 2) {
+			c_jitter.user_double = window_width;
+			c_jitter.user_double2 = random(window_height - c_jitter.h);
+		}
+		else if (i == 3) {
+			c_jitter.user_double = random(window_width - c_jitter.w);
+			c_jitter.user_double2 = window_height;
+		}
+	}
+	
+	//Pick a random direction
+	//A direction cannot be picked if the jitter is out of bounds in that direction
+	//If the jitter is out of bounds in that direction, try the next direction
+	i = random(4);
+	for (j = 0; j < 4; j ++) {
+		k = (i + j) % 4;
+		if (k == 0 && c_jitter.x < (window_width - c_jitter.w)) {
+			c_jitter.user_double += c_jitter.user_double3;
+			j = 4;
+		}
+		else if (k == 1 && c_jitter.y < (window_height - c_jitter.h)) {
+			c_jitter.user_double2 += c_jitter.user_double3;
+			j = 4;
+		}
+		else if (k == 2 && c_jitter.x > 0) {
+			c_jitter.user_double -= c_jitter.user_double3;
+			j = 4;
+		}
+		else if (k == 3 && c_jitter.y > 0) {
+			c_jitter.user_double2 -= c_jitter.user_double3;
+			j = 4;
+		}
+	}
+	
+	//Reflect movement in world
+	c_jitter.x = floor(c_jitter.user_double);
+	c_jitter.y = floor(c_jitter.user_double2);
+}
+
+animation chase(rectangle c_chase) {
+	//Initialization
+	if (c_chase.x == WAIT_POINT) {
+		c_chase.user_double3 = .55;
+		c_chase.user_int4 = 0;
+		c_chase.green = 0;
+		i = random(4);
+		if (i == 0) {
+			c_chase.user_double = 0 - c_chase.w;
+			c_chase.user_double2 = random(window_height - c_chase.h);
+		}
+		else if (i == 1) {
+			c_chase.user_double = random(window_width - c_chase.w);
+			c_chase.user_double2 = 0 - c_chase.h;
+		}
+		else if (i == 2) {
+			c_chase.user_double = window_width;
+			c_chase.user_double2 = random(window_height - c_chase.h);
+		}
+		else if (i == 3) {
+			c_chase.user_double = random(window_width - c_chase.w);
+			c_chase.user_double2 = window_height;
+		}
+	}
+	
+	//How long the chaser has been alive
+	c_chase.user_int4 ++;
+	
+	//Pulsating color
+	if (c_chase.red < 1) {
+		c_chase.red += .05;
+	} else {
+		c_chase.blue -= .05;
+	}
+	if (c_chase.blue <= 0) {
+		c_chase.red = 0;
+		c_chase.blue = 1;
+	}
+	
+	//Chase direction code
+	if (dead == 0) {
+		if (player.x - c_chase.x == 0) {
+			//Safety to prevent divide by zero
+			if (c_chase.y > player.y) {
+				c_chase.user_int = 270;
+			} else {
+				c_chase.user_int = 90;
+			}
+		} else {
+			//Chase equation
+			c_chase.user_int = floor(atan(((c_chase.y - player.y)*1.0)/((c_chase.x - player.x)*1.0)));
+			//We don't have access to atan2, so we gotta do it ourselves
+			if (player.x < c_chase.x) {
+				c_chase.user_int += 180;
+			}
+		}
+		//Calculate movement
+		c_chase.user_double += cos(c_chase.user_int) * c_chase.user_double3;
+		c_chase.user_double2 += sin(c_chase.user_int) * c_chase.user_double3;
+		
+		//Reflect movement in world
+		c_chase.x = floor(c_chase.user_double);
+		c_chase.y = floor(c_chase.user_double2);
+	}
+}
+
+animation spider(rectangle c_spider) {
+	//Initialization
+	if (c_spider.x == WAIT_POINT) {
+		c_spider.red = .35;
+		c_spider.green = 0;
+		c_spider.blue = 0;
+		c_spider.user_double3 = 4;
+		c_spider.user_int4 = 0;
+		c_spider.user_int5 = 0;
+		i = random(4);
+		if (i == 0) {
+			c_spider.user_double = 0 - c_spider.w;
+			c_spider.user_double2 = random(window_height - c_spider.h);
+			c_spider.user_int = 0;
+		}
+		else if (i == 1) {
+			c_spider.user_double = random(window_width - c_spider.w);
+			c_spider.user_double2 = 0 - c_spider.h;
+			c_spider.user_int = 90;
+		}
+		else if (i == 2) {
+			c_spider.user_double = window_width;
+			c_spider.user_double2 = random(window_height - c_spider.h);
+			c_spider.user_int = 180;
+		}
+		else if (i == 3) {
+			c_spider.user_double = random(window_width - c_spider.w);
+			c_spider.user_double2 = window_height;
+			c_spider.user_int = 270;
+		}
+	}
+	//How long the spider has been alive
+	c_spider.user_int4 ++;
+	
+	//Check whether spider is in hold state or move state
+	if (c_spider.user_int5 > 0) {
+		//Hold state, wait until ready to move again
+		c_spider.user_int5 --;
+	} else {
+		//Move state, calculate movement
+		c_spider.user_double += cos(c_spider.user_int) * c_spider.user_double3;
+		c_spider.user_double2 += sin(c_spider.user_int) * c_spider.user_double3;
+	}
+	
+	//If the spider hits an edge, have it wait, then jump off the wall
+	if (c_spider.user_double > window_width - c_spider.w && c_spider.user_int4 > 10) {
+		c_spider.user_double = window_width - c_spider.w;
+		c_spider.user_int5 = random(15) + 30;
+		c_spider.user_int = 135 + random(90);
+	}
+	if (c_spider.user_double2 > window_height - c_spider.h && c_spider.user_int4 > 10) {
+		c_spider.user_double2 = window_height - c_spider.h;
+		c_spider.user_int5 = random(15) + 30;
+		c_spider.user_int = 225 + random(90);
+	}
+	if (c_spider.user_double < 0 && c_spider.user_int4 > 10) {
+		c_spider.user_double = 0;
+		c_spider.user_int5 = random(15) + 30;
+		c_spider.user_int = (315 + random(90)) % 360;
+	}
+	if (c_spider.user_double2 < 0 && c_spider.user_int4 > 10) {
+		c_spider.user_double2 = 0;
+		c_spider.user_int5 = random(15) + 30;
+		c_spider.user_int = 45 + random(90);
+	}
+	
+	//Reflect movement in world
+	c_spider.x = floor(c_spider.user_double);
+	c_spider.y = floor(c_spider.user_double2);
+}
+
+animation stretch(rectangle c_stretch) {
+	//Initialization
+	if (c_stretch.x == WAIT_POINT) {
+		c_stretch.w = ENEMY_SIZE2;
+		c_stretch.h = ENEMY_SIZE2;
+		c_stretch.red = 0;
+		c_stretch.green = .6;
+		c_stretch.blue = .7;
+		c_stretch.user_double3 = 5;
+		//Tracks stretching
+		c_stretch.user_double4 = -1;
+		i = random(4);
+		if (i == 0) {
+			c_stretch.user_double = (0 - c_stretch.w) - 900;
+			c_stretch.user_double2 = random(window_height - c_stretch.h);
+			j = window_width - c_stretch.w;
+		}
+		else if (i == 1) {
+			c_stretch.user_double = random(window_width - c_stretch.w);
+			c_stretch.user_double2 = (0 - c_stretch.h) - 900;
+			j = window_height - c_stretch.h;
+		}
+		else if (i == 2) {
+			c_stretch.user_double = window_width + 900;
+			c_stretch.user_double2 = random(window_height - c_stretch.h);
+			j = window_width - c_stretch.w;
+		}
+		else if (i == 3) {
+			c_stretch.user_double = random(window_width - c_stretch.w);
+			c_stretch.user_double2 = window_height + 900;
+			j = window_height - c_stretch.h;
+		}
+		//Sets random direction
+		c_stretch.user_int5 = i;
+		//Sets random stretch position
+		c_stretch.user_double5 = (j*0.17) + random(j*0.66);
+	}
+	
+	if (c_stretch.user_double4 == -1) {
+		//Calculate movement
+		if (c_stretch.user_int5 == 0) {
+			c_stretch.user_double += c_stretch.user_double3;
+			if (c_stretch.user_double > c_stretch.user_double5) {
+				c_stretch.user_double4 = 0;
+			}
+		}
+		else if (c_stretch.user_int5 == 1) {
+			c_stretch.user_double2 += c_stretch.user_double3;
+			if (c_stretch.user_double2 > c_stretch.user_double5) {
+				c_stretch.user_double4 = 0;
+			}
+		}
+		else if (c_stretch.user_int5 == 2) {
+			c_stretch.user_double -= c_stretch.user_double3;
+			if (c_stretch.user_double < c_stretch.user_double5) {
+				c_stretch.user_double4 = 0;
+			}
+		}
+		else if (c_stretch.user_int5 == 3) {
+			c_stretch.user_double2 -= c_stretch.user_double3;
+			if (c_stretch.user_double2 < c_stretch.user_double5) {
+				c_stretch.user_double4 = 0;
+			}
+		}
+		//Reflect movement in world
+		c_stretch.x = floor(c_stretch.user_double);
+		c_stretch.y = floor(c_stretch.user_double2);
+	} else {
+		//Stretching
+		c_stretch.user_double4 += .15;
+		//Calculates amount of stretch
+		x = (((c_stretch.user_double4 - 1) * (c_stretch.user_double4 - 1))*.5)+.5;
+		//Calculates the height
+		y = ENEMY_SIZE2 * x;
+		//Calculates the width in a way that preserves volume
+		z = (ENEMY_SIZE2 * ENEMY_SIZE2) / y;
+		
+		if (c_stretch.user_int5 == 0 || c_stretch.user_int5 == 2) {
+			c_stretch.w = floor(z);
+			c_stretch.x = floor(c_stretch.user_double - (z/2) + ENEMY_SIZE2/2);
+			c_stretch.h = floor(y);
+			c_stretch.y = floor(c_stretch.user_double2 - (y/2) + ENEMY_SIZE2/2);
+		} else {
+			c_stretch.w = floor(y);
+			c_stretch.x = floor(c_stretch.user_double - (y/2) + ENEMY_SIZE2/2);
+			c_stretch.h = floor(z);
+			c_stretch.y = floor(c_stretch.user_double2 - (z/2) + ENEMY_SIZE2/2);
+		}
+		if (z < 1.5) {
+			c_stretch.x = WAIT_POINT;
+		}
+	}
+}
+
+animation deploy(rectangle c_deploy) {
+	//Initialization
+	if (c_deploy.x == WAIT_POINT) {
+		c_deploy.red = .9;
+		c_deploy.green = 0;
+		c_deploy.blue = .9;
+		c_deploy.user_double3 = 2;
+		//Tracks firing
+		c_deploy.user_int4 = 10 + random(10);
+		//Tracks offscreen wait
+		c_deploy.user_int5 = -1;
+		i = random(4);
+		if (i == 0) {
+			c_deploy.user_double = 0 - c_deploy.w;
+			c_deploy.user_double2 = random(window_height - c_deploy.h);
+			c_deploy.user_int = 0;
+		}
+		else if (i == 1) {
+			c_deploy.user_double = random(window_width - c_deploy.w);
+			c_deploy.user_double2 = 0 - c_deploy.h;
+			c_deploy.user_int = 90;
+		}
+		else if (i == 2) {
+			c_deploy.user_double = window_width;
+			c_deploy.user_double2 = random(window_height - c_deploy.h);
+			c_deploy.user_int = 180;
+		}
+		else if (i == 3) {
+			c_deploy.user_double = random(window_width - c_deploy.w);
+			c_deploy.user_double2 = window_height;
+			c_deploy.user_int = 270;
+		}
+	}
+	
+	//Movement
+	c_deploy.user_double += cos(c_deploy.user_int) * c_deploy.user_double3;
+	c_deploy.user_double2 += sin(c_deploy.user_int) * c_deploy.user_double3;
+	
+	//Reflect movement in world
+	c_deploy.x = floor(c_deploy.user_double);
+	c_deploy.y = floor(c_deploy.user_double2);
+	
+	//Projectile firing
+	c_deploy.user_int4 --;
+	if (c_deploy.user_int4 <= 0 && c_deploy.user_int5 == -1) {
+		//Deploy must be on screen
+		c_deploy.user_int4 = 20 + random(20);
+		projectiles[proj].animation_block = projectile;
+		projectiles[proj].user_double = c_deploy.x + (c_deploy.w/2) - PROJ_SIZE/2;
+		projectiles[proj].user_double2 = c_deploy.y + (c_deploy.h/2) - PROJ_SIZE/2;
+		projectiles[proj].user_int5 = random(4);
+		proj = (proj + 1) % MAX_PROJ;
+	}
+	
+	if (c_deploy.user_int5 == -1) {
+		//Set the timer after going off screen
+		if (c_deploy.x > window_width || c_deploy.y > window_height || c_deploy.x < 0 - c_deploy.w || c_deploy.y < 0 - c_deploy.h) {
+			c_deploy.user_int5 = 300 + random(150);
+		}
+	} else {
+		//Count down to reset
+		c_deploy.user_int5 --;
+		if (c_deploy.user_int5 == 0) {
+			c_deploy.x = WAIT_POINT;
+		}
+	}
+}
+
+animation projectile(rectangle c_projectile) {
+	if (c_projectile.user_int5 == 0) {
+		c_projectile.user_double += c_projectile.user_double3;
+	}
+	else if (c_projectile.user_int5 == 1) {
+		c_projectile.user_double2 += c_projectile.user_double3;
+	}
+	else if (c_projectile.user_int5 == 2) {
+		c_projectile.user_double -= c_projectile.user_double3;
+	}
+	else if (c_projectile.user_int5 == 3) {
+		c_projectile.user_double2 -= c_projectile.user_double3;
+	}
+	//Reflect movement in world
+	c_projectile.x = floor(c_projectile.user_double);
+	c_projectile.y = floor(c_projectile.user_double2);
+}
+
+animation follow(rectangle c_follow) {
+	//Initialization
+	if (c_follow.x == WAIT_POINT) {
+		c_follow.user_double3 = 2.3;
+		c_follow.red = .6;
+		c_follow.green = .3;
+		c_follow.blue = .1;
+		i = random(4);
+		if (i == 0) {
+			c_follow.user_double = 0 - c_follow.w;
+			c_follow.user_double2 = random(window_height - c_follow.h);
+		}
+		else if (i == 1) {
+			c_follow.user_double = random(window_width - c_follow.w);
+			c_follow.user_double2 = 0 - c_follow.h;
+		}
+		else if (i == 2) {
+			c_follow.user_double = window_width;
+			c_follow.user_double2 = random(window_height - c_follow.h);
+		}
+		else if (i == 3) {
+			c_follow.user_double = random(window_width - c_follow.w);
+			c_follow.user_double2 = window_height;
+		}
+		//Move block to its destination for calculation
+		c_follow.x = floor(c_follow.user_double);
+		c_follow.y = floor(c_follow.user_double2);
+		//Pick random point to initially track to
+		c_follow.user_int5 = random(4);
+		//Indicate that path point needs to be set
+		c_follow.user_int4 = -1;
+	}
+	
+	if (c_follow.user_int4 == -1) {
+		c_follow.user_int4 = 0;
+		c_follow.user_int5 = (c_follow.user_int5 + 1) % 4;
+		
+		//Sets x and y to the coords of the next point
+		x = path_x[c_follow.user_int5] * (window_width - c_follow.w);
+		y = path_y[c_follow.user_int5] * (window_height - c_follow.h);
+		//Figure out angle that takes the block toward its destination
+		if (x - c_follow.x == 0) {
+			//Safety to prevent divide by zero
+			if (c_follow.y > y) {
+				c_follow.user_int = 270;
+			} else {
+				c_follow.user_int = 90;
+			}
+		} else {
+			//Chase equation
+			c_follow.user_int = floor(atan(((c_follow.y - y)*1.0)/((c_follow.x - x)*1.0)));
+			//We don't have access to atan2, so we gotta do it ourselves
+			if (x < c_follow.x) {
+				c_follow.user_int += 180;
+			}
+		}
+	}
+	
+	//Sets x and y to the coords of the next point
+	x = path_x[c_follow.user_int5] * (window_width - c_follow.w);
+	y = path_y[c_follow.user_int5] * (window_height - c_follow.h);
+	
+	//Movement
+	if (abs(c_follow.x - x) < 12 && abs(c_follow.y - y) < 12) {
+		//Arrived at location, go to next point
+		c_follow.user_int4 = -1;
+	} else {
+		//Calculate movement
+		c_follow.user_double += cos(c_follow.user_int) * c_follow.user_double3;
+		c_follow.user_double2 += sin(c_follow.user_int) * c_follow.user_double3;
+		//Reflect movement in world
+		c_follow.x = floor(c_follow.user_double);
+		c_follow.y = floor(c_follow.user_double2);
+	}
+}
+
+animation shuffle(rectangle c_shuffle) {
+	//Initialization
+	if (c_shuffle.x == WAIT_POINT) {
+		c_shuffle.red = .2;
+		c_shuffle.green = .5;
+		c_shuffle.blue = .4;
+		c_shuffle.user_double3 = 1.2 + (.1 * random(10));
+		c_shuffle.user_double5 = 0;
+		i = random(2);
+		if (i == 0) {
+			c_shuffle.user_double = 0 - c_shuffle.w;
+			c_shuffle.user_double2 = random(window_height - c_shuffle.h);
+		}
+		else if (i == 1) {
+			c_shuffle.user_double = random(window_width - c_shuffle.w);
+			c_shuffle.user_double2 = 0 - c_shuffle.h;
+		}
+		c_shuffle.user_int = i;
+	}
+	
+	c_shuffle.user_double5 += 1.8;
+	if (c_shuffle.user_int == 0) {
+		c_shuffle.user_double = floor((cos(c_shuffle.user_double5)/2+.5)*(window_width - c_shuffle.w));
+	} else {
+		c_shuffle.user_double2 = floor((cos(c_shuffle.user_double5)/2+.5)*(window_height - c_shuffle.w));
+	}
+	
+	//Reflect movement in world
+	c_shuffle.x = floor(c_shuffle.user_double);
+	c_shuffle.y = floor(c_shuffle.user_double2);
+}
+
+animation compass2(rectangle c_compass2) {
+	//Initialization
+	if (c_compass2.x == WAIT_POINT) {
+		c_compass2.red = .5;
+		c_compass2.green = .5;
+		c_compass2.blue = .5;
+		arrows[c_compass2.user_int2].red = 0;
+		arrows[c_compass2.user_int2].green = 0;
+		arrows[c_compass2.user_int2].blue = 0;
+		c_compass2.user_double3 = 4.7;
+		//State variable
+		c_compass2.user_int5 = 0;
+		//Timer variable
+		c_compass2.user_int4 = 100;
+		//Time it's been alive
+		c_compass2.user_int3 = 0;
+		i = random(4);
+		if (i == 0) {
+			c_compass2.user_double = 0 - c_compass2.w;
+			c_compass2.user_double2 = random(window_height - c_compass2.h);
+			c_compass2.user_int = 0;
+		}
+		else if (i == 1) {
+			c_compass2.user_double = random(window_width - c_compass2.w);
+			c_compass2.user_double2 = 0 - c_compass2.h;
+			c_compass2.user_int = 90;
+		}
+		else if (i == 2) {
+			c_compass2.user_double = window_width;
+			c_compass2.user_double2 = random(window_height - c_compass2.h);
+			c_compass2.user_int = 180;
+		}
+		else if (i == 3) {
+			c_compass2.user_double = random(window_width - c_compass2.w);
+			c_compass2.user_double2 = window_height;
+			c_compass2.user_int = 270;
+		}
+	}
+	c_compass2.user_int3 ++;
+	
+	//Counts down timer
+	c_compass2.user_int4 --;
+	
+	//Movement state
+	if (c_compass2.user_int5 == 0) {
+		//Movement
+		c_compass2.user_double += cos(c_compass2.user_int) * c_compass2.user_double3;
+		c_compass2.user_double2 += sin(c_compass2.user_int) * c_compass2.user_double3;
+		if (c_compass2.user_int4 <= 0) {
+			c_compass2.user_int5 = 1;
+			c_compass2.user_int4 = 10;
+		}
+	}
+	else if (c_compass2.user_int5 == 1) {
+		//Waiting
+		if (c_compass2.user_int4 <= 0) {
+			c_compass2.user_int5 = 2;
+			c_compass2.user_int4 = 10 + random(60);
+		}
+	}
+	else if (c_compass2.user_int5 == 2) {
+		//Rotating
+		c_compass2.user_int += 5;
+		if (c_compass2.user_int4 <= 0) {
+			c_compass2.user_int5 = 3;
+			c_compass2.user_int4 = 10;
+		}
+	}
+	else if (c_compass2.user_int5 == 3) {
+		//Waiting
+		c_compass2.user_int4 --;
+		if (c_compass2.user_int4 <= 0) {
+			c_compass2.user_int5 = 0;
+			c_compass2.user_int4 = 80 + random(50);
+		}
+	}
+	
+	//If the block hits an edge, have it go back the way it came
+	if (c_compass2.user_double > window_width - c_compass2.w && c_compass2.user_int3 > 10) {
+		c_compass2.user_double -= 1;
+		c_compass2.user_int += 180;
+	}
+	if (c_compass2.user_double2 > window_height - c_compass2.h && c_compass2.user_int3 > 10) {
+		c_compass2.user_double2 -= 1;
+		c_compass2.user_int += 180;
+	}
+	if (c_compass2.user_double < 0 && c_compass2.user_int3 > 10) {
+		c_compass2.user_double += 1;
+		c_compass2.user_int += 180;
+	}
+	if (c_compass2.user_double2 < 0 && c_compass2.user_int3 > 10) {
+		c_compass2.user_double2 += 1;
+		c_compass2.user_int += 180;
+	}
+	
+	//Reflect movement in world
+	c_compass2.x = floor(c_compass2.user_double);
+	c_compass2.y = floor(c_compass2.user_double2);
+	
+	//Update arrow position
+	arrows[c_compass2.user_int2].x = c_compass2.x + c_compass2.w/2 - arrows[c_compass2.user_int2].w/2;
+	arrows[c_compass2.user_int2].y = c_compass2.y + c_compass2.h/2 - arrows[c_compass2.user_int2].h/2;
+	arrows[c_compass2.user_int2].rotation = c_compass2.user_int - 90;
+}
+
+animation compass(rectangle c_compass) {
+	//Initialization
+	if (c_compass.x == WAIT_POINT) {
+		c_compass.red = .5;
+		c_compass.green = .5;
+		c_compass.blue = .5;
+		arrows[c_compass.user_int2].red = 0;
+		arrows[c_compass.user_int2].green = 0;
+		arrows[c_compass.user_int2].blue = 0;
+		c_compass.user_double3 = 4.7;
+		//State variable
+		c_compass.user_int5 = 0;
+		//Timer variable
+		c_compass.user_int4 = 100;
+		//Time it's been alive
+		c_compass.user_int3 = 0;
+		i = random(4);
+		if (i == 0) {
+			c_compass.user_double = 0 - c_compass.w;
+			c_compass.user_double2 = random(window_height - c_compass.h);
+			c_compass.user_int = 0;
+		}
+		else if (i == 1) {
+			c_compass.user_double = random(window_width - c_compass.w);
+			c_compass.user_double2 = 0 - c_compass.h;
+			c_compass.user_int = 90;
+		}
+		else if (i == 2) {
+			c_compass.user_double = window_width;
+			c_compass.user_double2 = random(window_height - c_compass.h);
+			c_compass.user_int = 180;
+		}
+		else if (i == 3) {
+			c_compass.user_double = random(window_width - c_compass.w);
+			c_compass.user_double2 = window_height;
+			c_compass.user_int = 270;
+		}
+	}
+	c_compass.user_int3 ++;
+	
+	//Counts down timer
+	c_compass.user_int4 --;
+	
+	//Movement state
+	if (c_compass.user_int5 == 0) {
+		//Movement
+		c_compass.user_double += cos(c_compass.user_int) * c_compass.user_double3;
+		c_compass.user_double2 += sin(c_compass.user_int) * c_compass.user_double3;
+		if (c_compass.user_int4 <= 0) {
+			c_compass.user_int5 = 1;
+			c_compass.user_int4 = 10;
+		}
+	}
+	else if (c_compass.user_int5 == 1) {
+		//Waiting
+		if (c_compass.user_int4 <= 0) {
+			c_compass.user_int5 = 2;
+		}
+	}
+	else if (c_compass.user_int5 == 2) {
+		//Rotating
+		c_compass.user_int = (c_compass.user_int + 5 + 360) % 360;
+		
+		//Figure out what angle the player is at
+		if (player.x - c_compass.x == 0) {
+			//Safety to prevent divide by zero
+			if (c_compass.y > player.y) {
+				i = 270;
+			} else {
+				i = 90;
+			}
+		} else {
+			//Chase equation
+			i = floor(atan(((c_compass.y - player.y)*1.0)/((c_compass.x - player.x)*1.0)));
+			//We don't have access to atan2, so we gotta do it ourselves
+			if (player.x < c_compass.x) {
+				i += 180;
+			}
+		}
+		i = (i + 360) % 360;
+		
+		if (abs(i - c_compass.user_int) < 10) {
+			c_compass.user_int = i;
+			c_compass.user_int5 = 3;
+			c_compass.user_int4 = 10;
+		}
+	}
+	else if (c_compass.user_int5 == 3) {
+		//Waiting
+		c_compass.user_int4 --;
+		if (c_compass.user_int4 <= 0) {
+			c_compass.user_int5 = 0;
+			c_compass.user_int4 = 80 + random(50);
+		}
+	}
+	
+	//If the block hits an edge, have it go back the way it came
+	if (c_compass.user_double > window_width - c_compass.w && c_compass.user_int3 > 10) {
+		c_compass.user_double -= 1;
+		c_compass.user_int += 180;
+	}
+	if (c_compass.user_double2 > window_height - c_compass.h && c_compass.user_int3 > 10) {
+		c_compass.user_double2 -= 1;
+		c_compass.user_int += 180;
+	}
+	if (c_compass.user_double < 0 && c_compass.user_int3 > 10) {
+		c_compass.user_double += 1;
+		c_compass.user_int += 180;
+	}
+	if (c_compass.user_double2 < 0 && c_compass.user_int3 > 10) {
+		c_compass.user_double2 += 1;
+		c_compass.user_int += 180;
+	}
+	
+	//Reflect movement in world
+	c_compass.x = floor(c_compass.user_double);
+	c_compass.y = floor(c_compass.user_double2);
+	
+	//Update arrow position
+	arrows[c_compass.user_int2].x = c_compass.x + c_compass.w/2 - arrows[c_compass.user_int2].w/2;
+	arrows[c_compass.user_int2].y = c_compass.y + c_compass.h/2 - arrows[c_compass.user_int2].h/2;
+	arrows[c_compass.user_int2].rotation = c_compass.user_int - 90;
+}
+
+animation missile(rectangle c_missile) {
+	//Initialization
+	if (c_missile.x == WAIT_POINT) {
+		c_missile.red = .6;
+		c_missile.green = 0;
+		c_missile.blue = .8;
+		arrows[c_missile.user_int2].red = 1;
+		arrows[c_missile.user_int2].green = 1;
+		arrows[c_missile.user_int2].blue = 1;
+		c_missile.user_double3 = 3 + (random(30)/10.0);
+		c_missile.user_int5 = 2;
+		i = random(4);
+		if (i == 0) {
+			c_missile.user_double = 0 - c_missile.w;
+			c_missile.user_double2 = random(window_height - c_missile.h);
+			c_missile.user_int = 0;
+		}
+		else if (i == 1) {
+			c_missile.user_double = random(window_width - c_missile.w);
+			c_missile.user_double2 = 0 - c_missile.h;
+			c_missile.user_int = 90;
+		}
+		else if (i == 2) {
+			c_missile.user_double = window_width;
+			c_missile.user_double2 = random(window_height - c_missile.h);
+			c_missile.user_int = 180;
+		}
+		else if (i == 3) {
+			c_missile.user_double = random(window_width - c_missile.w);
+			c_missile.user_double2 = window_height;
+			c_missile.user_int = 270;
+		}
+	}
+	
+	//Figure out what angle the player is at
+	if (player.x - c_missile.x == 0) {
+		//Safety to prevent divide by zero
+		if (c_missile.y > player.y) {
+			i = 270;
+		} else {
+			i = 90;
+		}
+	} else {
+		//Chase equation
+		i = floor(atan(((c_missile.y - player.y)*1.0)/((c_missile.x - player.x)*1.0)));
+		//We don't have access to atan2, so we gotta do it ourselves
+		if (player.x < c_missile.x) {
+			i += 180;
+		}
+	}
+	i = (i + 360) % 360;
+	
+	//Rotate towards the target angle
+	if (abs(c_missile.user_int - i) < c_missile.user_int5) {
+		c_missile.user_int = i;
+	} else {
+		if (c_missile.user_int < i) {
+			if (abs(c_missile.user_int - i) < 180) {
+				k = c_missile.user_int5;
+			} else {
+				k = 0 - c_missile.user_int5;
+			}
+		} else {
+			if (abs(c_missile.user_int - i) < 180) {
+				k = 0 - c_missile.user_int5;
+			} else {
+				k = c_missile.user_int5;
+			}
+		}
+		c_missile.user_int = (c_missile.user_int + 360 + k) % 360;
+	}
+	
+	//Movement
+	c_missile.user_double += cos(c_missile.user_int) * c_missile.user_double3;
+	c_missile.user_double2 += sin(c_missile.user_int) * c_missile.user_double3;
+	
+	
+	//Reflect movement in world
+	c_missile.x = floor(c_missile.user_double);
+	c_missile.y = floor(c_missile.user_double2);
+	
+	//Update arrow position
+	arrows[c_missile.user_int2].x = c_missile.x + c_missile.w/2 - arrows[c_missile.user_int2].w/2;
+	arrows[c_missile.user_int2].y = c_missile.y + c_missile.h/2 - arrows[c_missile.user_int2].h/2;
+	arrows[c_missile.user_int2].rotation = c_missile.user_int - 90;
+}

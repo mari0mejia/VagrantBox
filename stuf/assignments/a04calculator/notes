@@ -1,0 +1,12 @@
+bison:
+	* takes token directives
+	* includes whatever libraries needed to run 
+	* includes rules that describe the grammar 
+	* includes main funciton that incloses the yyparsefunciton that calls our lexical analyzer
+
+extra:
+	123 is types regular expression for integer is triggered then
+	whatever was in regular expression action gets turned into a INT
+	from a STRING which we then return the token for what we want our 
+	parser to recieve. Parser will then match the token with a specific         grammar rule and then perform whatver action is provided. 
+

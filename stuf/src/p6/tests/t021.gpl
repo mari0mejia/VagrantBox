@@ -1,0 +1,6 @@
+//Incorrect type error
+forward animation stretch(triangle);
+
+double trouble;
+
+triangle mister_trippy(animation_block=trouble);

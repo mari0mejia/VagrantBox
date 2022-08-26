@@ -1,0 +1,7 @@
+int a=5;
+
+initialization {
+  print("This is one initialization block. a=" + a);
+  a=10;
+  print("Now a=" + a);
+}

@@ -1,0 +1,19 @@
+
+int //just int
+[a-z]+ //identifieer
+[\t] //space or tabl
+. //single characeter
+\n // any newline
+"//".*$<---- to end of line
+^   ^
+|   |
+|   |
+|   |
+|   followed by zero or more chars
+literal comment
+
+-To not handle spaces or tabs handle it as a NOP
+-How to handle regular expressions to the end of a line?
+    * check for uploaded file
+- everything that you want taken literal then "wrap" it <--
+

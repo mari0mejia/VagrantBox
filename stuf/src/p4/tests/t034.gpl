@@ -1,0 +1,5 @@
+string window_title = "Project 4 t034.gpl ***PRESS q TO QUIT***";
+
+pixmap bitmap_without_a_file_specified(x = 100, y = 200);
+
+textbox title(x = 10, y = 10, text = "Pixmap with the default bitmap");

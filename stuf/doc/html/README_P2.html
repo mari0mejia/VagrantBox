@@ -1,0 +1,672 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Second Project &#8212; Game Programming Language 2.1 documentation</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Third Project" href="README_P3.html" />
+    <link rel="prev" title="First Project" href="README_P1.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="README_P3.html" title="Third Project"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="README_P1.html" title="First Project"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Second Project</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="second-project">
+<h1>Second Project<a class="headerlink" href="#second-project" title="Permalink to this headline">¶</a></h1>
+<p>Ver. 2 November 2021</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>Symbols and symbol tables are introduced to manage the declaration, access, and scope of variables that are created in GPL.</p>
+</div>
+<div class="section" id="manifest">
+<h2>Manifest<a class="headerlink" href="#manifest" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p2/types_and_ops.h</span></code></dt>
+<dd class="field-odd"><p>Enumerations &amp; conversion functions used with GPL language types and operators.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">./src/p2/types_and_ops.cpp</span></code></dt>
+<dd class="field-even"><p>Source to conversion functions declared in header file.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p2/tests</span></code></dt>
+<dd class="field-odd"><p>Testing suite directory, 25 tests.</p>
+</dd>
+</dl>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">./src/p2/sample_singleton.cpp</span></code></dt>
+<dd class="field-odd"><p>Sample code–implementing Singleton class</p>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="project-description">
+<h2>Project description<a class="headerlink" href="#project-description" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Copy the following files over from <code class="docutils literal notranslate"><span class="pre">p1</span></code> into <code class="docutils literal notranslate"><span class="pre">p2</span></code>:</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">gpl</span><span class="p">.</span><span class="n">cpp</span>
+<span class="n">gpl</span><span class="p">.</span><span class="n">l</span>
+<span class="n">gpl</span><span class="p">.</span><span class="n">y</span>
+<span class="n">error</span><span class="p">.</span><span class="n">h</span>
+<span class="n">error</span><span class="p">.</span><span class="n">cpp</span>
+<span class="n">Makefile</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="2">
+<li><p>To assist in debugging the first project, actions were added to three of the rules in the <code class="docutils literal notranslate"><span class="pre">primary_expression:</span></code> production. Remove them now:</p>
+<p>Original:</p>
+<pre>primary_expression:
+    T_LPAREN  expression T_RPAREN
+    | variable
+    | T_INT_CONSTANT <span style="font-weight:bold;color:green;">{ std::cout << "Integer constant -->" << $1 << "<--\n";}</span>
+    | T_TRUE
+    | T_FALSE
+    | T_DOUBLE_CONSTANT <span style="font-weight:bold;color:green;">{ std::cout << "Double constant -->" << $1 << "<--\n";}</span>
+    | T_STRING_CONSTANT <span style="font-weight:bold;color:green;">{ std::cout << "String constant -->" << &#42;$1 << "<--\n";}</span>
+    ;</pre><p>With actions removed:</p>
+<pre>primary_expression:
+    T_LPAREN  expression T_RPAREN
+    | variable
+    | T_INT_CONSTANT
+    | T_TRUE
+    | T_FALSE
+    | T_DOUBLE_CONSTANT
+    | T_STRING_CONSTANT
+    ;</pre></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>For this second project, three kinds of symbols are managed: strings, integers, and doubles. To facilitate this, declare a union of the three possible types as private data member of a <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> class (see following step). Each member of the union is a pointer to the type it manages. Creating a constructor for each union member eases its use in <code class="docutils literal notranslate"><span class="pre">Symbol</span></code>’s initialization list. Example of union declaration:</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">union</span> <span class="n">symbol_type</span> <span class="p">{</span>
+  <span class="kt">double</span><span class="o">*</span> <span class="n">double_pointer</span><span class="p">;</span>
+  <span class="c1">//etc. for int and string</span>
+
+  <span class="c1">//constructors to ease initialization of union variables</span>
+  <span class="n">symbol_type</span><span class="p">(</span><span class="kt">double</span><span class="o">*</span> <span class="n">val</span><span class="p">)</span> <span class="o">:</span> <span class="n">double_pointer</span><span class="p">(</span><span class="n">val</span><span class="p">){}</span>
+  <span class="c1">//etc. for int and string</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="4">
+<li><p>Write a <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> class.</p>
+<p>Private data:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span> <span class="c1">//the name of the variable</span>
+<span class="n">symbol_type</span> <span class="n">value</span><span class="p">;</span> <span class="c1">//the contents of the variable</span>
+<span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">type</span><span class="p">;</span>  <span class="c1">//the type of the variable. See types_and_ops.h</span>
+<span class="kt">int</span> <span class="n">count</span><span class="p">;</span> <span class="c1">//used to store the size if the variable is an array</span>
+</pre></div>
+</div>
+<p>Public member functions:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Symbol</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span> <span class="kt">double</span><span class="o">*</span> <span class="n">value</span><span class="p">);</span> <span class="c1">//for double variable</span>
+<span class="n">Symbol</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span> <span class="kt">double</span><span class="o">*</span> <span class="n">value</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">);</span> <span class="c1">//for double array</span>
+<span class="c1">//etc. for int and string</span>
+
+<span class="n">GPL</span><span class="o">::</span><span class="n">Type</span> <span class="n">get_type</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">get_name</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="k">virtual</span> <span class="o">~</span><span class="n">Symbol</span><span class="p">();</span>
+<span class="k">friend</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">Symbol</span><span class="o">&amp;</span> <span class="n">sym</span><span class="p">);</span>
+
+<span class="c1">//prevent compiler from generating these functions</span>
+<span class="n">Symbol</span><span class="p">(</span><span class="k">const</span> <span class="n">Symbol</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+<span class="n">Symbol</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Symbol</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul>
+<li><p>The data member <code class="docutils literal notranslate"><span class="pre">value</span></code> points to the actual value (int, double, or string) or array of same. The value is created using <code class="docutils literal notranslate"><span class="pre">new</span></code> outside of the constructor. That is, the allocation using <code class="docutils literal notranslate"><span class="pre">new</span></code> occurs prior to creating/declaring the Symbol object. The constructor takes a pointer to the newly-allocated value(s).</p></li>
+<li><p>The destructor (<code class="docutils literal notranslate"><span class="pre">Symbol::~Symbol</span></code>) is responsible for releasing the memory (<code class="docutils literal notranslate"><span class="pre">delete</span></code>, or <code class="docutils literal notranslate"><span class="pre">delete</span> <span class="pre">[]</span></code>, depending on whether value points to a single variable or array of variables). A fair amount of branching (if/elses and/or switches) will be required to properly release the memory based on its type and whether it is an array.</p></li>
+<li><p>The insertion operator (<code class="docutils literal notranslate"><span class="pre">operator&lt;&lt;</span></code>) should print out the symbol in the following format:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">type</span> <span class="n">varname</span> <span class="o">=</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">rocket_number</span> <span class="o">=</span> <span class="mi">99</span>
+<span class="kt">double</span> <span class="n">gpa</span> <span class="o">=</span> <span class="mf">3.5</span>
+<span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Icabod Crane&quot;</span>
+</pre></div>
+</div>
+<p>Note that the double-quotes surrounding the string are added by the printing routine. They are not part of the string’s value. The flex pattern action from the previous project strips the quotes off.</p>
+<p>A symbol of an array of values should list each element. For example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">machine</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">235</span>
+<span class="kt">int</span> <span class="n">machine</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="kt">int</span> <span class="n">machine</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6024</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">to_string()</span></code> function can be useful here (see <code class="docutils literal notranslate"><span class="pre">types_and_ops.(h|cpp)</span></code>)</p>
+</li>
+</ul>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="5">
+<li><p>Test the <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> class. Write a test program that creates various Symbols.:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="kt">double</span><span class="o">*</span> <span class="n">oneofem</span><span class="o">=</span><span class="k">new</span> <span class="kt">double</span><span class="p">(</span><span class="mf">3.141592</span><span class="p">);</span>
+  <span class="kt">double</span><span class="o">*</span> <span class="n">bunchofem</span><span class="o">=</span><span class="k">new</span> <span class="kt">double</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">{</span><span class="mf">1.123</span><span class="p">,</span> <span class="mf">2.234</span><span class="p">,</span> <span class="mf">3.456</span><span class="p">,</span> <span class="mf">7.899</span><span class="p">};</span>
+  <span class="n">Symbol</span> <span class="n">one</span><span class="p">(</span><span class="s">&quot;pi&quot;</span><span class="p">,</span> <span class="n">oneofem</span><span class="p">);</span>
+  <span class="n">Symbol</span> <span class="n">two</span><span class="p">(</span><span class="s">&quot;racetimes&quot;</span><span class="p">,</span> <span class="n">bunchofem</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">two</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">one</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">//BE SURE TO TEST INT AND STRING AS WELL.</span>
+</pre></div>
+</div>
+<p>Compile your code with the <code class="docutils literal notranslate"><span class="pre">-g</span></code> option. Run the test code through <code class="docutils literal notranslate"><span class="pre">valgrind</span></code> to confirm that there are no memory leaks:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">valgrind</span> <span class="p">.</span><span class="o">/</span><span class="n">a</span><span class="p">.</span><span class="n">out</span>
+
+<span class="p">...</span>
+<span class="o">==</span><span class="mi">9006</span><span class="o">==</span> <span class="n">All</span> <span class="n">heap</span> <span class="n">blocks</span> <span class="n">were</span> <span class="n">freed</span> <span class="o">--</span> <span class="n">no</span> <span class="n">leaks</span> <span class="n">are</span> <span class="n">possible</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="6">
+<li><p>Write the <code class="docutils literal notranslate"><span class="pre">Symbol_table</span></code> class.  The <code class="docutils literal notranslate"><span class="pre">Symbol_table</span></code> class manages an <code class="docutils literal notranslate"><span class="pre">unordered_map</span></code> with the symbol’s name as the key and a pointer to the <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> object as the value. Smart pointers are used to avoid memory leaks:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Symbol_table</span> <span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="n">Symbol_table</span><span class="p">(){}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;</span> <span class="n">lookup</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">);</span>
+    <span class="kt">bool</span> <span class="nf">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;</span> <span class="n">sym</span><span class="p">);</span>
+    <span class="k">friend</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">Symbol_table</span><span class="o">&amp;</span> <span class="n">symtab</span><span class="p">);</span>
+
+    <span class="c1">//prevent compiler from generating these functions</span>
+    <span class="n">Symbol_table</span><span class="p">(</span><span class="k">const</span> <span class="n">Symbol_table</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+    <span class="n">Symbol_table</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Symbol_table</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+  <span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;&gt;</span> <span class="n">symbols</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The key of the <code class="docutils literal notranslate"><span class="pre">unordered_map</span></code> is the symbol’s name.</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">Symbol_table::lookup</span></code></dt><dd><p>Return the named <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> object if it is found in the <code class="docutils literal notranslate"><span class="pre">unordered_map</span></code>, and <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> otherwise. Note that <code class="docutils literal notranslate"><span class="pre">unordered_map::find()</span></code> should be used to search the keys for the symbol’s name. Using <code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">]</span></code> will erroneously create an entry if it doesn’t already exist.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">Symbol_table::insert</span></code></dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> input parameter already exists in the <code class="docutils literal notranslate"><span class="pre">unordered_map</span></code> return <code class="docutils literal notranslate"><span class="pre">false</span></code>. Otherwise add the <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> to the map and return <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">Symbol_table::operator&lt;&lt;</span></code></dt><dd><p>Print out all of the symbols in the table sorted by name. The format of the output is: <strong>type name = value</strong>. For example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="kt">double</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">3.14159</span>
+<span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">string</span> <span class="n">d</span> <span class="o">=</span> <span class="s">&quot;Hello world&quot;</span>
+<span class="kt">int</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="kt">int</span> <span class="n">nums</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="kt">int</span> <span class="n">nums</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="7">
+<li><p>Here’s a test program to ensure the <code class="docutils literal notranslate"><span class="pre">Symbol_table</span></code> class is bug-free. Run the test code through <code class="docutils literal notranslate"><span class="pre">valgrind</span></code> to confirm that there are no memory leaks:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;Symbol.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;Symbol_table.h&quot;</span><span class="cp"></span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">Symbol_table</span> <span class="n">symtab</span><span class="p">;</span>
+
+  <span class="kt">double</span><span class="o">*</span> <span class="n">double_oneofem</span><span class="o">=</span><span class="k">new</span> <span class="kt">double</span><span class="p">(</span><span class="mf">3.141592</span><span class="p">);</span>
+  <span class="kt">double</span><span class="o">*</span> <span class="n">double_bunchofem</span><span class="o">=</span><span class="k">new</span> <span class="kt">double</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">{</span><span class="mf">1.123</span><span class="p">,</span> <span class="mf">2.234</span><span class="p">,</span> <span class="mf">3.456</span><span class="p">,</span> <span class="mf">7.899</span><span class="p">};</span>
+  <span class="n">string</span><span class="o">*</span> <span class="n">string_oneofem</span><span class="o">=</span><span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="s">&quot;hi there&quot;</span><span class="p">);</span>
+  <span class="n">string</span><span class="o">*</span> <span class="n">string_bunchofem</span><span class="o">=</span><span class="k">new</span> <span class="n">string</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="p">{</span><span class="s">&quot;one&quot;</span><span class="p">,</span> <span class="s">&quot;two two&quot;</span><span class="p">,</span> <span class="s">&quot;three three three&quot;</span><span class="p">,</span> <span class="s">&quot;fo fo fo fo&quot;</span><span class="p">};</span>
+  <span class="kt">int</span><span class="o">*</span> <span class="n">int_oneofem</span><span class="o">=</span><span class="k">new</span> <span class="kt">int</span><span class="p">(</span><span class="mi">321</span><span class="p">);</span>
+  <span class="kt">int</span><span class="o">*</span> <span class="n">int_bunchofem</span><span class="o">=</span><span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">{</span><span class="mi">12</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">78</span><span class="p">};</span>
+
+  <span class="n">symtab</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;alpha&quot;</span><span class="p">,</span> <span class="n">string_oneofem</span><span class="p">));</span>
+  <span class="n">symtab</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;gamma&quot;</span><span class="p">,</span> <span class="n">string_bunchofem</span><span class="p">,</span> <span class="mi">4</span><span class="p">));</span>
+  <span class="n">symtab</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;beta&quot;</span><span class="p">,</span> <span class="n">double_oneofem</span><span class="p">));</span>
+  <span class="n">symtab</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;delta&quot;</span><span class="p">,</span> <span class="n">double_bunchofem</span><span class="p">,</span> <span class="mi">4</span><span class="p">));</span>
+  <span class="n">symtab</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;zeta&quot;</span><span class="p">,</span> <span class="n">int_oneofem</span><span class="p">));</span>
+  <span class="n">symtab</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;eta&quot;</span><span class="p">,</span> <span class="n">int_bunchofem</span><span class="p">,</span> <span class="mi">4</span><span class="p">));</span>
+
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">symtab</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="8">
+<li><p>Write the <code class="docutils literal notranslate"><span class="pre">Scope_manager</span></code> class. This class is a <em>singleton</em> class that ensures no more than one <code class="docutils literal notranslate"><span class="pre">Scope_manager</span></code> object exists in the application. See <code class="docutils literal notranslate"><span class="pre">sample_singleton.cpp</span></code> for an example of how to structure a class as a singleton. Ensure that <code class="docutils literal notranslate"><span class="pre">sample_singleton.cpp</span></code> s moved out of the project directory or the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> will erroneously add it to the project build. Use a <code class="docutils literal notranslate"><span class="pre">std::vector</span></code> as the private data to manage multiple symbol tables:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Symbol_table</span><span class="o">&gt;&gt;</span> <span class="n">tables</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The public member functions include:</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">static</span> <span class="pre">Scope_manager&amp;</span> <span class="pre">instance()</span></code></dt><dd><p>Return the singleton instance.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">push_table()</span></code></dt><dd><p>Create a new <code class="docutils literal notranslate"><span class="pre">Symbol_table</span></code> and push it onto the back of the vector.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">pop_table()</span></code></dt><dd><p>If more than one table is on the vector remove the table on the back of the vector. There must always be at least one table in the vector. Throw an exception if there is an attemt to pop it off:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="cpf">&lt;stdexcept&gt;</span><span class="cp"></span>
+<span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">underflow_error</span><span class="p">(</span><span class="s">&quot;Can&#39;t pop global symbol table&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">add_to_current_scope(std::shared_ptr&lt;Symbol&gt;</span> <span class="pre">sym)</span></code></dt><dd><p>Add <code class="docutils literal notranslate"><span class="pre">sym</span></code> to the last/back table in the vector via a call to <code class="docutils literal notranslate"><span class="pre">Symbol_table::insert</span></code>. Return the value that <code class="docutils literal notranslate"><span class="pre">Symbol_table::insert</span></code> returns.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">std::shared_ptr&lt;Symbol&gt;</span> <span class="pre">lookup(const</span> <span class="pre">std::string&amp;</span> <span class="pre">name)</span></code></dt><dd><p>Iterate through the symbol table vector <em>from back to front</em>, calling <code class="docutils literal notranslate"><span class="pre">Symbol_table::lookup</span></code> on each. Return the first match found. Return <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> if the symbol is undefined.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">defined_in_current_scope(const</span> <span class="pre">std::string&amp;</span> <span class="pre">name)</span></code></dt><dd><p>Search the top/last/back table for the named symbol. Return true if it is defined, false otherwise. Used to check for variable redefinition errors.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">friend</span> <span class="pre">std::ostream&amp;</span> <span class="pre">operator&lt;&lt;(std::ostream&amp;</span> <span class="pre">os,</span> <span class="pre">const</span> <span class="pre">Scope_manager&amp;</span> <span class="pre">sh)</span></code></dt><dd><p>Iterate through the symbol tables <em>from back to front</em>, printing each.</p>
+</dd>
+</dl>
+<p>The private member function:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Scope_manager</span></code>’s default constructor should push an initial <code class="docutils literal notranslate"><span class="pre">Symbol_table</span></code> object onto the vector, representing the global namespace (which holds global variables).</p></li>
+</ul>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="9">
+<li><p>Write a test program to ensure <code class="docutils literal notranslate"><span class="pre">Scope_manager</span></code> is bug-free. Run the test code through <code class="docutils literal notranslate"><span class="pre">valgrind</span></code> to ensure it is free of memory leaks. Two modifications to the previous test program should be sufficient:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;Scope_manager.h&quot;</span><span class="cp"></span>
+<span class="p">...</span>
+<span class="c1">//comment out:</span>
+<span class="c1">//Symbol_table symtab;</span>
+<span class="c1">//and replace with:</span>
+<span class="n">Scope_manager</span><span class="o">&amp;</span> <span class="n">symtab</span> <span class="o">=</span> <span class="n">Scope_manager</span><span class="o">::</span><span class="n">instance</span><span class="p">();</span>
+<span class="p">...</span>
+<span class="c1">//and replace each call to insert() with a call to add_to_current_scope()</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="section" id="implement-variable-declarations-in-the-parser">
+<h3>Implement variable declarations in the parser<a class="headerlink" href="#implement-variable-declarations-in-the-parser" title="Permalink to this headline">¶</a></h3>
+<p>Now that <code class="docutils literal notranslate"><span class="pre">Symbol</span></code>, <code class="docutils literal notranslate"><span class="pre">Symbol_table</span></code>, and <code class="docutils literal notranslate"><span class="pre">Scope_manager</span></code> have been developed, they will be used to implement variable declarations in the parser.</p>
+<ol class="arabic simple" start="10">
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">simple_type:</span></code> production in <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code>, each rule should set the production’s semantic value of to the corresponding <code class="docutils literal notranslate"><span class="pre">GPL::Type</span></code>:</p></li>
+</ol>
+<blockquote>
+<div><pre>simple_type:
+    T_INT      <span style="font-weight:bold;color:DarkRed;">{$$=GPL::INT;}</span>
+    | T_DOUBLE <span style="font-weight:bold;color:DarkRed;">{$$=GPL::DOUBLE;}</span>
+    | T_STRING <span style="font-weight:bold;color:DarkRed;">{$$=GPL::STRING;}</span></pre></div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="11">
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">Scope_manager.h</span></code> to the header files included near the top of <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code>.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="12">
+<li><p>Assigning a <code class="docutils literal notranslate"><span class="pre">GPL::Type</span></code> to <code class="docutils literal notranslate"><span class="pre">simple_type</span></code> requires two additional configurations:</p>
+<ol class="arabic">
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">GPL::Type</span> <span class="pre">union_gpl_type;</span></code> to the <code class="docutils literal notranslate"><span class="pre">%union</span></code> declaration.</p></li>
+<li><p>Declare the type that <code class="docutils literal notranslate"><span class="pre">simple_type</span></code> holds:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">type</span> <span class="o">&lt;</span><span class="n">union_gpl_type</span><span class="o">&gt;</span> <span class="n">simple_type</span>
+</pre></div>
+</div>
+<p>This can be appended just after the <code class="docutils literal notranslate"><span class="pre">%token</span></code> declarations.</p>
+</li>
+</ol>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="13">
+<li><p>For this project, simplify the rule in the <code class="docutils literal notranslate"><span class="pre">variable_declaration:</span></code> production for declaring arrays.</p>
+<p>Original:</p>
+<pre>| simple_type  T_ID T_LBRACKET <span style="font-weight:bold;color:green;">expression</span> T_RBRACKET</pre><p>Simplified:</p>
+<pre>| simple_type  T_ID T_LBRACKET <span style="font-weight:bold;color:DarkRed;">T_INT_CONSTANT</span> T_RBRACKET</pre></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="14">
+<li><p>At this point the project can be built (<code class="docutils literal notranslate"><span class="pre">make</span></code>) and tested (<code class="docutils literal notranslate"><span class="pre">../../bin/gt</span></code>). Several tests will fail.</p>
+<p>The build may generate warnings similar to:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="nf">Symbol.cpp</span><span class="o">:</span> <span class="n">In</span> <span class="n">destructor</span> ‘<span class="n">virtual</span> <span class="n">Symbol</span>::~<span class="n">Symbol</span>()’:
+<span class="nf">Symbol.cpp</span><span class="o">:</span>36:11: <span class="n">warning</span>: <span class="n">enumeration</span> <span class="n">value</span> ‘<span class="n">NO_TYPE</span>’ <span class="n">not</span> <span class="n">handled</span> <span class="n">in</span> <span class="n">switch</span> [-<span class="n">Wswitch</span>]
+   <span class="m">36</span> <span class="p">|</span>     switch<span class="o">(</span><span class="nb">type</span><span class="o">)</span>
+      <span class="p">|</span>           ^
+<span class="nf">Symbol.cpp</span><span class="o">:</span>36:11: <span class="n">warning</span>: <span class="n">enumeration</span> <span class="n">value</span> ‘<span class="n">ANIMATION_BLOCK</span>’ <span class="n">not</span> <span class="n">handled</span> <span class="n">in</span> <span class="n">switch</span> [-<span class="n">Wswitch</span>]
+<span class="nf">Symbol.cpp</span><span class="o">:</span>36:11: <span class="n">warning</span>: <span class="n">enumeration</span> <span class="n">value</span> ‘<span class="n">GAME_OBJECT</span>’ <span class="n">not</span> <span class="n">handled</span> <span class="n">in</span> <span class="n">switch</span> [-<span class="n">Wswitch</span>]
+<span class="nf">Symbol.cpp</span><span class="o">:</span>36:11: <span class="n">warning</span>: <span class="n">enumeration</span> <span class="n">value</span> ‘<span class="n">CIRCLE</span>’ <span class="n">not</span> <span class="n">handled</span> <span class="n">in</span> <span class="n">switch</span> [-<span class="n">Wswitch</span>]
+<span class="nf">Symbol.cpp</span><span class="o">:</span>36:11: <span class="n">warning</span>: <span class="n">enumeration</span> <span class="n">value</span> ‘<span class="n">RECTANGLE</span>’ <span class="n">not</span> <span class="n">handled</span> <span class="n">in</span> <span class="n">switch</span> [-<span class="n">Wswitch</span>]
+<span class="nf">Symbol.cpp</span><span class="o">:</span>36:11: <span class="n">warning</span>: <span class="n">enumeration</span> <span class="n">value</span> ‘<span class="n">TRIANGLE</span>’ <span class="n">not</span> <span class="n">handled</span> <span class="n">in</span> <span class="n">switch</span> [-<span class="n">Wswitch</span>]
+<span class="nf">Symbol.cpp</span><span class="o">:</span>36:11: <span class="n">warning</span>: <span class="n">enumeration</span> <span class="n">value</span> ‘<span class="n">TEXTBOX</span>’ <span class="n">not</span> <span class="n">handled</span> <span class="n">in</span> <span class="n">switch</span> [-<span class="n">Wswitch</span>]
+<span class="nf">Symbol.cpp</span><span class="o">:</span>36:11: <span class="n">warning</span>: <span class="n">enumeration</span> <span class="n">value</span> ‘<span class="n">PIXMAP</span>’ <span class="n">not</span> <span class="n">handled</span> <span class="n">in</span> <span class="n">switch</span> [-<span class="n">Wswitch</span>]
+<span class="nf">Symbol.cpp</span><span class="o">:</span>36:11: <span class="n">warning</span>: <span class="n">enumeration</span> <span class="n">value</span> ‘<span class="n">ANIMATION_CODE</span>’ <span class="n">not</span> <span class="n">handled</span> <span class="n">in</span> <span class="n">switch</span> [-<span class="n">Wswitch</span>]
+<span class="nf">Symbol.cpp</span><span class="o">:</span>51:11: <span class="n">warning</span>: <span class="n">enumeration</span> <span class="n">value</span> ‘<span class="n">NO_TYPE</span>’ <span class="n">not</span> <span class="n">handled</span> <span class="n">in</span> <span class="n">switch</span> [-<span class="n">Wswitch</span>]
+</pre></div>
+</div>
+<p>These warnings indicate that the enumeration type <code class="docutils literal notranslate"><span class="pre">GPL::Type</span></code> has many possible values not handled by the cases in switch statements. These warnings can be silenced by adding a default case:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">default</span><span class="o">:</span>
+  <span class="n">assert</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span> <span class="c1">//be sure to #include&lt;cassert&gt;</span>
+</pre></div>
+</div>
+<p>If the default case is entered GPL will immediately abort. Correct code will not enter the default case. An abort allows for prompt debugging of the issue.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="15">
+<li><p>For the <code class="docutils literal notranslate"><span class="pre">variable_declaration:</span></code> production, write an action for each of the two rules. The action for the first rule will allocate and initialize individual variables. The action for the second rule will allocate and initialize arrays. For simplicity at this point, each individual variable and each element of an array should be initialized using hard-code values:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span>     <span class="mi">42</span>
+<span class="kt">double</span>  <span class="mf">3.14159</span>
+<span class="n">string</span>  <span class="s">&quot;Hello world&quot;</span>
+</pre></div>
+</div>
+<p>The code used to test <code class="docutils literal notranslate"><span class="pre">Symbol_table</span></code> and <code class="docutils literal notranslate"><span class="pre">Scope_manager</span></code> can provide clues on how to do this. Note that array elements will have to be initialized using a loop.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="16">
+<li><p>Running the project tests reveals that several fail because required error-checking hasn’t been added yet. Use <code class="docutils literal notranslate"><span class="pre">vde</span></code> to check error output, inspect the content of the <code class="docutils literal notranslate"><span class="pre">tests/t###.gpl</span></code> files directly to see why the test’s GPL code generates an error, and consult <code class="docutils literal notranslate"><span class="pre">error.cpp</span></code> for the enumeration that corresponds to the expected error. Example of error-handling code:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Scope_manager</span><span class="o">&amp;</span> <span class="n">scopemgr</span><span class="o">=</span><span class="n">Scope_manager</span><span class="o">::</span><span class="n">instance</span><span class="p">();</span>
+<span class="k">if</span><span class="p">(</span><span class="n">scopemgr</span><span class="p">.</span><span class="n">defined_in_current_scope</span><span class="p">(</span><span class="o">*</span><span class="err">$</span><span class="mi">2</span><span class="p">))</span>
+<span class="p">{</span>
+  <span class="n">Error</span><span class="o">::</span><span class="n">error</span><span class="p">(</span><span class="n">Error</span><span class="o">::</span><span class="n">PREVIOUSLY_DECLARED_VARIABLE</span><span class="p">,</span><span class="o">*</span><span class="err">$</span><span class="mi">2</span><span class="p">);</span>
+  <span class="c1">// break after error because bison-generated code</span>
+  <span class="c1">// embeds each rule in a case of a switch statement</span>
+  <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Depending on the error type, the <code class="docutils literal notranslate"><span class="pre">Error::error</span></code> function may take up to three string arguments (the above example shows one). Non-string arguments should be converted to strings, for example: <code class="docutils literal notranslate"><span class="pre">std::to_string($4)</span></code></p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="17">
+<li><p>After these actions are written including error handling, all of the tests will pass. The next step is to eliminate memory leaks. Use <code class="docutils literal notranslate"><span class="pre">valgrind</span></code> to manually check individual tests for leaks. Use <code class="docutils literal notranslate"><span class="pre">memvalidate.bash</span></code> to check all tests (akin to the <code class="docutils literal notranslate"><span class="pre">gt</span></code> utility) for memory leaks. Subsequent steps describe sources of memory leaks.</p></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="18">
+<li><p>The scanner (<code class="docutils literal notranslate"><span class="pre">gpl.l</span></code>) dynamically allocates strings for the semantic values of <code class="docutils literal notranslate"><span class="pre">T_ID</span></code>. The parser needs to release this memory to avoid memory leaks. At the end of each action for <code class="docutils literal notranslate"><span class="pre">variable_declaration</span></code>, release the memory allocated for <code class="docutils literal notranslate"><span class="pre">T_ID</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">delete</span> <span class="err">$</span><span class="mi">2</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Errors that <code class="docutils literal notranslate"><span class="pre">break</span></code> out of the action (Shown in the example on step 16), should release the memory prior to the <code class="docutils literal notranslate"><span class="pre">break</span></code>.</p>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="19">
+<li><p>Syntax errors are sequences of tokens that do not match any rule in the grammar. In this case, the parser itself needs to release memory allocated in the scanner. This is done with the following directive (just add it below the <code class="docutils literal notranslate"><span class="pre">%union</span></code> directive):</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">destructor</span> <span class="p">{</span> <span class="k">delete</span> <span class="err">$$</span><span class="p">;</span> <span class="p">}</span> <span class="o">&lt;</span><span class="n">union_string</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Adding this directive will generate several bison warnings on rules using <code class="docutils literal notranslate"><span class="pre">T_ID</span></code> but for which no action has been written:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>bison -vd gpl.y
+gpl.y:297.17-20: warning: unused value: <span class="nv">$2</span> <span class="o">[</span>-Wother<span class="o">]</span>
+  <span class="m">297</span> <span class="p">|</span>     object_type T_ID parameter_list_or_empty
+      <span class="p">|</span>                 ^~~~
+gpl.y:298.19-22: warning: unused value: <span class="nv">$2</span> <span class="o">[</span>-Wother<span class="o">]</span>
+  <span class="m">298</span> <span class="p">|</span>     <span class="p">|</span> object_type T_ID T_LBRACKET expression T_RBRACKET
+      <span class="p">|</span>                   ^~~~
+gpl.y:354.27-30: warning: unused value: <span class="nv">$3</span> <span class="o">[</span>-Wother<span class="o">]</span>
+  <span class="m">354</span> <span class="p">|</span>     T_FORWARD T_ANIMATION T_ID T_LPAREN animation_parameter T_RPAREN
+      <span class="p">|</span>                           ^~~~
+gpl.y:359.17-20: warning: unused value: <span class="nv">$2</span> <span class="o">[</span>-Wother<span class="o">]</span>
+  <span class="m">359</span> <span class="p">|</span>     object_type T_ID
+      <span class="p">|</span>                 ^~~~
+gpl.y:370.17-20: warning: unused value: <span class="nv">$2</span> <span class="o">[</span>-Wother<span class="o">]</span>
+  <span class="m">370</span> <span class="p">|</span>     T_ANIMATION T_ID T_LPAREN object_type T_ID T_RPAREN
+      <span class="p">|</span>                 ^~~~
+gpl.y:370.43-46: warning: unused value: <span class="nv">$5</span> <span class="o">[</span>-Wother<span class="o">]</span>
+  <span class="m">370</span> <span class="p">|</span>     T_ANIMATION T_ID T_LPAREN object_type T_ID T_RPAREN
+      <span class="p">|</span>                                           ^~~~
+gpl.y:474.21-24: warning: unused value: <span class="nv">$3</span> <span class="o">[</span>-Wother<span class="o">]</span>
+  <span class="m">474</span> <span class="p">|</span>     <span class="p">|</span> T_ID T_PERIOD T_ID
+      <span class="p">|</span>                     ^~~~
+gpl.y:475.54-57: warning: unused value: <span class="nv">$6</span> <span class="o">[</span>-Wother<span class="o">]</span>
+  <span class="m">475</span> <span class="p">|</span>     <span class="p">|</span> T_ID T_LBRACKET expression T_RBRACKET T_PERIOD T_ID
+      <span class="p">|</span>                                                      ^~~~
+</pre></div>
+</div>
+<p>To silence these warnings, add a <em>temporary</em> action that “uses” <code class="docutils literal notranslate"><span class="pre">T_ID</span></code>. For example, the first two warnings complain about <code class="docutils literal notranslate"><span class="pre">$2</span></code> on lines 297 and 298 of <code class="docutils literal notranslate"><span class="pre">gpl.y</span></code>. Here are the temporary actions to add:</p>
+<p>Original:</p>
+<pre>object_declaration:
+    object_type T_ID parameter_list_or_empty
+    | object_type T_ID T_LBRACKET expression T_RBRACKET
+    ;</pre><p>Temporary action added:</p>
+<pre>object_declaration:
+    object_type T_ID parameter_list_or_empty <span style="font-weight:bold;color:DarkRed">{$2; /*CHANGE*/}</span>
+    | object_type T_ID T_LBRACKET expression T_RBRACKET <span style="font-weight:bold;color:DarkRed">{$2; /*CHANGE*/}</span>
+    ;</pre></li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic" start="20">
+<li><p>Finally, dynamic memory is allocated for <code class="docutils literal notranslate"><span class="pre">T_STRING_CONSTANT</span></code>. Since this constant isn’t used in this project, add a temporary action to release (<code class="docutils literal notranslate"><span class="pre">delete</span></code>) it in the <code class="docutils literal notranslate"><span class="pre">primary_expression:</span></code> production:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="nl">primary_expression</span><span class="p">:</span>
+  <span class="p">...</span>
+  <span class="o">|</span> <span class="n">T_STRING_CONSTANT</span> <span class="p">{</span> <span class="k">delete</span> <span class="err">$</span><span class="mi">1</span><span class="p">;</span> <span class="cm">/*CHANGE*/</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="21">
+<li><p>Again, use <code class="docutils literal notranslate"><span class="pre">memvalidate.bash</span></code> to ensure all tests are free of memory leaks. Use <code class="docutils literal notranslate"><span class="pre">valgrind</span></code> directly on individual tests (e.g., <code class="docutils literal notranslate"><span class="pre">valgrind</span> <span class="pre">./gpl</span> <span class="pre">tests/t015.gpl</span></code>) to gain information on the location of leaked memory.</p></li>
+<li><p>The code should compile in its entirety without any warnings. If there are warnings, seek help to eliminate them.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="version-history">
+<h2>Version History<a class="headerlink" href="#version-history" title="Permalink to this headline">¶</a></h2>
+<p>Ver. 2 November 2021</p>
+<ul class="simple">
+<li><p>Converted Gpl_type to GPL::Type</p></li>
+</ul>
+<p>Ver. 5 October 2021</p>
+<ul class="simple">
+<li><p>Miscellaneous minor text elaborations and corrections</p></li>
+</ul>
+<p>Ver. 28 September 2021</p>
+<ul class="simple">
+<li><p>In code sample for step 9, added to replace <code class="docutils literal notranslate"><span class="pre">insert()</span></code> with <code class="docutils literal notranslate"><span class="pre">add_to_current_scope()</span></code></p></li>
+</ul>
+<p>Ver. 23 August 2021</p>
+<ul class="simple">
+<li><p>Transitioned out <code class="docutils literal notranslate"><span class="pre">Table_handler</span></code>.</p></li>
+</ul>
+<p>Ver. 16 August 2021</p>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">only::</span> <span class="pre">latex</span></code> boxes following <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">raw::</span> <span class="pre">html</span></code> boxes.</p></li>
+<li><p>Added colons to some mentions of specific productions.</p></li>
+</ul>
+<p>Ver. 29 September 2020</p>
+<ul class="simple">
+<li><p>Typo corrrection, memtest -&gt; memvalidate</p></li>
+<li><p>Added paragraph for suppressing switch statement warnings.</p></li>
+<li><p>Added final item to encourage removal of switch warnings.</p></li>
+<li><p>Updated T_ID warnings &amp; grammar in example.</p></li>
+</ul>
+<p>Ver. 26 September 2020</p>
+<ul class="simple">
+<li><p>Typo corrrection, STING -&gt; STRING</p></li>
+</ul>
+<p>Ver. 12 September 2020</p>
+<ul class="simple">
+<li><p>Minor changes to the prose.</p></li>
+</ul>
+<p>Ver. 16 August 2020</p>
+<ul class="simple">
+<li><p>Corrected incorrect reference to previous step on #18.</p></li>
+</ul>
+<p>Ver. 2 May 2020</p>
+<ul class="simple">
+<li><p>Restructured document for use with Sphinx markup</p></li>
+</ul>
+<p>Ver. 2 March 2020</p>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">virtual</span></code> to <code class="docutils literal notranslate"><span class="pre">Symbol::~Symbol</span></code></p></li>
+</ul>
+<p>Ver. 22 October 2019</p>
+<ul class="simple">
+<li><p>Corrected typo in item #14</p></li>
+</ul>
+<p>Ver. 7 October 2019</p>
+<ul class="simple">
+<li><p>Removed unnecessary sentence from <code class="docutils literal notranslate"><span class="pre">Table_handler::instance()</span></code> description about checking for empty vector.</p></li>
+</ul>
+<p>Ver. 3 October 2019</p>
+<ul class="simple">
+<li><p>In code testing directions, corrected method of accessing <code class="docutils literal notranslate"><span class="pre">Table_handler</span></code>.</p></li>
+</ul>
+<p>Ver. 29 September 2019</p>
+<ul class="simple">
+<li><p>Made some Symbol member functions constant</p></li>
+</ul>
+<p>Ver. 24 September 2019</p>
+<ul class="simple">
+<li><p>Added mention of <code class="docutils literal notranslate"><span class="pre">-g</span></code> option.</p></li>
+</ul>
+<p>Ver. 23 September 2019</p>
+<ul class="simple">
+<li><p>Minor change to Manifest</p></li>
+</ul>
+<p>Ver. 22 September 2019</p>
+<ul class="simple">
+<li><p>Enhancements throughout</p></li>
+</ul>
+<p>Ver. 07 April 2019</p>
+<ul class="simple">
+<li><p>Expanded the writeup on item #14</p></li>
+</ul>
+<p>Ver. 01 April 2019</p>
+<ul class="simple">
+<li><p>Enhanced item 15, added memtest.bash verbiage.</p></li>
+</ul>
+<p>Ver. 25 March 2019</p>
+<ul class="simple">
+<li><p>Corrected typo: p1 to p2</p></li>
+</ul>
+<p>Ver. 11 March 2019</p>
+<ul class="simple">
+<li><p>Removed gpl.cpp from Manifest</p></li>
+</ul>
+<p>Ver. 10 March 2019</p>
+<ul class="simple">
+<li><p>Added copy constructor and assignment operator <code class="docutils literal notranslate"><span class="pre">=delete</span></code> declarations to <code class="docutils literal notranslate"><span class="pre">Symbol</span></code> and <code class="docutils literal notranslate"><span class="pre">Symbol_table</span></code> class declarations to prevent unnecessary local copies of these objects from being created.</p></li>
+<li><p>Added missing <code class="docutils literal notranslate"><span class="pre">const</span></code> to <code class="docutils literal notranslate"><span class="pre">operator&lt;&lt;()</span></code> for <code class="docutils literal notranslate"><span class="pre">Table_handler</span></code>.</p></li>
+<li><p>Corrected <code class="docutils literal notranslate"><span class="pre">Table_handler::lookup</span></code> description to call each <code class="docutils literal notranslate"><span class="pre">Symbol_table::lookup</span></code> (instead of each <code class="docutils literal notranslate"><span class="pre">Table_handler::lookup</span></code>).</p></li>
+</ul>
+<p>Ver. 7 March 2019</p>
+<ul class="simple">
+<li><p>Corrected <code class="docutils literal notranslate"><span class="pre">T_CONSTANT_STRING</span></code> to <code class="docutils literal notranslate"><span class="pre">T_STRING_CONSTANT</span></code></p></li>
+</ul>
+<p>Ver. 26 February 2019</p>
+<ul class="simple">
+<li><p>Added ctor to Symbol, added blank line for formatting before union <code class="docutils literal notranslate"><span class="pre">symbol_type</span></code></p></li>
+</ul>
+<p>Ver. 20 February 2019</p>
+<ul class="simple">
+<li><p>Initial version</p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="README_P3.html" title="Third Project"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="README_P1.html" title="First Project"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Game Programming Language 2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Second Project</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CSCI 515 Compiler Design.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.0.
+    </div>
+  </body>
+</html>

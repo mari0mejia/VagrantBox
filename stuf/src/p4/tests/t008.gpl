@@ -1,0 +1,5 @@
+// Error. previously declared variable errors
+rectangle one_shape[3];
+circle    one_shape[2];
+triangle  another_shape[4];
+triangle  another_shape[3];

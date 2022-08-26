@@ -1,0 +1,5 @@
+double prehistoric_tea_time;
+
+forward animation teapot(triangle troglodyte);
+forward animation handle(circle grabem);
+forward animation spout(pixmap pourem);

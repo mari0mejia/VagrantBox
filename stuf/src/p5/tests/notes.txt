@@ -1,0 +1,24 @@
+t008.gpl Good assignment
+t009.gpl Bad assignment
+
+t010.gpl Good plus-assign
+t011.gpl Bad plus-assign
+
+t012.gpl Good minus-assign
+t013.gpl Bad minus-assign
+
+t014.gpl Good Increment
+t015.gpl Bad Increment
+
+t016.gpl Good Decrement
+t017.gpl Bad Decrement
+
+t018.gpl Test mult-line print statement (use T_PRINT semantic value, not line_count)
+t019.gpl Ensure that game_object.attribute_name is printed on LHS type error messages
+t020.gpl Test if and if/else. Also tests single statement vs. Curly braces.
+
+t021.gpl Test if and if/else executes next pointer.
+
+t022.gpl Test of for-loop
+t023.gpl Test of for-loop, executes next pointer.
+t024.gpl Test of for-loop, empty argument variants

@@ -1,0 +1,3 @@
+Semantic error on line 1: The array 'brick' was declared with illegal size '-3'. Arrays sizes must be integers of 1 or larger.
+Semantic error on line 4: The array 'one' was declared with illegal size '0'. Arrays sizes must be integers of 1 or larger.
+Semantic error on line 6: The given expression is not a legal type for the size of array <parachute>.  The size must be an integer.  Given expression is of type string.

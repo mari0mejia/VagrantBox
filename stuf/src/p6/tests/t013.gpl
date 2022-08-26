@@ -1,0 +1,9 @@
+//ensure that set_difference is used correctly in the "program:" 
+//production. "justadeclaration" should not appear in the printed symbols
+forward animation belch(circle);
+forward animation justadeclaration(circle);
+
+animation belch(circle stomach)
+{
+  stomach.radius -= 1;
+}

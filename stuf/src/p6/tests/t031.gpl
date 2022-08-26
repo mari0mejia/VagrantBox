@@ -1,0 +1,7 @@
+rectangle windowsill(x = 0, y = 100);
+double trouble;
+
+//bad type on RHS of assignment, double instead of an animation block
+on akey {
+  windowsill.animation_block=trouble;//bad assignment statement, parameter type
+}

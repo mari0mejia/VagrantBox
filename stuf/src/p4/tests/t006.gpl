@@ -1,0 +1,8 @@
+//Should report errors on invalid type being provided as subscript to array declaration
+//With an invalid type the provided index should default to 1
+int ii=3;
+double dd=3.3; 
+string ss="Memphis";
+rectangle my_rectangle[ii];
+circle    my_circle[dd];
+triangle  my_triangle[ss];

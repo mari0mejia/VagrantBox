@@ -1,0 +1,6 @@
+string window_title = "p4 t010.gpl -- compare to t010.jpg ***PRESS q TO QUIT***";
+rectangle my_rectangle(x = 100, y = 100, rotation=-30, w=45);
+circle    my_circle(x = 200, y = 200, radius=30);
+triangle    my_triangle(x = 300, y = 100, size=40, rotation=30);
+pixmap    my_pixmap(x = 100, y = 400, green=0.5);
+textbox    my_textbox(x = 200, y = 300, text = "Home Sweet Home");

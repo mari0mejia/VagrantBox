@@ -1,0 +1,11 @@
+int    lhs_int;
+
+on hkey
+{
+  print("Increment. h-key pressed");
+  lhs_int++;
+  lhs_int++;
+  lhs_int++;
+  lhs_int++;
+  lhs_int++;
+}

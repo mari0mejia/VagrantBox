@@ -1,0 +1,13 @@
+on
+akey
+{
+//Use semantic value of T_PRINT.
+//Don't use line_count directly.
+print
+(
+"This is " +
+"spread across " +
+"multpile lines."
+)
+;
+}

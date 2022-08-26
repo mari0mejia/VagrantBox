@@ -1,0 +1,2 @@
+Semantic error on line 5: The animation block's parameter type (circle) does not match the parameter type specified in the forward statement (triangle).
+Semantic error on line 11: Object 'stomach' does not contain the member variable 'skew'.

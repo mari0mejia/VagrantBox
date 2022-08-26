@@ -1,0 +1,5 @@
+// previously declared variable errors
+rectangle one_shape();
+circle    one_shape();
+triangle  another_shape();
+triangle  another_shape();

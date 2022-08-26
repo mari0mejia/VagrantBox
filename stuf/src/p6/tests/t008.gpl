@@ -1,0 +1,16 @@
+rectangle box_one(x=50,y=50,w=20,h=20, red=1.0, green=0.0, blue=0.0);
+rectangle box_two(x=100,y=100,w=20,h=20, red=0.0, green=1.0, blue=0.0);
+
+on akey {
+  if(box_one touches box_two)
+    print("box_one touches box_two");
+  else
+    print("box_one does not touch box_two");
+}
+
+on wkey {
+  if(box_one near box_two)
+    print("box_one near box_two");
+  else
+    print("box_one is not near box_two");
+}

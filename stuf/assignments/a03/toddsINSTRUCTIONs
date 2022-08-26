@@ -1,0 +1,1 @@
+flex a03.l && g++ -std=c++11 lex.yy.c

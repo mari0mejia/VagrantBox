@@ -1,0 +1,102 @@
+////
+//Test four variants of if-statement, NO curly-braces
+////
+on akey {
+  if(42 == 42)
+    print("Test-A, they are equal.");
+}
+
+on akey {
+  if(42 == 41)
+    print("Test-B, should not see this message.");
+}
+
+on akey {
+  if(42 == 41)
+    print("Test-C, should not see this message.");
+  else
+    print("Test-C, they are not equal.");
+}
+
+on akey {
+  if(42 == 42)
+    print("Test-D, they are equal.");
+  else
+    print("Test-D, should not see this message.");
+}
+
+on akey {print("");}
+
+////
+//Test four variants of if-statement, WITH curly-braces
+////
+on akey {
+  if(42 == 42)
+  { print("Test-E, they are equal."); }
+}
+
+on akey {
+  if(42 == 41)
+  { print("Test-F, should not see this message."); }
+}
+
+on akey {
+  if(42 == 41)
+  { print("Test-G, should not see this message."); }
+  else
+  { print("Test-G, they are not equal."); }
+}
+
+on akey {
+  if(42 == 42)
+  { print("Test-H, they are equal."); }
+  else
+  { print("Test-H, should not see this message."); }
+}
+
+on akey {print("");}
+
+////
+//Test four variants of if-statement, WITH multiple statements IN curly-braces
+////
+on akey {
+  if(42 == 42)
+  {
+    print("Test-I, they are equal.");
+    print("Test-I, they are still equal.");
+  }
+}
+
+on akey {
+  if(42 == 41)
+  {
+    print("Test-J, should not see this message.");
+    print("Test-J, still should not see this message.");
+  }
+}
+
+on akey {
+  if(42 == 41)
+  {
+    print("Test-K, should not see this message.");
+    print("Test-K, still should not see this message.");
+  }
+  else
+  {
+    print("Test-K, they are not equal.");
+    print("Test-K, they are still not equal.");
+  }
+}
+
+on akey {
+  if(42 == 42)
+  {
+    print("Test-L, they are equal.");
+    print("Test-L, they are still equal.");
+  }
+  else
+  {
+    print("Test-L, should not see this message.");
+    print("Test-L, still should not see this message.");
+  }
+}

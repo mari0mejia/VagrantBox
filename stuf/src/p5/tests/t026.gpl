@@ -1,0 +1,22 @@
+
+int i = 1;
+int k = 2;
+int l = 3;
+
+on wkey
+{
+  //Use semantic value of T_EXIT.
+  ////Don't use line_count directly.
+  exit(i
+       +
+       i
+       +
+       5
+       *
+       k
+       +
+       10
+       *
+       l
+       );
+}

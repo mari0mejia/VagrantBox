@@ -1,0 +1,23 @@
+These are production rules
+--------------------------
+program --> expression
+
+expression --> T_INTEGER
+           --> expression T_MINUS expression
+           --> expression T_PLUS expression
+           --> expression T_DIVIDE expression
+
+
+cat run moose play
+
+T_NOUN run moose play
+
+T_NOUN T_VERB moose play
+
+sentence T_NOUN T_VERB moose play
+
+sentence moose play
+sentence T_NOUN play
+sentence T_NOUN T_VERB
+sentence
+
